@@ -4,8 +4,7 @@ import com.trains.sim.Simulation;
 import com.trains.ui.SimulationController;
 import com.trains.ui.SimulationView;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
+
 import javafx.stage.Stage;
 
 
