@@ -15,7 +15,7 @@ repositories {
 
 javafx {
     version = "25"
-    modules("javafx.controls", "javafx.fxml")
+    modules("javafx.controls", "javafx.fxml", "javafx.graphics")
 }
 
 dependencies {
