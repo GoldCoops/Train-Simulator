@@ -2,8 +2,8 @@ plugins {
     id("java")
 }
 
-group = "net.goldcoops"
-version = "1.0-SNAPSHOT"
+group = "com.trains"
+version = "1.0"
 
 repositories {
     mavenCentral()
