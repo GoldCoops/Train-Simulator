@@ -1,8 +1,7 @@
 package com.trains.network;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
 
 public class Node {
     private final GridPos pos;
