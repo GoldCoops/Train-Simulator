@@ -1,8 +1,6 @@
 package com.trains.network;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Network {
     private final HashMap<GridPos, Node> nodes = new HashMap<>();
@@ -42,6 +40,9 @@ public class Network {
         return station;
     }
 
+
+
+
     /**
      * Connects two nodes with a PathwaySegment
      * @param a The first node
@@ -59,4 +60,6 @@ public class Network {
     public void disconnectNodes(PathwaySegment segment) {}
     public void removeNode(Node node) {}
     public void removeNode(GridPos pos) {}
+    public Map<GridPos, Node> getNodes() {return Collections.unmodifiableMap(nodes);}
+    public Set<PathwaySegment> getPathways() {return Collections.unmodifiableSet(pathways);}
 }
