@@ -14,12 +14,5 @@ public class App extends Application {
         SimulationView view = new SimulationView(200);
         SimulationController controller = new SimulationController();
     }
-
-    // I don't think we need this anymore? Uses different library for visual, we seem to be using swing
-    @Override
-    public void start(Stage stage) throws Exception {
-
-
-
-    }
+    
 }
