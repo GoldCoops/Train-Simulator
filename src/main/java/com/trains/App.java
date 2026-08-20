@@ -14,5 +14,9 @@ public class App extends Application {
         SimulationView view = new SimulationView(200);
         SimulationController controller = new SimulationController();
     }
-    
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+    }
 }
