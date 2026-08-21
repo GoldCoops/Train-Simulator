@@ -2,6 +2,10 @@ package com.trains.network;
 
 import java.util.*;
 
+
+/**
+ * Handles/manages the overall network
+ */
 public class Network {
     private final HashMap<GridPos, Node> nodes = new HashMap<>();
     private final Set<PathwaySegment> pathways = new HashSet<>();
@@ -17,7 +21,7 @@ public class Network {
      */
     public Node addNode(GridPos pos) throws IllegalArgumentException {
         if (nodes.containsKey(pos)) {
-            throw new IllegalArgumentException("Station already exists at " + pos);
+            throw new IllegalArgumentException("Node already exists at " + pos);
         }
         Node node = new Node(pos);
         nodes.put(pos, node);

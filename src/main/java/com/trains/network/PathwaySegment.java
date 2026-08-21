@@ -1,5 +1,9 @@
 package com.trains.network;
 
+/**
+ * The PathwaySegment class
+ * May turn this into different classes for different types of pathways, but at the moment this tracks the nodes it connects and the distance between those nodes.
+ */
 public class PathwaySegment {
     private final Node start;
     private final Node end;

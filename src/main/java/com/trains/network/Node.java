@@ -2,7 +2,10 @@ package com.trains.network;
 
 import java.util.*;
 
-
+/**
+ * The Node Class
+ * Handles the underlying logic of each individual node, holds a position, and the pathways which it is connected to.
+ */
 public class Node {
     private final GridPos pos;
     private final ArrayList<PathwaySegment> connections = new ArrayList<>();
