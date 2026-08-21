@@ -23,8 +23,48 @@ public class NetworkTest {
         network.addNode(new GridPos(15, 20), Network.NodeType.STATION);
         assertEquals(2, network.getNodes().size());
         assertThrows(IllegalArgumentException.class, () -> network.addNode(new GridPos(10, 20), Network.NodeType.NODE)); // Node already at position
+        assertThrows(IllegalArgumentException.class, () -> network.addNode(new GridPos(10, 20), Network.NodeType.STATION));
         assertEquals(2, network.getNodes().size());
     }
 
+    @Test
+    void addNodesTest() {
+
+    }
+
+    @Test
+    void isStationAtTest() {
+
+    }
+
+    @Test
+    void isStationTest() {
+
+    }
+
+    @Test
+    void isNoteAtTest() {
+
+    }
+
+    @Test
+    void connectNodesTest() {
+
+    }
+
+    @Test
+    void disconnectNodesTest() {
+
+    }
+
+    @Test
+    void removeNodeTest() {
+
+    }
+
+    @Test
+    void removeNodeByPosTest() {
+
+    }
 
 }
