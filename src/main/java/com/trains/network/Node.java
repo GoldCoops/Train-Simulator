@@ -34,4 +34,17 @@ public class Node {
     void removeConnection(PathwaySegment segment) {
         connections.remove(segment);
     }
+
+
+    /**
+     * Gets the GridPos of the node
+     * @return the GridPos record
+     */
+    GridPos getPos() {return pos;}
+
+    /**
+     * Removes a connection
+     * @param index index of the segment to be removed in connections arraylist
+     */
+    void removeConnection(int index) {connections.remove(index);}
 }

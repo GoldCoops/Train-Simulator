@@ -41,7 +41,21 @@ public class Network {
     }
 
 
+    /**
+     * @param pos The position to check
+     * @return true if there is a node at that position and it is a station, false otherwise
+     */
+    public boolean isStationAt(GridPos pos) {
+        return nodes.containsKey(pos) && nodes.get(pos) instanceof Station;
+    }
 
+    /**
+     * @param node The node to check
+     * @return true if the node supplied is a station and if it is in the network, false otherwise
+     */
+    public boolean isStation(Node node) {
+        return nodes.containsValue(node) && node instanceof Station;
+    }
 
     /**
      * Connects two nodes with a PathwaySegment
