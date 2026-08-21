@@ -34,8 +34,12 @@ public class Station extends Node{
 
     /**
      * Adds one passenger for each call
+     * @throws IllegalStateException if the station is full
      */
-    public void addPassenger() {
+    public void addPassenger() throws IllegalStateException{
+        if (isFull()) {
+            throw new IllegalStateException("Station is full");
+        }
         currentPassengers++;
     }
     /**
