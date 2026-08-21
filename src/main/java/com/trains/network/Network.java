@@ -1,5 +1,7 @@
 package com.trains.network;
 
+import com.sun.jdi.connect.IllegalConnectorArgumentsException;
+
 import java.util.*;
 
 
@@ -7,41 +9,44 @@ import java.util.*;
  * Handles/manages the overall network
  */
 public class Network {
-    private final HashMap<GridPos, Node> nodes = new HashMap<>();
+    private final Map<GridPos, Node> nodes = new HashMap<>();
     private final Set<PathwaySegment> pathways = new HashSet<>();
 
-    public Network() {
+
+    public enum NodeType {
+        STATION,
+        NODE
     }
+
+    public Network() {}
 
     /**
      * Adds a Node at the given position
      * @param pos the position to add the node
+     * @param type the type of node to add at the given position
      * @throws IllegalArgumentException if there is already a node at the pos provided
      * @return Returns the created node.
      */
-    public Node addNode(GridPos pos) throws IllegalArgumentException {
+    public Node addNode(GridPos pos, NodeType type) throws IllegalArgumentException {
         if (nodes.containsKey(pos)) {
             throw new IllegalArgumentException("Node already exists at " + pos);
         }
-        Node node = new Node(pos);
+        Node node = (type == NodeType.NODE) ? new Node(pos) : (type == NodeType.STATION) ? new Station(pos) : null;
         nodes.put(pos, node);
         return node;
     }
 
     /**
-     * Adds a Station at the given position
-     * @param pos the position to add the station/node
-     * @param capacity The capacity of the station
-     * @return the created station
-     * @throws IllegalArgumentException if a node already exists at the pos provided
+     * Convenience method for adding multiple nodes at one time, returns a list of the nodes added
+     * @return list of nodes added
+     * @throws IllegalArgumentException if any of the supplied positions already have nodes on them.
      */
-    public Station addStation(GridPos pos, int capacity) throws IllegalArgumentException{
-        if (nodes.containsKey(pos)) {
-            throw new IllegalArgumentException("Station already exists at " + pos);
+    public List<Node> addNodes(Map<GridPos, NodeType> nodes) throws IllegalArgumentException {
+        List<Node> created = new ArrayList<>();
+        for(Map.Entry<GridPos, NodeType> entry : nodes.entrySet()) {
+            created.add(addNode(entry.getKey(),entry.getValue()));
         }
-        Station station = new Station(pos, capacity);
-        nodes.put(pos, station);
-        return station;
+        return created;
     }
 
 
