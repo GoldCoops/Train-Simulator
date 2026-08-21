@@ -12,8 +12,41 @@ public class PathwaySegment {
     public PathwaySegment(Node start, Node end) {
         this.start = start;
         this.end = end;
+        start.addConnection(this);
+        end.addConnection(this);
         int xdist = Math.abs(start.getPos().x() - end.getPos().x());
         int ydist = Math.abs(start.getPos().y() - end.getPos().y());
         this.length = Math.sqrt(Math.pow(xdist, 2) + Math.pow(ydist,2));
+    }
+
+
+    /**
+     * whether this pathway segment is connected to the given node
+     * @param node the node to check
+     * @return true if the segment is connected to the supplied node, false otherwise
+     */
+    public boolean isConnectedTo(Node node) {
+        return start.equals(node) || end.equals(node);
+    }
+    /**
+     * Getter for the starter node
+     * @return the start node
+     */
+    public Node getStart() {
+        return start;
+    }
+    /**
+     * Getter for the end node
+     * @return the end node
+     */
+    public Node getEnd() {
+        return end;
+    }
+    /**
+     * Getter for the length
+     * @return the length of the pathway
+     */
+    public double getLength() {
+        return length;
     }
 }

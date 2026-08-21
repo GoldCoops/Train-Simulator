@@ -68,15 +68,42 @@ public class Network {
      * @return The created PathwaySegment
      */
     public PathwaySegment connectNodes(Node a, Node b) {
-        return null;
+        PathwaySegment segment = new PathwaySegment(a, b);
+        pathways.add(segment);
+        return segment;
     }
 
     /**
-     * Disconnects
-     * @param segment
+     * Disconnects two nodes via the supplied segment
+     * @param segment the segment to disconnect
+     * @throws IllegalArgumentException if segment is not found in pathways list
      */
-    public void disconnectNodes(PathwaySegment segment) {}
-    public void removeNode(Node node) {}
+    public void disconnectNodes(PathwaySegment segment) throws IllegalArgumentException{
+        if (pathways.contains(segment)) {
+            segment.getStart().removeConnection(segment);
+            segment.getEnd().removeConnection(segment);
+            pathways.remove(segment);
+        } else {
+            throw new IllegalArgumentException("Segment not found in pathways list");
+        }
+    }
+
+
+    /**
+     * Removes a Node from the network and destroys all connections
+     * @param node the Node to remove
+     */
+    public void removeNode(Node node) {
+        for (PathwaySegment segment : node.getConnections()) {
+            disconnectNodes(segment);
+        }
+        nodes.remove(node.getPos());
+    }
+
+    /**
+     * Removes a Node found at the given GridPos from the network and destroys all connections
+     * @param pos The Position of the node to remove
+     */
     public void removeNode(GridPos pos) {}
     public Map<GridPos, Node> getNodes() {return Collections.unmodifiableMap(nodes);}
     public Set<PathwaySegment> getPathways() {return Collections.unmodifiableSet(pathways);}
