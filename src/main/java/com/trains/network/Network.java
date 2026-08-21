@@ -30,7 +30,14 @@ public class Network {
         if (nodes.containsKey(pos)) {
             throw new IllegalArgumentException("Node already exists at " + pos);
         }
-        Node node = (type == NodeType.NODE) ? new Node(pos) : (type == NodeType.STATION) ? new Station(pos) : null;
+        Node node;
+        if (type == NodeType.NODE) {
+            node = new Node(pos);
+        } else if (type == NodeType.STATION) {
+            node = new Station(pos);
+        } else {
+            throw new IllegalArgumentException("NodeType not valid");
+        }
         nodes.put(pos, node);
         return node;
     }
@@ -52,18 +59,27 @@ public class Network {
 
     /**
      * @param pos The position to check
-     * @return true if there is a node at that position and it is a station, false otherwise
+     * @return true if there is a node at that position, if it is part of the network, and it is a station, false otherwise
      */
     public boolean isStationAt(GridPos pos) {
         return nodes.containsKey(pos) && nodes.get(pos) instanceof Station;
     }
 
     /**
-     * @param node The node to check
-     * @return true if the node supplied is a station and if it is in the network, false otherwise
+     * @param node The node to check, does not check if the node is part of the network, just checks if it is a station.
+     * @return true if the node supplied is a station, false otherwise
      */
     public boolean isStation(Node node) {
-        return nodes.containsValue(node) && node instanceof Station;
+        return node instanceof Station;
+    }
+
+    /**
+     * Checks if a given GridPos has a node
+     * @param pos the position to check
+     * @return true if there is a node at that position, false otherwise
+     */
+    public boolean isNodeAt(GridPos pos) {
+        return nodes.containsKey(pos);
     }
 
     /**
