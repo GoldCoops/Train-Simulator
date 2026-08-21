@@ -104,7 +104,21 @@ public class Network {
      * Removes a Node found at the given GridPos from the network and destroys all connections
      * @param pos The Position of the node to remove
      */
-    public void removeNode(GridPos pos) {}
+    public void removeNode(GridPos pos) {
+        if (nodes.containsKey(pos)) {
+            removeNode(nodes.get(pos));
+        }
+    }
+
+    /**
+     * Gets the Map of nodes in the network
+     * @return an unmodifiable Map of GridPos, Node
+     */
     public Map<GridPos, Node> getNodes() {return Collections.unmodifiableMap(nodes);}
+
+    /**
+     * Gets the list of pathways in the network
+     * @return an unmodifiable list of the pathways in the network
+     */
     public Set<PathwaySegment> getPathways() {return Collections.unmodifiableSet(pathways);}
 }
