@@ -49,4 +49,17 @@ public class PathwaySegment {
     public double getLength() {
         return length;
     }
+
+    @Override
+    public int hashCode() {
+        return this.start.hashCode() + this.end.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof PathwaySegment otherPath) {
+            return this.start.equals(otherPath.getStart()) && this.end.equals(otherPath.getEnd()); // May change if we decide to make multiple types of "Pathways"
+        }
+        return false;
+    }
 }

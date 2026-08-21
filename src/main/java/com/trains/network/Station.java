@@ -15,6 +15,11 @@ public class Station extends Node{
         super(pos);
     }
 
+    public Station(GridPos pos, int capacity) {
+        super(pos);
+        this.capacity = capacity;
+    }
+
     /**
      * gets the total capacity of the station
      * @return the total capacity

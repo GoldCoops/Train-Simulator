@@ -1,6 +1,5 @@
 package com.trains.network;
 
-import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 
 import java.util.*;
 
@@ -38,6 +37,7 @@ public class Network {
 
     /**
      * Convenience method for adding multiple nodes at one time, returns a list of the nodes added
+     * @param nodes Map of GridPos, NodeType to add to the network
      * @return list of nodes added
      * @throws IllegalArgumentException if any of the supplied positions already have nodes on them.
      */
