@@ -61,6 +61,6 @@ public class Node {
 
     @Override
     public String toString() {
-        return "Node[ " + pos;
+        return this.getClass().getSimpleName() + "[ " + pos + "]";
     }
 }
