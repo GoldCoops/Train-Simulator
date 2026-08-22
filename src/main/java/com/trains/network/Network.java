@@ -139,9 +139,13 @@ public class Network {
     /**
      * Removes a Node from the network and destroys all connections
      * @param node the Node to remove
+     * @throws IllegalArgumentException if the node doesn't belong to the network
      */
-    public void removeNode(Node node) {
-        for (PathwaySegment segment : node.getConnections()) {
+    public void removeNode(Node node) throws IllegalArgumentException {
+        if (nodes.get(node.getPos()) != node) {
+            throw new IllegalArgumentException("Node does not belong to the network");
+        }
+        for (PathwaySegment segment : new ArrayList<>(node.getConnections())) {
             disconnectNodes(segment);
         }
         nodes.remove(node.getPos());
@@ -150,11 +154,13 @@ public class Network {
     /**
      * Removes a Node found at the given GridPos from the network and destroys all connections
      * @param pos The Position of the node to remove
+     * @throws IllegalArgumentException if node is not part of the network
      */
-    public void removeNode(GridPos pos) {
+    public void removeNode(GridPos pos) throws IllegalArgumentException {
         if (nodes.containsKey(pos)) {
             removeNode(nodes.get(pos));
         }
+        else { throw new IllegalArgumentException("No node at position " + pos);}
     }
 
     /**
