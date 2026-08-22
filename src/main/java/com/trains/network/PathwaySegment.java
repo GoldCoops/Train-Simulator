@@ -35,6 +35,7 @@ public class PathwaySegment {
     public Node getStart() {
         return start;
     }
+
     /**
      * Getter for the end node
      * @return the end node

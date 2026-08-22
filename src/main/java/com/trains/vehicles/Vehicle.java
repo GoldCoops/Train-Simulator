@@ -3,7 +3,7 @@ package com.trains.vehicles;
 import com.trains.network.*;
 
 public class Vehicle {
-    private double x = 0, y = 0;
+    private double x, y;
     // GridPos is a record, and as such the values inside are immutable, trains need to move, so we need something different.
     private boolean isStopped;
     private PathwaySegment curSegment;
@@ -11,12 +11,22 @@ public class Vehicle {
     private float speed;
 
 
-    public Vehicle(PathwaySegment curSegment) {
+    public Vehicle(int x, int y, PathwaySegment curSegment) {
         //position initialisation to be added...
+        this.x = x;
+        this.y = y;
         this.curSegment = curSegment;
         this.isStopped = true;
         this.capacity = 0;
         this.speed = 0;
+    }
+
+
+    public double getX() {
+        return x;
+    }
+    public double getY() {
+        return y;
     }
 
     public PathwaySegment getCurrentSegment() {
