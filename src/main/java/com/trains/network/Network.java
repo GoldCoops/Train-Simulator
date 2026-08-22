@@ -12,9 +12,18 @@ public class Network {
     private final Set<PathwaySegment> pathways = new HashSet<>();
 
 
-
+    /**
+     * Enum for each type of Node available
+     */
     public enum NodeType {
+
+        /**
+         * A Station Node
+         */
         STATION,
+        /**
+         * A Generic Node, used to connect the graph
+         */
         NODE
     }
 
