@@ -45,7 +45,7 @@ public class Node {
      */
     GridPos getPos() {return pos;}
 
-    
+
     @Override
     public int hashCode() {
         return this.pos.hashCode();
@@ -57,5 +57,10 @@ public class Node {
             return this.pos.equals(otherNode.getPos());
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Node[ " + pos;
     }
 }
