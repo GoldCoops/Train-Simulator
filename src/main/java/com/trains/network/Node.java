@@ -11,7 +11,7 @@ public class Node {
     private final ArrayList<PathwaySegment> connections = new ArrayList<>();
 
 
-    public Node(GridPos pos) {
+    Node(GridPos pos) {
         this.pos = pos;
     }
     /**

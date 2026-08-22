@@ -6,7 +6,7 @@ package com.trains.network;
  * @param x the x position
  * @param y the y position
  */
-public record GridPos(int x, int y) {
+record GridPos(int x, int y) {
     public GridPos {
         if (x < 0 || y < 0) {
             throw new IllegalArgumentException("Grid position cannot be negative");

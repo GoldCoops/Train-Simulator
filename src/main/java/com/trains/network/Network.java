@@ -12,6 +12,7 @@ public class Network {
     private final Set<PathwaySegment> pathways = new HashSet<>();
 
 
+
     public enum NodeType {
         STATION,
         NODE
@@ -91,9 +92,15 @@ public class Network {
      * @param a The first node
      * @param b The Second node
      * @return The created PathwaySegment
+     * @throws IllegalArgumentException if nodes are the same or one/both dont belong to the network
      */
-    public PathwaySegment connectNodes(Node a, Node b) {
+    public PathwaySegment connectNodes(Node a, Node b) throws IllegalArgumentException{
+        if (Objects.equals(a, b)) {throw new IllegalArgumentException("Cannot connect a node to itself");}
+        if (nodes.get(a.getPos()) != a || nodes.get(b.getPos()) != b) {throw new IllegalArgumentException("Nodes do not belong to the network");}
+        if (areConnected(a, b)) {throw new IllegalArgumentException("Nodes are already connected");}
         PathwaySegment segment = new PathwaySegment(a, b);
+        a.addConnection(segment);
+        b.addConnection(segment);
         pathways.add(segment);
         return segment;
     }
@@ -111,6 +118,21 @@ public class Network {
         } else {
             throw new IllegalArgumentException("Segment not found in pathways list");
         }
+    }
+
+    /**
+     * Checks if two nodes are connected
+     * @param a the first node
+     * @param b the second node
+     * @return true if the nodes are connected, false otherwise
+     */
+    public boolean areConnected(Node a, Node b) {
+        for (PathwaySegment segment : a.getConnections()) {
+            if (segment.isConnectedTo(b)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

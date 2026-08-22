@@ -11,11 +11,11 @@ public class Station extends Node{
     private int capacity;
     private int currentPassengers;
 
-    public Station(GridPos pos) {
+    Station(GridPos pos) {
         super(pos);
     }
 
-    public Station(GridPos pos, int capacity) {
+    Station(GridPos pos, int capacity) {
         super(pos);
         this.capacity = capacity;
     }

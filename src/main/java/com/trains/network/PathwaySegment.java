@@ -9,11 +9,9 @@ public class PathwaySegment {
     private final Node end;
     private final double length;
 
-    public PathwaySegment(Node start, Node end) {
+    PathwaySegment(Node start, Node end) {
         this.start = start;
         this.end = end;
-        start.addConnection(this);
-        end.addConnection(this);
         int xdist = Math.abs(start.getPos().x() - end.getPos().x());
         int ydist = Math.abs(start.getPos().y() - end.getPos().y());
         this.length = Math.sqrt(Math.pow(xdist, 2) + Math.pow(ydist,2));
@@ -26,7 +24,7 @@ public class PathwaySegment {
      * @return true if the segment is connected to the supplied node, false otherwise
      */
     public boolean isConnectedTo(Node node) {
-        return start.equals(node) || end.equals(node);
+        return start == node  || end == node;
     }
     /**
      * Getter for the starter node
@@ -51,16 +49,21 @@ public class PathwaySegment {
         return length;
     }
 
-    @Override
-    public int hashCode() {
-        return this.start.hashCode() + this.end.hashCode();
+    /**
+     * Gets the node at the other end of the supplied segment
+     * @param from the node you are coming from
+     * @return the opposite node via this pathway
+     * @throws IllegalArgumentException if this segment is not connected to the supplied node
+     */
+    public Node opposite(Node from) {
+        if (from == start) {
+            return end;
+        }
+        if (from == end) {
+            return start;
+        }
+        throw new IllegalArgumentException("Segment not connected to " + from);
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof PathwaySegment otherPath) {
-            return this.start.equals(otherPath.getStart()) && this.end.equals(otherPath.getEnd()); // May change if we decide to make multiple types of "Pathways"
-        }
-        return false;
-    }
+
 }
