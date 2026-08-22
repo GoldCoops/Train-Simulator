@@ -44,12 +44,16 @@ public class Network {
 
     /**
      * Convenience method for adding multiple nodes at one time, returns a list of the nodes added
+     * If any of the positions supplied have nodes on them, this method will bail and throw before mutating the network
      * @param nodes Map of GridPos, NodeType to add to the network
      * @return list of nodes added
      * @throws IllegalArgumentException if any of the supplied positions already have nodes on them.
      */
     public List<Node> addNodes(Map<GridPos, NodeType> nodes) throws IllegalArgumentException {
         List<Node> created = new ArrayList<>();
+        if (nodes.keySet().stream().anyMatch(this::isNodeAt)) {
+            throw new IllegalArgumentException("Some positions supplied already have nodes on them");
+        }
         for(Map.Entry<GridPos, NodeType> entry : nodes.entrySet()) {
             created.add(addNode(entry.getKey(),entry.getValue()));
         }
