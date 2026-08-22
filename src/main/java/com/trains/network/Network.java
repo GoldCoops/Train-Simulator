@@ -27,6 +27,9 @@ public class Network {
         NODE
     }
 
+    /**
+     * Network Constructor, doesnt do anything yet
+     */
     public Network() {}
 
     /**
@@ -72,6 +75,7 @@ public class Network {
 
 
     /**
+     * Check if a station is at the given position
      * @param pos The position to check
      * @return true if there is a node at that position, if it is part of the network, and it is a station, false otherwise
      */
@@ -80,6 +84,7 @@ public class Network {
     }
 
     /**
+     * Checks if a node is a station
      * @param node The node to check, does not check if the node is part of the network, just checks if it is a station.
      * @return true if the node supplied is a station, false otherwise
      */
