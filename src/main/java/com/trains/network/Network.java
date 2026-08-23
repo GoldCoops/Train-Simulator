@@ -12,20 +12,7 @@ public class Network {
     private final Set<PathwaySegment> pathways = new HashSet<>();
 
 
-    /**
-     * Enum for each type of Node available
-     */
-    public enum NodeType {
 
-        /**
-         * A Station Node
-         */
-        STATION,
-        /**
-         * A Generic Node, used to connect the graph
-         */
-        NODE
-    }
 
     /**
      * Network Constructor, doesnt do anything yet
@@ -33,42 +20,55 @@ public class Network {
     public Network() {}
 
     /**
-     * Adds a Node at the given position
+     * Add a node to the network
+     * usage: network.addNode(new GridPos(x,y))
      * @param pos the position to add the node
-     * @param type the type of node to add at the given position
-     * @throws IllegalArgumentException if there is already a node at the pos provided
-     * @return Returns the created node.
+     * @return The created node object
+     * @throws IllegalArgumentException If a node already exists at the supplied position
      */
-    public Node addNode(GridPos pos, NodeType type) throws IllegalArgumentException {
-        if (nodes.containsKey(pos)) {
-            throw new IllegalArgumentException("Node already exists at " + pos);
+    public Node addNode(GridPos pos) throws IllegalArgumentException{
+        return register(new Node(pos));
+    }
+
+    /**
+     * Add a station to the network
+     * usage: network.addStation(new GridPos(x,y), capacity)
+     * @param pos the position to add the station
+     * @param capacity the capacity of the station - final, cannot be changed after creation
+     * @return the created station object
+     * @throws IllegalArgumentException If a node already exists at the supplied position
+     */
+    public Station addStation(GridPos pos, int capacity) throws IllegalArgumentException{
+        return register(new Station(pos, capacity));
+    }
+
+    private <T extends Node> T register(T node) throws IllegalArgumentException{
+        if (nodes.putIfAbsent(node.getPos(), node) != null) { // if there is an object already in the map containing node.getPos(), it will be returned by putIfAbsent()
+            throw new IllegalArgumentException("Node already exists at " + node.getPos());
         }
-        Node node;
-        if (type == NodeType.NODE) {
-            node = new Node(pos);
-        } else if (type == NodeType.STATION) {
-            node = new Station(pos);
-        } else {
-            throw new IllegalArgumentException("NodeType not valid");
-        }
-        nodes.put(pos, node);
         return node;
     }
+
+
 
     /**
      * Convenience method for adding multiple nodes at one time, returns a list of the nodes added
      * If any of the positions supplied have nodes on them, this method will bail and throw before mutating the network
-     * @param nodes Map of GridPos, NodeType to add to the network
+     * @param positions The positions to add nodes at
      * @return list of nodes added
-     * @throws IllegalArgumentException if any of the supplied positions already have nodes on them.
+     * @throws IllegalArgumentException if any of the supplied positions already have nodes on them, or if duplicate positions are supplied
      */
-    public List<Node> addNodes(Map<GridPos, NodeType> nodes) throws IllegalArgumentException {
-        List<Node> created = new ArrayList<>();
-        if (nodes.keySet().stream().anyMatch(this::isNodeAt)) {
+    public List<Node> addNodes(GridPos... positions) throws IllegalArgumentException {
+        List<Node> created = new ArrayList<>(positions.length);
+        Set<GridPos> distinct = new LinkedHashSet<>(Arrays.asList(positions)); //a set to auto-eliminate duplicates
+        if (distinct.size() != positions.length) {
+            throw new IllegalArgumentException("Duplicate positions supplied");
+        }
+        if (distinct.stream().anyMatch(this::isNodeAt)) {
             throw new IllegalArgumentException("Some positions supplied already have nodes on them");
         }
-        for(Map.Entry<GridPos, NodeType> entry : nodes.entrySet()) {
-            created.add(addNode(entry.getKey(),entry.getValue()));
+        for(GridPos pos : positions) {
+            created.add(addNode(pos));
         }
         return created;
     }
@@ -108,7 +108,7 @@ public class Network {
      * @return The created PathwaySegment
      * @throws IllegalArgumentException if nodes are the same or one/both dont belong to the network
      */
-    public PathwaySegment connectNodes(Node a, Node b) throws IllegalArgumentException{
+    public PathwaySegment connectNodes(Node a, Node b) throws IllegalArgumentException {
         if (Objects.equals(a, b)) {throw new IllegalArgumentException("Cannot connect a node to itself");}
         if (nodes.get(a.getPos()) != a || nodes.get(b.getPos()) != b) {throw new IllegalArgumentException("Nodes do not belong to the network");}
         if (areConnected(a, b)) {throw new IllegalArgumentException("Nodes are already connected");}
