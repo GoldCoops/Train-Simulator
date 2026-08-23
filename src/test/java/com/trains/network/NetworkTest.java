@@ -18,7 +18,6 @@ public class NetworkTest {
         network.addNode(new GridPos(15, 20));
         assertEquals(2, network.getNodes().size());
         assertThrows(IllegalArgumentException.class, () -> network.addNode(new GridPos(10, 20))); // Node already at position
-        assertThrows(IllegalArgumentException.class, () -> network.addNode(new GridPos(10, 20)));
         assertEquals(2, network.getNodes().size());
     }
 
