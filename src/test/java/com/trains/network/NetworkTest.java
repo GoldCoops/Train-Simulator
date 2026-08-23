@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static com.trains.network.Network.NodeType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NetworkTest {
@@ -13,41 +12,36 @@ public class NetworkTest {
     @Test
     void addNodeTest() {
         network = new Network();
-        network.addNode(new GridPos(10, 20), NODE);
+        network.addNode(new GridPos(10, 20));
         assertEquals(1, network.getNodes().size());
         assertNotNull(network.getNodes().get(new GridPos(10, 20)));
-        network.addNode(new GridPos(15, 20), STATION);
+        network.addNode(new GridPos(15, 20));
         assertEquals(2, network.getNodes().size());
-        assertThrows(IllegalArgumentException.class, () -> network.addNode(new GridPos(10, 20), NODE)); // Node already at position
-        assertThrows(IllegalArgumentException.class, () -> network.addNode(new GridPos(10, 20), STATION));
+        assertThrows(IllegalArgumentException.class, () -> network.addNode(new GridPos(10, 20))); // Node already at position
+        assertThrows(IllegalArgumentException.class, () -> network.addNode(new GridPos(10, 20)));
         assertEquals(2, network.getNodes().size());
     }
 
     @Test
     void addNodesTest() {
         network = new Network();
-        HashMap<GridPos, Network.NodeType> nodes = new HashMap<>();
-        nodes.put(new GridPos(10, 20), NODE);
-        nodes.put(new GridPos(15, 20), STATION);
-        nodes.put(new GridPos(20, 20), STATION);
-        nodes.put(new GridPos(25, 20), NODE);
-        network.addNodes(nodes);
-        assertEquals(4, network.getNodes().size());
-        HashMap<GridPos, Network.NodeType> nodes1 = new HashMap<>();
-        nodes1.put(new GridPos(150, 220), STATION);
-        nodes1.put(new GridPos(10, 20), NODE);
-        nodes1.put(new GridPos(100, 200), NODE);
-        nodes1.put(new GridPos(15, 20), STATION);
-        assertThrows(IllegalArgumentException.class,() -> network.addNodes(nodes1)); // addNodes should bail and not add anything if any of the positions supplied are full.
-        assertEquals(4, network.getNodes().size());
+        network.addNodes(new GridPos(10,20),new GridPos(20,20), new GridPos(15,20));
+        assertEquals(3, network.getNodes().size());
+        assertTrue(network.isNodeAt(new GridPos(10,20)));
+        assertTrue(network.isNodeAt(new GridPos(20,20)));
+        assertTrue(network.isNodeAt(new GridPos(15,20)));
+        assertThrows(IllegalArgumentException.class ,() -> network.addNodes(new GridPos(300,20),new GridPos(20,20), new GridPos(15,20))); // throws if any of the nodes already exist in the network
+        assertEquals(3, network.getNodes().size());
+        assertThrows(IllegalArgumentException.class ,() -> network.addNodes(new GridPos(100,50),new GridPos(100,50), new GridPos(30,20))); // denies duplicates
+        assertEquals(3, network.getNodes().size());
     }
 
     @Test
     void isStationAtTest() {
         network = new Network();
-        network.addNode(new GridPos(10, 20), STATION);
-        network.addNode(new GridPos(25, 20), STATION);
-        network.addNode(new GridPos(15, 20), NODE);
+        network.addStation(new GridPos(10, 20), 20);
+        network.addStation(new GridPos(25, 20), 100);
+        network.addNode(new GridPos(15, 20));
         assertTrue(network.isStationAt(new GridPos(10, 20)));
         assertTrue(network.isStationAt(new GridPos(25, 20)));
         assertFalse(network.isStationAt(new GridPos(15, 20)));
@@ -64,12 +58,12 @@ public class NetworkTest {
     }
 
     @Test
-    void isNoteAtTest() {
+    void isNodeAtTest() {
         network = new Network();
-        network.addNode(new GridPos(10, 20), NODE);
-        network.addNode(new GridPos(25, 20), STATION);
-        network.addNode(new GridPos(15, 20), STATION);
-        network.addNode(new GridPos(95, 200), NODE);
+        network.addNode(new GridPos(10, 20));
+        network.addNode(new GridPos(25, 20));
+        network.addNode(new GridPos(15, 20));
+        network.addNode(new GridPos(95, 200));
         assertTrue(network.isNodeAt(new GridPos(10, 20)));
         assertTrue(network.isNodeAt(new GridPos(25, 20)));
         assertTrue(network.isNodeAt(new GridPos(95, 200)));
@@ -80,10 +74,10 @@ public class NetworkTest {
     @Test
     void connectNodesTest() {
         network = new Network();
-        Node a = network.addNode(new GridPos(10, 20), NODE);
-        Node b = network.addNode(new GridPos(25, 20), STATION);
-        Node c = network.addNode(new GridPos(15, 20), STATION);
-        Node d = network.addNode(new GridPos(95, 200), NODE);
+        Node a = network.addNode(new GridPos(10, 20));
+        Node b = network.addNode(new GridPos(25, 20));
+        Node c = network.addNode(new GridPos(15, 20));
+        Node d = network.addNode(new GridPos(95, 200));
         network.connectNodes(a, b);
         network.connectNodes(c, d);
         network.connectNodes(a, c);
