@@ -2,6 +2,7 @@ package com.trains.network;
 
 
 import com.trains.cargo.Cargo;
+import com.trains.cargo.CargoHold;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,14 +13,13 @@ import java.util.List;
  * Tracks everything needed on top of the regular node for a station, such as capacity and the current amount of passengers.
  */
 public class Station extends Node {
-    private final int capacity;
-    private int currentPassengers;
+    private final CargoHold cargoHold;
 
 
 
     Station(GridPos pos, int capacity) {
         super(pos);
-        this.capacity = capacity;
+        this.cargoHold = CargoHold.mixed(capacity);
     }
 
     /**
@@ -27,7 +27,7 @@ public class Station extends Node {
      * @return the total capacity
      */
     public int getCapacity() {
-        return capacity;
+        return cargoHold.getCapacity();
     }
 
 
@@ -35,18 +35,10 @@ public class Station extends Node {
      * gets the current amount of passengers at this station
      * @return the current amount of passengers
      */
-    public List<Cargo> getCargo() {
-        return Collections.unmodifiableList(cargo);
+    public CargoHold getCargo() {
+        return cargoHold;
     }
 
-
-    /**
-     * if the station is full
-     * @return true if the station is full, false otherwise
-     */
-    public boolean isFull() {
-        return cargo.size() >= capacity;
-    }
 
 
 
