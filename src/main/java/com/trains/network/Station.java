@@ -8,12 +8,9 @@ package com.trains.network;
  */
 public class Station extends Node{
 
-    private int capacity;
+    private final int capacity;
     private int currentPassengers;
 
-    Station(GridPos pos) {
-        super(pos);
-    }
 
     Station(GridPos pos, int capacity) {
         super(pos);
@@ -28,13 +25,6 @@ public class Station extends Node{
         return capacity;
     }
 
-    /**
-     * setter for capacity
-     * @param capacity the new capacity of the station
-     */
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
 
     /**
      * gets the current amount of passengers at this station
