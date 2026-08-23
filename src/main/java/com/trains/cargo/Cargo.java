@@ -16,6 +16,9 @@ public class Cargo {
         this.units = units;
     }
 
+    public static Cargo passenger(GridPos destination) {return new Cargo(destination, CargoType.PASSENGER, 1);}
+    public static Cargo freight(GridPos destination,int units) {return new Cargo(destination, CargoType.FREIGHT, units);}
+
 
     public int getUnits() {
         return units;
@@ -27,7 +30,5 @@ public class Cargo {
     public GridPos getDestination() {
         return destination;
     }
-
-
 
 }
