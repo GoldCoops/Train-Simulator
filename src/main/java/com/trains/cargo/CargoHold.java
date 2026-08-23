@@ -20,8 +20,18 @@ public final class CargoHold {
     }
 
     public static CargoHold forType(int capacity, CargoType accepted) {
+        Objects.requireNonNull(accepted);
         return new CargoHold(capacity, EnumSet.of(accepted));
     }
+
+    public static CargoHold mixed(int capacity, CargoType... accepted) {
+        Objects.requireNonNull(accepted);
+        if (accepted.length == 0) {
+            throw new IllegalArgumentException("At least one cargo type must be accepted");
+        }
+        return new CargoHold(capacity, EnumSet.copyOf(Arrays.asList(accepted)));
+    }
+
 
     public static CargoHold mixed(int capacity) {
         return new CargoHold(capacity, EnumSet.allOf(CargoType.class));
