@@ -19,11 +19,23 @@ public final class CargoHold {
         this.capacity = capacity;
     }
 
+    /**
+     * Creates a cargo hold for one specific type of cargo
+     * @param capacity The capacity of the hold
+     * @param accepted The accepted type of cargo
+     * @return The CargoHold Object
+     */
     public static CargoHold forType(int capacity, CargoType accepted) {
         Objects.requireNonNull(accepted);
         return new CargoHold(capacity, EnumSet.of(accepted));
     }
 
+    /**
+     * Creates a mixed cargo hold that accepts any of the supplied CargoType's
+     * @param capacity The capacity of the hold
+     * @param accepted The cargo types to accept
+     * @return The CargoHold Object
+     */
     public static CargoHold mixed(int capacity, CargoType... accepted) {
         Objects.requireNonNull(accepted);
         if (accepted.length == 0) {
@@ -32,19 +44,26 @@ public final class CargoHold {
         return new CargoHold(capacity, EnumSet.copyOf(Arrays.asList(accepted)));
     }
 
-
+    /**
+     * Creates a mixed cargo hold that accepts any of the cargo types in the enum
+     * @param capacity The capacity of the hold
+     * @return The CargoHold Object
+     */
     public static CargoHold mixed(int capacity) {
         return new CargoHold(capacity, EnumSet.allOf(CargoType.class));
     }
 
-
+    /**
+     * Gets the capacity of the hold
+     * @return the capacity of the hold
+     */
     public int getCapacity() {
         return capacity;
     }
 
 
 
-    public boolean canAccept(Cargo cargo) {
+    public boolean canAccept(Cargo cargo) { // this needs to consult the accepted types set, I will leave that up to the person who takes this package
         return usedUnits + cargo.getUnits() <= capacity;
     }
 
