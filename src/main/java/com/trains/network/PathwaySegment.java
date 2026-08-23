@@ -26,10 +26,12 @@ public class PathwaySegment {
     public boolean isConnectedTo(Node node) {
         return start == node  || end == node;
     }
+
     /**
      * Getter for the starter node
      * @return the start node
      */
+
     public Node getStart() {
         return start;
     }

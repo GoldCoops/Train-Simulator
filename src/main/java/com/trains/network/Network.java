@@ -11,12 +11,10 @@ public class Network {
     private final Map<GridPos, Node> nodes = new HashMap<>();
     private final Set<PathwaySegment> pathways = new HashSet<>();
 
-
-
-
     /**
      * Network Constructor, doesnt do anything yet
      */
+
     public Network() {}
 
     /**
@@ -26,6 +24,7 @@ public class Network {
      * @return The created node object
      * @throws IllegalArgumentException If a node already exists at the supplied position
      */
+
     public Node addNode(GridPos pos) throws IllegalArgumentException{
         return register(new Node(pos));
     }
@@ -94,6 +93,7 @@ public class Network {
 
     /**
      * Checks if a given GridPos has a node
+     * useage: network.isNodeAt(new GridPos(x,y));
      * @param pos the position to check
      * @return true if there is a node at that position, false otherwise
      */
@@ -122,16 +122,53 @@ public class Network {
     /**
      * Disconnects two nodes via the supplied segment
      * @param segment the segment to disconnect
-     * @throws IllegalArgumentException if segment is not found in pathways list
+     * @return true if the segment was found in the pathway set and successfully removed, false otherwise.
      */
     public void disconnectNodes(PathwaySegment segment) throws IllegalArgumentException{
-        if (pathways.contains(segment)) {
-            segment.getStart().removeConnection(segment);
-            segment.getEnd().removeConnection(segment);
-            pathways.remove(segment);
-        } else {
-            throw new IllegalArgumentException("Segment not found in pathways list");
+        if (!pathways.contains(segment)) {
+            throw new IllegalArgumentException("Segment not found in pathway set");
         }
+        unlink(segment);
+    }
+
+    /**
+     * Takes two nodes, and if there is a connection between them, disconnects them
+     * @param a the first node to disconnect
+     * @param b the second node to disconnect
+     * @return true if the two nodes were connected and have been successfully disconnected, false otherwise
+     * @throws IllegalArgumentException if either node supplied is not in the network.
+     */
+    public boolean disconnectNodes(Node a, Node b) throws IllegalArgumentException{
+        if (nodes.get(a.getPos()) != a || nodes.get(b.getPos()) != b) {
+            throw new IllegalArgumentException("Nodes do not belong to the network");
+        }
+        PathwaySegment segment = segmentBetween(a, b);
+        if (segment == null) {
+            return false;
+        }
+        unlink(segment);
+        return true;
+    }
+
+    private void unlink(PathwaySegment segment) {
+        segment.getStart().removeConnection(segment);
+        segment.getEnd().removeConnection(segment);
+        pathways.remove(segment);
+    }
+
+    /**
+     * Returns the segment between two nodes
+     * @param a the first node
+     * @param b the second node
+     * @return the segment if the nodes are connected, {@code null} if not.
+     */
+    public PathwaySegment segmentBetween(Node a, Node b) {
+        for (PathwaySegment segment : a.getConnections()) {
+            if (segment.opposite(a) == b) {
+                return segment;
+            }
+        }
+        return null;
     }
 
     /**
