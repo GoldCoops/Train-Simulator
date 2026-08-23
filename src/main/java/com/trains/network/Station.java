@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * The Station class
- * Tracks everything needed on top of the regular node for a station, such as capacity and the current amount of passengers.
+ * Keeps a cargo hold on top of regular nodes, which allows it to store cargo/passengers
  */
 public class Station extends Node {
     private final CargoHold cargoHold;
