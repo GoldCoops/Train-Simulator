@@ -52,7 +52,7 @@ public class PathwaySegment {
     }
 
     /**
-     * Gets the node at the other end of the supplied segment
+     * Gets the node at the other end of the calling segment from the supplied node
      * @param from the node you are coming from
      * @return the opposite node via this pathway
      * @throws IllegalArgumentException if this segment is not connected to the supplied node

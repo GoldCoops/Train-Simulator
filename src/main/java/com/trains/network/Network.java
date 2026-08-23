@@ -93,7 +93,7 @@ public class Network {
 
     /**
      * Checks if a given GridPos has a node
-     * useage: network.isNodeAt(new GridPos(x,y));
+     * usage: network.isNodeAt(new GridPos(x,y));
      * @param pos the position to check
      * @return true if there is a node at that position, false otherwise
      */
@@ -122,7 +122,6 @@ public class Network {
     /**
      * Disconnects two nodes via the supplied segment
      * @param segment the segment to disconnect
-     * @return true if the segment was found in the pathway set and successfully removed, false otherwise.
      */
     public void disconnectNodes(PathwaySegment segment) throws IllegalArgumentException{
         if (!pathways.contains(segment)) {
@@ -178,12 +177,7 @@ public class Network {
      * @return true if the nodes are connected, false otherwise
      */
     public boolean areConnected(Node a, Node b) {
-        for (PathwaySegment segment : a.getConnections()) {
-            if (segment.isConnectedTo(b)) {
-                return true;
-            }
-        }
-        return false;
+        return segmentBetween(a, b) != null;
     }
 
 
@@ -205,7 +199,7 @@ public class Network {
     /**
      * Removes a Node found at the given GridPos from the network and destroys all connections
      * @param pos The Position of the node to remove
-     * @throws IllegalArgumentException if node is not part of the network
+     * @throws IllegalArgumentException if the node is not part of the network
      */
     public void removeNode(GridPos pos) throws IllegalArgumentException {
         if (nodes.containsKey(pos)) {

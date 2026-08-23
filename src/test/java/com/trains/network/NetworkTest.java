@@ -117,8 +117,13 @@ public class NetworkTest {
         Node c = network.addNode(new GridPos(15, 20));
         assertEquals(3, network.getNodes().size());
         network.removeNode(network.getNodes().get(new GridPos(10, 20)));
+        assertFalse(network.getNodes().containsKey(new GridPos(10, 20)));
+        assertTrue(network.getNodes().containsKey(new GridPos(15, 20)));
+        assertTrue(network.getNodes().containsKey(new GridPos(25, 20)));
         assertEquals(2, network.getNodes().size());
         network.removeNode(network.getNodes().get(new GridPos(25, 20)));
+        assertFalse(network.getNodes().containsKey(new GridPos(25, 20)));
+        assertTrue(network.getNodes().containsKey(new GridPos(15, 20)));
         assertEquals(1, network.getNodes().size());
         assertTrue(network.getNodes().containsKey(new GridPos(15, 20)));
 
@@ -133,9 +138,40 @@ public class NetworkTest {
         Node c = network.addNode(new GridPos(15, 20));
         assertEquals(3, network.getNodes().size());
         network.removeNode(new GridPos(10, 20));
+        assertTrue(network.getNodes().containsKey(new GridPos(15, 20)));
+        assertTrue(network.getNodes().containsKey(new GridPos(25, 20)));
+        assertFalse(network.getNodes().containsKey(new GridPos(10, 20)));
         assertEquals(2, network.getNodes().size());
         network.removeNode(new GridPos(25, 20));
+        assertTrue(network.getNodes().containsKey(new GridPos(15, 20)));
+        assertFalse(network.getNodes().containsKey(new GridPos(25, 20)));
         assertEquals(1, network.getNodes().size());
+    }
+
+    @Test
+    void areConnectedTest() {
+        network = new Network();
+        Node a = network.addNode(new GridPos(10, 20));
+        Node b = network.addNode(new GridPos(25, 20));
+        Node c = network.addNode(new GridPos(15, 20));
+        network.connectNodes(a, b);
+        network.connectNodes(c, b);
+        assertTrue(network.areConnected(a, b));
+        assertTrue(network.areConnected(c, b));
+        assertFalse(network.areConnected(a, c));
+    }
+
+    @Test
+    void segmentBetweenTest() {
+        network = new Network();
+        Node a = network.addNode(new GridPos(10, 20));
+        Node b = network.addNode(new GridPos(25, 20));
+        Node c = network.addNode(new GridPos(15, 20));
+        PathwaySegment seg1 = network.connectNodes(a, b);
+        PathwaySegment seg2 = network.connectNodes(c, b);
+        assertEquals(seg1, network.segmentBetween(a, b));
+        assertEquals(seg2, network.segmentBetween(c, b));
+        assertNull(network.segmentBetween(a, c));
     }
 
 }

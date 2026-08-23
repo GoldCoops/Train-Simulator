@@ -71,18 +71,6 @@ public class Node {
         return false;
     }
 
-    @Override
-    public int hashCode() {
-        return this.pos.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof Node otherNode) {
-            return this.pos.equals(otherNode.getPos());
-        }
-        return false;
-    }
 
     @Override
     public String toString() {

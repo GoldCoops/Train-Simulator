@@ -8,7 +8,7 @@ package com.trains.network;
  */
 public record GridPos(int x, int y) {
     /**
-     * GridPos constructor, x and y must be greater than 0, and must be a multiple of 5
+     * GridPos constructor, x and y must be greater than or equal to 0, and must be a multiple of 5
      * @param x the x position
      * @param y the y position
      */
