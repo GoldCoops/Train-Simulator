@@ -40,11 +40,36 @@ public class Node {
 
 
     /**
-     * Gets the GridPos of the node
+     * Gets the GridPos record of the node
      * @return the GridPos record
      */
-    GridPos getPos() {return pos;}
+    public GridPos getPos() {return pos;}
 
+    /**
+     * get the x coordinate of a node
+     * @return the x coordinate
+     */
+    public int getX() {return pos.x();}
+
+    /**
+     * get the y coordinate of a node
+     * @return the y coordinate
+     */
+    public int getY() {return pos.y();}
+
+    /**
+     * Checks if the calling node is connected to the supplied node
+     * @param other The node to check for
+     * @return true if the calling node is connected to the supplied, false otherwise
+     */
+    public boolean isConnectedTo(Node other) {
+        for (PathwaySegment segment : connections) {
+            if (segment.opposite(this) == other) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public int hashCode() {
