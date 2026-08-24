@@ -1,4 +1,4 @@
-package com.trains.interfaces.ui;
+package com.trains.ui;
 
 public class SimulationController {
     // Decides when the simulation runs

@@ -1,4 +1,4 @@
-package com.trains.interfaces.gui;
+package com.trains.ui.gui;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

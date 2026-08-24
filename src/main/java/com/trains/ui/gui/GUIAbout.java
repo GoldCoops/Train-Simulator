@@ -1,4 +1,4 @@
-package com.trains.interfaces.gui;
+package com.trains.ui.gui;
 
 import javafx.scene.control.Label;
 import javafx.scene.text.TextAlignment;

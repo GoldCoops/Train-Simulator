@@ -1,4 +1,4 @@
-package com.trains.interfaces.gui;
+package com.trains.ui.gui;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
