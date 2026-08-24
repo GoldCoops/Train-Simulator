@@ -18,6 +18,6 @@ public class GUIMainMenu extends GUI {
     protected void drawMenuItems() {
         buttonContainer.getChildren().addAll(
                 createMenuButton("About", () -> openMenu(new GUIAbout(stage))),
-                createMenuButton("Quit", Platform::exit));
+                createMenuButton("Quit", () -> Platform.exit()));
     }
 }
