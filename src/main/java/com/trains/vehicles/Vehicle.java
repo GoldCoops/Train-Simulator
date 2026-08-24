@@ -38,6 +38,14 @@ public class Vehicle {
         return y;
     }
 
+    public float getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public Node getTargetNode() {
+        return targetNode;
+    }
+
     public PathwaySegment getCurrentSegment() {
         return curSegment;
     }
