@@ -12,9 +12,10 @@ public class Vehicle {
     private float speed;
     private final float maxSpeed;
     private final float acceleration;
+    private Node targetNode;
 
 
-    public Vehicle(int x, int y, float maxSpeed, float acceleration, PathwaySegment curSegment, CargoHold cargoHold) {
+    public Vehicle(int x, int y, float maxSpeed, float acceleration, PathwaySegment curSegment, CargoHold cargoHold, Node targetNode) {
         //position initialisation to be added...
         this.x = x;
         this.y = y;
@@ -23,6 +24,7 @@ public class Vehicle {
         this.isStopped = true;
         this.maxSpeed = maxSpeed;
         this.acceleration = acceleration + (1000 / this.cargoHold.getCapacity()); // slightly changes acceleration value based on train capacity (NOT FINAL FORMULA)
+        this.targetNode = targetNode;
     }
 
 
