@@ -1,4 +1,4 @@
-package com.trains.ui;
+package com.trains.interfaces.ui;
 
 public class SimulationView extends SimulationController {
 
