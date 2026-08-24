@@ -7,18 +7,22 @@ public class Vehicle {
     // GridPos is a record, and as such the values inside are immutable, trains need to move, so we need something different.
     private boolean isStopped;
     private PathwaySegment curSegment;
-    protected int capacity;
-    protected float speed;
+    private int capacity;
+    private float maxSpeed;
+    private float speed;
+    private final float acceleration;
 
 
-    public Vehicle(int x, int y, PathwaySegment curSegment) {
+    public Vehicle(int x, int y, PathwaySegment curSegment, float maxSpeed, float acceleration) {
         //position initialisation to be added...
         this.x = x;
         this.y = y;
         this.curSegment = curSegment;
         this.isStopped = true;
         this.capacity = 0;
+        this.maxSpeed = maxSpeed;
         this.speed = 0;
+        this.acceleration = acceleration;
     }
 
 
@@ -43,11 +47,43 @@ public class Vehicle {
 
     public void stop() {
         this.isStopped = true;
-        this.speed = 0;
     }
     
     public void go() {
         this.isStopped = false;
+    }
+
+    protected void update() { // this is just an example of what we should be doing, it needs to be edited.
+        if (isStopped) {
+            decelerateTrain();
+        } else {
+            accelerateTrain();
+        }
+    }
+
+
+    /**
+     * Accelerates the train until it reaches its max speed value
+     */
+    private void accelerateTrain() { // this belongs in vehicle, not train, rewrite. also, this does not do what you think it does, this will instantly accelerate to max speed.
+        /*
+        while(super.speed > currentSpeed) {
+            currentSpeed += acceleration;
+        }
+         */
+    }
+
+    /**
+     * Decelerates the train until it stops
+     */
+    private void decelerateTrain() { // again, this belongs in vehicle, not train, rewrite. also does the same thing, instant deceleration.
+        /*
+        while(currentSpeed > 0) {
+            currentSpeed -= acceleration;
+        }
+
+        currentSpeed = 0;
+        */
     }
 
     public void updateSpeed() {
