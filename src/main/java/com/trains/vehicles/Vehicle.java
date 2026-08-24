@@ -17,6 +17,9 @@ public class Vehicle {
     private final float acceleration;
     private Node targetNode;
 
+    private double distanceAlong; // We should switch from using x and y values for the coordinates to a position along a PathwaySegment, and then interpolate X and Y when we need them for rendering in getX and getY
+
+
 
     public Vehicle(int x, int y, float maxSpeed, float acceleration, PathwaySegment curSegment, CargoHold cargoHold, Node targetNode) {
         //position initialisation to be added...
