@@ -8,8 +8,8 @@ public class Vehicle {
     private boolean isStopped;
     private PathwaySegment curSegment;
     private int capacity;
-    private float maxSpeed;
     private float speed;
+    private final float maxSpeed;
     private final float acceleration;
 
 
@@ -20,9 +20,9 @@ public class Vehicle {
         this.curSegment = curSegment;
         this.isStopped = true;
         this.capacity = 0;
-        this.maxSpeed = maxSpeed;
         this.speed = 0;
-        this.acceleration = acceleration;
+        this.maxSpeed = maxSpeed;
+        this.acceleration = acceleration + (1000 / this.capacity); // slightly changes acceleration value based on train capacity (NOT FINAL FORMULA)
     }
 
 
@@ -43,7 +43,7 @@ public class Vehicle {
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
-    } 
+    }
 
     public void stop() {
         this.isStopped = true;
@@ -55,9 +55,9 @@ public class Vehicle {
 
     protected void update() { // this is just an example of what we should be doing, it needs to be edited.
         if (isStopped) {
-            decelerateTrain();
+            decelerate();
         } else {
-            accelerateTrain();
+            accelerate();
         }
     }
 
@@ -65,30 +65,28 @@ public class Vehicle {
     /**
      * Accelerates the train until it reaches its max speed value
      */
-    private void accelerateTrain() { // this belongs in vehicle, not train, rewrite. also, this does not do what you think it does, this will instantly accelerate to max speed.
-        /*
-        while(super.speed > currentSpeed) {
-            currentSpeed += acceleration;
+    private void accelerate() {
+        if(speed < maxSpeed) {
+            speed += acceleration;
+            isStopped = false;
         }
-         */
     }
 
     /**
      * Decelerates the train until it stops
      */
-    private void decelerateTrain() { // again, this belongs in vehicle, not train, rewrite. also does the same thing, instant deceleration.
-        /*
-        while(currentSpeed > 0) {
-            currentSpeed -= acceleration;
+    private void decelerate() {
+        if(speed > 0) {
+            speed -= acceleration;
         }
 
-        currentSpeed = 0;
-        */
+        if(speed < 0) {
+            speed = 0;
+            isStopped = true;
+        }
     }
 
     public void updateSpeed() {
         //to either increase or decrease speed when going to a station
     }
-
-
 }
