@@ -21,7 +21,8 @@ public class Cargo {
 
     public int getUnits() {
         return units;
-    }
+    }  
+
     public CargoType getType() {
         return type;
     }

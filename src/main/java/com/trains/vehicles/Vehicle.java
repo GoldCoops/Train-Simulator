@@ -1,5 +1,6 @@
 package com.trains.vehicles;
 
+import com.trains.cargo.CargoHold;
 import com.trains.network.*;
 
 public class Vehicle {
@@ -7,19 +8,19 @@ public class Vehicle {
     // GridPos is a record, and as such the values inside are immutable, trains need to move, so we need something different.
     private boolean isStopped;
     private PathwaySegment curSegment;
-    private int capacity;
+    private final CargoHold cargoHold; // CargoHold now manages capacity per hold
     private float maxSpeed;
     private float speed;
     private final float acceleration;
 
 
-    public Vehicle(int x, int y, PathwaySegment curSegment, float maxSpeed, float acceleration) {
+    public Vehicle(int x, int y, float maxSpeed, float acceleration, PathwaySegment curSegment, CargoHold cargoHold) {
         //position initialisation to be added...
         this.x = x;
         this.y = y;
         this.curSegment = curSegment;
+        this.cargoHold = cargoHold;
         this.isStopped = true;
-        this.capacity = 0;
         this.maxSpeed = maxSpeed;
         this.speed = 0;
         this.acceleration = acceleration;
@@ -36,14 +37,14 @@ public class Vehicle {
     public PathwaySegment getCurrentSegment() {
         return curSegment;
     }
+    public CargoHold getCargoHold() {
+        return cargoHold;
+    }
 
     public void setNextSegment(PathwaySegment nextSegment) {
         this.curSegment = nextSegment;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    } 
 
     public void stop() {
         this.isStopped = true;
@@ -52,6 +53,8 @@ public class Vehicle {
     public void go() {
         this.isStopped = false;
     }
+
+
 
     protected void update() { // this is just an example of what we should be doing, it needs to be edited.
         if (isStopped) {
