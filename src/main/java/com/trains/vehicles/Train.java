@@ -8,7 +8,7 @@ public class Train extends Vehicle {
 
     public Train(PathwaySegment curSegment, float maxSpeed) {
         super(0,0,curSegment);
-        this.acceleration = .2f;
+        this.acceleration = .2f + (super.capacity / 1000);
         super.speed = maxSpeed;
         this.currentSpeed = 0;
     }
@@ -30,6 +30,6 @@ public class Train extends Vehicle {
             currentSpeed -= acceleration;
         }
 
-        currentSpeed = 0;
+        currentSpeed = 0; // Sets speed to zero in case it goes to the negatives
     }
 }
