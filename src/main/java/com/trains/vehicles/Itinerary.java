@@ -26,10 +26,19 @@ public class Itinerary {
     }
 
     /**
+     * Gets the current segment the vehicle *should* be on
+     * @return The current segment
+     */
+    public PathwaySegment getCurrentSegment() {
+        return route.getSegments().get(leg);
+    }
+
+    /**
      * advances the leg of the route we are on by one, only call when moving to the next pathway
      * @return The next pathway
      */
     public PathwaySegment advance() {
-        return route.getSegments().get(leg++);
+        leg++; // leg++ returns the value of leg then increments leg, which would return the current pathwaySegment we are on, we need to increment then get the segment from the incremented value.
+        return route.getSegments().get(leg);
     }
 }
