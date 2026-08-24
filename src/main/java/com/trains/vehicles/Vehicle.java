@@ -9,7 +9,6 @@ public class Vehicle {
     private boolean isStopped;
     private PathwaySegment curSegment;
     private final CargoHold cargoHold; // CargoHold now manages capacity per hold
-    private float maxSpeed;
     private float speed;
     private final float maxSpeed;
     private final float acceleration;
@@ -23,7 +22,7 @@ public class Vehicle {
         this.cargoHold = cargoHold;
         this.isStopped = true;
         this.maxSpeed = maxSpeed;
-        this.acceleration = acceleration + (1000 / this.capacity); // slightly changes acceleration value based on train capacity (NOT FINAL FORMULA)
+        this.acceleration = acceleration + (1000 / this.cargoHold.getCapacity()); // slightly changes acceleration value based on train capacity (NOT FINAL FORMULA)
     }
 
 
