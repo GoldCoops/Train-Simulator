@@ -86,31 +86,43 @@ public class Vehicle {
         }
     }
 
-    protected void moveTowardsNextNode(Node current, Node next) {
-        if(current == next) {
+        /**
+     * Moves the train towards the target
+     * @param current
+     * @param target
+     * @throws IllegalArgumentException if the nodes supplied to the methods are the same node
+     */
+    protected void moveTowardsNextNode(Node current, Node target) { // to be reworked to use PathwaySegment instead of the current node
+        if(current == target) {
             throw new IllegalArgumentException("Train cannot move between the nodes at the same position");
         }
+
         int currentX = current.getX();
-        int nextX = next.getX();
+        int targetX = target.getX();
         int currentY = current.getY();
-        int nextY = next.getY();
+        int targetY = target.getY();
 
-        if(currentX < nextX) {
-            // move right
+        // Need to implement an error where the nodes supplied are not adjacent
+        // if()
+        // ...
+
+        if(currentX < targetX) {
+            currentX += speed;
         }
 
-        if(currentX > nextX) {
-            // move left
+        if(currentX > targetX) {
+            currentX -= speed;
         }
 
-        if(currentY < nextY) {
-            // move forward (up)
+        if(currentY < targetY) {
+            currentY += speed;
         }
 
-        if(currentY > nextY) {
-            // move back (down)
+        if(currentY > targetY) {
+            currentY -= speed;
         }
     }
+
 
     public void updateSpeed() { // Redundant due to existence of accelerate() and decelerate() methods. To be removed
         //to either increase or decrease speed when going to a station
