@@ -36,7 +36,7 @@ public class Simulation {
     }
     public void tick() {
         for ( Vehicle vehicle : vehicles) {
-            // Vehicle Tick Logic
+            vehicle.update();
         }
     }
 }
