@@ -9,8 +9,8 @@ public class Vehicle {
     private boolean isStopped;
     private PathwaySegment curSegment;
     private final CargoHold cargoHold; // CargoHold now manages capacity per hold
-    private float maxSpeed;
     private float speed;
+    private final float maxSpeed;
     private final float acceleration;
 
 
@@ -22,8 +22,7 @@ public class Vehicle {
         this.cargoHold = cargoHold;
         this.isStopped = true;
         this.maxSpeed = maxSpeed;
-        this.speed = 0;
-        this.acceleration = acceleration;
+        this.acceleration = acceleration + (1000 / this.cargoHold.getCapacity()); // slightly changes acceleration value based on train capacity (NOT FINAL FORMULA)
     }
 
 
@@ -58,9 +57,9 @@ public class Vehicle {
 
     protected void update() { // this is just an example of what we should be doing, it needs to be edited.
         if (isStopped) {
-            decelerateTrain();
+            decelerate();
         } else {
-            accelerateTrain();
+            accelerate();
         }
     }
 
@@ -68,30 +67,52 @@ public class Vehicle {
     /**
      * Accelerates the train until it reaches its max speed value
      */
-    private void accelerateTrain() { // this belongs in vehicle, not train, rewrite. also, this does not do what you think it does, this will instantly accelerate to max speed.
-        /*
-        while(super.speed > currentSpeed) {
-            currentSpeed += acceleration;
+    private void accelerate() {
+        if(speed < maxSpeed) {
+            speed += acceleration;
         }
-         */
     }
 
     /**
      * Decelerates the train until it stops
      */
-    private void decelerateTrain() { // again, this belongs in vehicle, not train, rewrite. also does the same thing, instant deceleration.
-        /*
-        while(currentSpeed > 0) {
-            currentSpeed -= acceleration;
+    private void decelerate() {
+        if(speed > 0) {
+            speed -= acceleration;
         }
 
-        currentSpeed = 0;
-        */
+        if(speed < 0) {
+            speed = 0;
+        }
     }
 
-    public void updateSpeed() {
+    protected void moveTowardsNextNode(Node current, Node next) {
+        if(current == next) {
+            throw new IllegalArgumentException("Train cannot move between the nodes at the same position");
+        }
+        int currentX = current.getX();
+        int nextX = next.getX();
+        int currentY = current.getY();
+        int nextY = next.getY();
+
+        if(currentX < nextX) {
+            // move right
+        }
+
+        if(currentX > nextX) {
+            // move left
+        }
+
+        if(currentY < nextY) {
+            // move forward (up)
+        }
+
+        if(currentY > nextY) {
+            // move back (down)
+        }
+    }
+
+    public void updateSpeed() { // Redundant due to existence of accelerate() and decelerate() methods. To be removed
         //to either increase or decrease speed when going to a station
     }
-
-
 }
