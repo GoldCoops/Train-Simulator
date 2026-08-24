@@ -17,7 +17,7 @@ public class App extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// All other init logic should be here
 		Simulation sim = new Simulation();
-		SimulationView view = new SimulationView(200);
+		// SimulationView view = new SimulationView(200);
 		SimulationController controller = new SimulationController();
 	}
 }
