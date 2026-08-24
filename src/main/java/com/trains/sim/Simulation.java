@@ -34,9 +34,9 @@ public class Simulation {
     public void removeVehicle(Vehicle vehicle) {
         vehicles.remove(vehicle);
     }
-    public void tick() {
+    public void tick(double dt) {
         for ( Vehicle vehicle : vehicles) {
-            vehicle.update();
+            vehicle.update(dt);
         }
     }
 }

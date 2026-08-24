@@ -57,7 +57,7 @@ public class Vehicle {
 
 
 
-    public void update() { // this is just an example of what we should be doing, it needs to be edited.
+    public void update(double dt) { // this is just an example of what we should be doing, it needs to be edited.
         if (isStopped) {
             decelerate();
         } else {
