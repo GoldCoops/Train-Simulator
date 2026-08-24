@@ -1,5 +1,8 @@
 package com.trains.vehicles;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.trains.cargo.CargoHold;
 import com.trains.network.*;
 
@@ -125,8 +128,35 @@ public class Vehicle {
         }
     }
 
+    /**
+     * Makes sure vehicle statisfes conditions required to depart from station
+     * @return a list of delays found for a train to depart
+     * Used as a helper function for canDepart()
+     * The different delays etc can be changed later on when we are more clear on when a vehicle can leave a station
+     */
 
-    public void updateSpeed() { // Redundant due to existence of accelerate() and decelerate() methods. To be removed
-        //to either increase or decrease speed when going to a station
+    public List<String> checkDepartureBlockers() {
+        List<String> blockers = new ArrayList<>();
+
+        if (!isStopped) {
+            blockers.add("Vehicle is moving");
+        }
+
+        if (curSegment == null) {
+            blockers.add("Vehicle has no pathway segment");
+        }
+
+        if (maxSpeed <= 0) {
+            blockers.add("Vehicle has no max speed assigned");
+        }
+        return blockers;
+    }
+
+    /* 
+      @return a boolean to check whether a vehicle should depart or not from a station
+    */
+
+    public boolean canDepart() {
+        return checkDepartureBlockers().isEmpty();
     }
 }
