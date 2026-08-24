@@ -68,7 +68,6 @@ public class Vehicle {
     private void accelerate() {
         if(speed < maxSpeed) {
             speed += acceleration;
-            isStopped = false;
         }
     }
 
@@ -82,11 +81,36 @@ public class Vehicle {
 
         if(speed < 0) {
             speed = 0;
-            isStopped = true;
         }
     }
 
-    public void updateSpeed() {
+    protected void moveTowardsNextNode(Node current, Node next) {
+        if(current == next) {
+            throw new IllegalArgumentException("Train cannot move between the nodes at the same position");
+        }
+        int currentX = current.getX();
+        int nextX = next.getX();
+        int currentY = current.getY();
+        int nextY = next.getY();
+
+        if(currentX < nextX) {
+            // move right
+        }
+
+        if(currentX > nextX) {
+            // move left
+        }
+
+        if(currentY < nextY) {
+            // move forward (up)
+        }
+
+        if(currentY > nextY) {
+            // move back (down)
+        }
+    }
+
+    public void updateSpeed() { // Redundant due to existence of accelerate() and decelerate() methods. To be removed
         //to either increase or decrease speed when going to a station
     }
 }
