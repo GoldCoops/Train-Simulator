@@ -24,7 +24,6 @@ public class Vehicle {
 
 
     public Vehicle(int x, int y, float maxSpeed, float acceleration, PathwaySegment curSegment, CargoHold cargoHold, Node targetNode) {
-        //position initialisation to be added...
         this.x = x;
         this.y = y;
         this.curSegment = curSegment;
