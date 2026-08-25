@@ -38,7 +38,7 @@ public class MathUtils {
     }
 
     /**
-     * Linear interpolation between two Vector2D values
+     * Linear interpolation between two Point2D values
      * @param origin the origin point
      * @param target the target point
      * @param t the fraction of the way between the two points
@@ -72,7 +72,7 @@ public class MathUtils {
 
 
     /**
-     * A 2D vector class
+     * A 2D point class
      */
     public static class Point2D {
         public double x;
