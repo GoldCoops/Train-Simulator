@@ -62,23 +62,56 @@ public final class CargoHold {
     }
 
     /**
-    checks whether the hold contains the cargo
+     * Gets the number of unsed units of the hold
+     * @return the number of used units
+     */
+    public int getUsedUnits() {
+        return usedUnits;
+    }
+
+    /** 
+     * gets the remaining unused capacity of the hold
+     * @return the number of unused capacity 
+     * 
+    */
+    public int getRemainingCapacity() {
+        return capacity - usedUnits;
+    }
+    
+    /**
+    checks whether the cargo is held in the contents
     @param cargo the cargo being checked
     @return true if the cargo exists in the contents
     */
-    boolean contains(Cargo cargo) {
+    boolean hasCargo(Cargo cargo) {
+        Objects.requireNonNull(cargo);
         return contents.contains(cargo);
     }
 
     /**
      Adds cargo to the contents list and updates the capacity
+     @param cargo being added to contents
+     @throws IllegalStateException if the hold can't accept the cargo
     */
     void addCargo(Cargo cargo) {
+        Objects.requireNonNull(cargo);
+         if (!canAccept(cargo)) {
+            throw new IllegalStateException("Cargo not accepted: " + cargo);
+        }
         contents.add(cargo);
         usedUnits += cargo.getUnits();
     }
 
-    public boolean canAccept(Cargo cargo) { // this needs to consult the accepted types set, I will leave that up to the person who takes this package
+    boolean removeCargo(Cargo cargo) {
+        Objects.requireNonNull(cargo);
+        boolean removed = contents.remove(cargo);
+        if (removed) {
+            usedUnits -= cargo.getUnits();
+        }
+        return removed;
+    }
+
+    public boolean canAccept(Cargo cargo) { 
         return accepted.contains(cargo.getType()) && usedUnits + cargo.getUnits() <= capacity;
     }
 
