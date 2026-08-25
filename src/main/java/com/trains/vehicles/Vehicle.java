@@ -6,6 +6,8 @@ import java.util.List;
 import com.trains.cargo.CargoHold;
 import com.trains.network.*;
 
+import static com.trains.utils.MathUtils.*;
+
 public class Vehicle {
     private double x, y;
     // GridPos is a record, and as such the values inside are immutable, trains need to move, so we need something different.
