@@ -1,9 +1,9 @@
 package com.trains;
 
 import com.trains.sim.Simulation;
-import com.trains.interfaces.gui.GUIMainMenu;
-import com.trains.interfaces.ui.SimulationController;
-import com.trains.interfaces.ui.SimulationView;
+import com.trains.ui.SimulationController;
+import com.trains.ui.SimulationView;
+import com.trains.ui.gui.GUIMainMenu;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

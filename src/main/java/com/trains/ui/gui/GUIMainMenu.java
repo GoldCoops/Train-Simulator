@@ -1,4 +1,4 @@
-package com.trains.interfaces.gui;
+package com.trains.ui.gui;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -18,6 +18,6 @@ public class GUIMainMenu extends GUI {
     protected void drawMenuItems() {
         buttonContainer.getChildren().addAll(
                 createMenuButton("About", () -> openMenu(new GUIAbout(stage))),
-                createMenuButton("Quit", Platform::exit));
+                createMenuButton("Quit", () -> Platform.exit()));
     }
 }

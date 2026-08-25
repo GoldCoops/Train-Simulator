@@ -20,4 +20,13 @@ public record GridPos(int x, int y) {
             throw new IllegalArgumentException("Grid position must be a multiple of 5");
         }
     }
+
+    /**
+     * Calculates the distance between this GridPos and the supplied GridPos
+     * @param other The other GridPos with which to calculate distance
+     * @return The distance between the two GridPos
+     */
+    public double distanceTo(GridPos other) {
+        return Math.sqrt(Math.pow(other.x - x, 2) + Math.pow(other.y - y, 2));
+    }
 }

@@ -42,8 +42,9 @@ public class Network {
     }
 
     private <T extends Node> T register(T node) throws IllegalArgumentException{
-        if (nodes.putIfAbsent(node.getPos(), node) != null) { // if there is an object already in the map containing node.getPos(), it will be returned by putIfAbsent()
-            throw new IllegalArgumentException("Node already exists at " + node.getPos());
+        Node existing = nodes.putIfAbsent(node.getPos(), node);
+        if (existing != null) { // if there is an object already in the map containing node.getPos(), it will be returned by putIfAbsent(), else it returns null if the item has been successfully put in the map
+            throw new IllegalArgumentException(existing.getClass().getSimpleName() + " already exists at " + node.getPos());
         }
         return node;
     }
