@@ -74,7 +74,7 @@ public final class CargoHold {
      Adds cargo to the contents list and updates the capacity
     */
     private void addCargo(Cargo cargo) {
-        contents.add(cargo)
+        contents.add(cargo);
         usedUnits += cargo.getUnits();
     }
 
