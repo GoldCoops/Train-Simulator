@@ -35,7 +35,7 @@ public class Station extends Node {
      * gets the current amount of passengers at this station
      * @return the current amount of passengers
      */
-    public CargoHold getCargo() {
+    public CargoHold getCargoHold() {
         return cargoHold;
     }
 
