@@ -1,6 +1,6 @@
 package com.trains.cargo;
 
-public class CargoTransfer {
+public final class CargoTransfer {
     // This class should manage the boarding removal of cargo from vehicles and stations to ensure no desync between their separate cargo tracking lists
     // This class should ensure that no cargo is lost, when moving cargo between two holds, we should first add the cargo to the new list
     // then confirm it exists in the new list, then remove it from the old list.
@@ -8,9 +8,46 @@ public class CargoTransfer {
 
     private final CargoHold source;
     private final CargoHold destination;
+    private final Cargo cargo;
 
-    public CargoTransfer(CargoHold source, CargoHold destination) {
-        this.source = source;
-        this.destination = destination;
+    /**
+    Tramsfers cargo from origin to destination CargoHold
+    @param origin the CargoHold from which the cargo is being transferred
+    @param destination CargoHold destination to where the cargo is being transferred
+    @param cargo being transferred 
+    @return returns true is cargo was successfully transferred
+    */
+    public static boolean transferCargo(CargoHold source, CargoHold destination, Cargo cargo) {
+
+    }
+
+    /**
+    Adds cargo to CargoHold destination
+    @param destination to where the cargo is being transferred to
+    @param cargo being transferred
+    */
+    private static void addCargo(CargoHold destination, Cargo cargo) {
+
+    }
+
+    /*
+    Checks whether destination contains the cargo that was transferred from source
+    Helper method for addCargo method
+    @param destination of the CargoHold being checked
+    @param cargo to be found
+    @return true if destination contains the cargo
+    */
+    private static boolean verifyCargo(CargoHold destination, Cargo cargo) {
+
+    }
+
+    /*
+    Removes cargo from the source
+    Should only be used once verifyCargo() has been called
+    @param origin CargoHold origin that the cargo is being removed from
+    @param cargo being removed
+    */
+    private static void removeCargo(CargoHold origin, Cargo cargo) {
+        
     }
 }
