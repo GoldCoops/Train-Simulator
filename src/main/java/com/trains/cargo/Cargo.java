@@ -12,20 +12,22 @@ public class Cargo {
 
 
     Cargo(GridPos destination, CargoType type, int units) {
+        if (units < 1) {
+            throw new IllegalArgumentException("Units must be greater than 0");
+        }
         this.destination = Objects.requireNonNull(destination);
         this.type = Objects.requireNonNull(type);
         this.units = units;
     }
 
 
-    public static Cargo passenger(GridPos destination) {
+    public static Cargo passenger(GridPos destination) throws IllegalArgumentException {
         return new Cargo(destination, CargoType.PASSENGER, 1);
     }
 
-    public static Cargo freight(GridPos destination, int units) {
+    public static Cargo freight(GridPos destination, int units) throws IllegalArgumentException{
         return new Cargo(destination, CargoType.FREIGHT, units);
     }
-
 
 
 
