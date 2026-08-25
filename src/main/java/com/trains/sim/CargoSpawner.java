@@ -1,8 +1,7 @@
 package com.trains.sim;
-import com.trains.cargo.Cargo;
-import com.trains.cargo.CargoType;
+import com.trains.cargo.*;
 import com.trains.network.*;
-import com.trains.utils.GridPos;
+
 
 import java.util.Objects;
 
@@ -19,38 +18,5 @@ public final class CargoSpawner {
     }
 
 
-    /**
-     * Passenger factory method
-     * Does not register cargo or place it in a CargoHold.
-     * @param destination the destination of the passenger
-     * @return the created cargo object
-     * @throws IllegalArgumentException If the destination does not have a station
-     */
-    public Cargo passenger(GridPos destination) throws IllegalArgumentException {
-        requireStation(destination);
-        return Cargo.passenger(destination);
-    }
-
-    /**
-     * Freight factory method -
-     * @param destination The destination of the freight
-     * @param units the amount of space the freight should take
-     * @return the created cargo object
-     * @throws IllegalArgumentException If the units supplied is less than 1 or the destination does not have a station
-     */
-    public Cargo freight(GridPos destination,int units) throws IllegalArgumentException {
-        requireStation(destination);
-        if (units < 1) {
-            throw new IllegalArgumentException("Units must be greater than 0");
-        }
-        return Cargo.freight(destination, units);
-    }
-
-    /** This handles whether or not a station is on the supplied destination; however, it does not guarantee that the station is reachable through connections, which needs a separate check */
-    private void requireStation(GridPos destination) {
-        if (!network.isStationAt(destination)) {
-            throw new IllegalArgumentException("No station at position " + destination);
-        }
-    }
 
 }

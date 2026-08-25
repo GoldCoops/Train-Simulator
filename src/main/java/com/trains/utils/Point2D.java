@@ -1,9 +1,10 @@
 package com.trains.utils;
 
-public class Point2D {
-    /**
-     * A 2D point class
-     */
+/**
+ * The Point2D Class
+ * A continuous interpolated position for rendering
+ */
+public final class Point2D {
     public double x;
     public double y;
 
