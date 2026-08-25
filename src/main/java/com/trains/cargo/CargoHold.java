@@ -66,14 +66,14 @@ public final class CargoHold {
     @param cargo the cargo being checked
     @return true if the cargo exists in the contents
     */
-    private boolean contains(Cargo cargo) {
+    boolean contains(Cargo cargo) {
         return contents.contains(cargo);
     }
 
     /**
      Adds cargo to the contents list and updates the capacity
     */
-    private void addCargo(Cargo cargo) {
+    void addCargo(Cargo cargo) {
         contents.add(cargo);
         usedUnits += cargo.getUnits();
     }
