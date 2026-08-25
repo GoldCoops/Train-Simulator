@@ -8,7 +8,7 @@ public final class CargoTransfer {
 
     /**
     Tramsfers cargo from origin to destination CargoHold
-    @param origin the CargoHold from which the cargo is being transferred
+    @param source the CargoHold from which the cargo is being transferred
     @param destination CargoHold destination to where the cargo is being transferred
     @param cargo being transferred 
     @return returns true is cargo was successfully transferred

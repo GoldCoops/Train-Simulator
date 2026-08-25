@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import com.trains.utils.GridPos;
 
-public class Cargo {
+public final class Cargo {
     private final GridPos destination;
     private final CargoType type;
     private final int units;
