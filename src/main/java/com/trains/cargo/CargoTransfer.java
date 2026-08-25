@@ -6,7 +6,7 @@ public class CargoTransfer {
     // then confirm it exists in the new list, then remove it from the old list.
     // If the cargo is not in the new list, then we do not remove it from the old list, bail and throw an exception.
 
-    private final CargiHold source;
+    private final CargoHold source;
     private final CargoHold destination;
 
     public CargoTransfer(CargoHold source, CargoHold destination) {
