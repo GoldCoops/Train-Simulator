@@ -78,11 +78,8 @@ public final class CargoHold {
         usedUnits += cargo.getUnits();
     }
 
-    
-
-
     public boolean canAccept(Cargo cargo) { // this needs to consult the accepted types set, I will leave that up to the person who takes this package
-        return usedUnits + cargo.getUnits() <= capacity;
+        return accepted.contains(cargo.getType()) && usedUnits + cargo.getUnits() <= capacity;
     }
 
     
