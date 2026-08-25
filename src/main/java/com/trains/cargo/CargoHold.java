@@ -62,7 +62,7 @@ public final class CargoHold {
     }
 
     /**
-     * Gets the number of unsed units of the hold
+     * Gets the number of used units of the hold
      * @return the number of used units
      */
     public int getUsedUnits() {
@@ -77,7 +77,7 @@ public final class CargoHold {
     public int getRemainingCapacity() {
         return capacity - usedUnits;
     }
-    
+
     /**
     checks whether the cargo is held in the contents
     @param cargo the cargo being checked
@@ -102,6 +102,11 @@ public final class CargoHold {
         usedUnits += cargo.getUnits();
     }
 
+    /**
+     * removes the cargo from the hold if it is there
+     * @param cargo being removed
+     * @return true if cargo was found and removed
+    */
     boolean removeCargo(Cargo cargo) {
         Objects.requireNonNull(cargo);
         boolean removed = contents.remove(cargo);
@@ -112,6 +117,7 @@ public final class CargoHold {
     }
 
     public boolean canAccept(Cargo cargo) { 
+        Objects.requireNonNull(cargo);
         return accepted.contains(cargo.getType()) && usedUnits + cargo.getUnits() <= capacity;
     }
 
