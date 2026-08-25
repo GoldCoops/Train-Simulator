@@ -6,10 +6,6 @@ public final class CargoTransfer {
     // then confirm it exists in the new list, then remove it from the old list.
     // If the cargo is not in the new list, then we do not remove it from the old list, bail and throw an exception.
 
-    private final CargoHold source;
-    private final CargoHold destination;
-    private final Cargo cargo;
-
     /**
     Tramsfers cargo from origin to destination CargoHold
     @param origin the CargoHold from which the cargo is being transferred
@@ -18,7 +14,7 @@ public final class CargoTransfer {
     @return returns true is cargo was successfully transferred
     */
     public static boolean transferCargo(CargoHold source, CargoHold destination, Cargo cargo) {
-
+        return false;
     }
 
     /**
@@ -38,7 +34,7 @@ public final class CargoTransfer {
     @return true if destination contains the cargo
     */
     private static boolean verifyCargo(CargoHold destination, Cargo cargo) {
-
+        return false;
     }
 
     /*
