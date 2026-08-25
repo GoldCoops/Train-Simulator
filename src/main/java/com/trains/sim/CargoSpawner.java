@@ -1,5 +1,8 @@
-package com.trains.cargo;
+package com.trains.sim;
+import com.trains.cargo.Cargo;
+import com.trains.cargo.CargoType;
 import com.trains.network.*;
+import com.trains.utils.GridPos;
 
 import java.util.Objects;
 
@@ -25,7 +28,7 @@ public final class CargoSpawner {
      */
     public Cargo passenger(GridPos destination) throws IllegalArgumentException {
         requireStation(destination);
-        return new Cargo(destination, CargoType.PASSENGER, 1);
+        return Cargo.passenger(destination);
     }
 
     /**
@@ -40,7 +43,7 @@ public final class CargoSpawner {
         if (units < 1) {
             throw new IllegalArgumentException("Units must be greater than 0");
         }
-        return new Cargo(destination, CargoType.FREIGHT, units);
+        return Cargo.freight(destination, units);
     }
 
     /** This handles whether or not a station is on the supplied destination; however, it does not guarantee that the station is reachable through connections, which needs a separate check */

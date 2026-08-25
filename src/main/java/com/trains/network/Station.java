@@ -1,12 +1,8 @@
 package com.trains.network;
 
 
-import com.trains.cargo.Cargo;
 import com.trains.cargo.CargoHold;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.trains.utils.GridPos;
 
 /**
  * The Station class

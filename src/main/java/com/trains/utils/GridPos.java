@@ -1,4 +1,4 @@
-package com.trains.network;
+package com.trains.utils;
 
 /**
  * Immutable record for storing Node positions, nodes should not be able to move after creation.

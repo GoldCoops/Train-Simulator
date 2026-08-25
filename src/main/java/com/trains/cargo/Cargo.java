@@ -2,7 +2,8 @@ package com.trains.cargo;
 
 
 import java.util.Objects;
-import com.trains.network.*;
+
+import com.trains.utils.GridPos;
 
 public class Cargo {
     private final GridPos destination;
@@ -14,6 +15,15 @@ public class Cargo {
         this.destination = Objects.requireNonNull(destination);
         this.type = Objects.requireNonNull(type);
         this.units = units;
+    }
+
+
+    public static Cargo passenger(GridPos destination) {
+        return new Cargo(destination, CargoType.PASSENGER, 1);
+    }
+
+    public static Cargo freight(GridPos destination, int units) {
+        return new Cargo(destination, CargoType.FREIGHT, units);
     }
 
 

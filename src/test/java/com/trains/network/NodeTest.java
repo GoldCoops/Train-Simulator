@@ -1,4 +1,5 @@
 package com.trains.network;
+import com.trains.utils.GridPos;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

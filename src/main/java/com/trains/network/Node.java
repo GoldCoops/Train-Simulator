@@ -1,5 +1,7 @@
 package com.trains.network;
 
+import com.trains.utils.GridPos;
+
 import java.util.*;
 
 /**
