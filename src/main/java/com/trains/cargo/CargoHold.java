@@ -61,10 +61,30 @@ public final class CargoHold {
         return capacity;
     }
 
+    /**
+    checks whether the hold contains the cargo
+    @param cargo the cargo being checked
+    @return true if the cargo exists in the contents
+    */
+    private boolean contains(Cargo cargo) {
+        return contents.contains(cargo);
+    }
+
+    /**
+     Adds cargo to the contents list and updates the capacity
+    */
+    private void addCargo(Cargo cargo) {
+        contents.add(cargo)
+        usedUnits += cargo.getUnits();
+    }
+
+    
 
 
     public boolean canAccept(Cargo cargo) { // this needs to consult the accepted types set, I will leave that up to the person who takes this package
         return usedUnits + cargo.getUnits() <= capacity;
     }
+
+    
 
 }
