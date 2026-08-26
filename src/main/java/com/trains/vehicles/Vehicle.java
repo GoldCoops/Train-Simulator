@@ -64,10 +64,14 @@ public class Vehicle {
     }
 
     public double getX(){
-        return lerp(itinerary.getCurrentSegment().getStart().getX(), itinerary.getCurrentSegment().getEnd().getX(), distanceAlong/itinerary.getCurrentSegment().getLength());
+        return lerp(itinerary.getEntryNode().getX(), itinerary.getEntryNode().getX(), distanceAlong/itinerary.getCurrentSegment().getLength());
     }
     public double getY(){
-        return lerp(itinerary.getCurrentSegment().getStart().getY(), itinerary.getCurrentSegment().getEnd().getY(), distanceAlong/itinerary.getCurrentSegment().getLength());
+        return lerp(itinerary.getEntryNode().getY(), itinerary.getTargetNode().getY(), distanceAlong/itinerary.getCurrentSegment().getLength());
+    }
+
+    public Point2D getPos(){
+        return lerp(itinerary.getEntryNode().getPos(),itinerary.getTargetNode().getPos(), distanceAlong/itinerary.getCurrentSegment().getLength());
     }
 
 
