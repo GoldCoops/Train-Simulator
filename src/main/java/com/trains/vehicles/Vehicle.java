@@ -64,14 +64,27 @@ public class Vehicle {
     }
 
     public double getX(){
-        return lerp(itinerary.getEntryNode().getX(), itinerary.getEntryNode().getX(), distanceAlong/itinerary.getCurrentSegment().getLength());
+        if (itinerary.isComplete()) {
+            return itinerary.getEntryNode().getX();
+        }
+        double t = distanceAlong/itinerary.getCurrentSegment().getLength();
+        return lerp(itinerary.getEntryNode().getX(), itinerary.getEntryNode().getX(), t);
     }
+
     public double getY(){
-        return lerp(itinerary.getEntryNode().getY(), itinerary.getTargetNode().getY(), distanceAlong/itinerary.getCurrentSegment().getLength());
+        if (itinerary.isComplete()) {
+            return itinerary.getEntryNode().getY();
+        }
+        double t = distanceAlong/itinerary.getCurrentSegment().getLength();
+        return lerp(itinerary.getEntryNode().getY(), itinerary.getTargetNode().getY(), t);
     }
 
     public Point2D getPos(){
-        return lerp(itinerary.getEntryNode().getPos(),itinerary.getTargetNode().getPos(), distanceAlong/itinerary.getCurrentSegment().getLength());
+        if (itinerary.isComplete()) {
+            return gridPosToPoint2D(itinerary.getTargetNode().getPos());
+        }
+        double t = distanceAlong/itinerary.getCurrentSegment().getLength();
+        return lerp(itinerary.getEntryNode().getPos(),itinerary.getTargetNode().getPos(), t);
     }
 
 
