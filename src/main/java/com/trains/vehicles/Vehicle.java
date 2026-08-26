@@ -11,8 +11,6 @@ import com.trains.utils.Point2D;
 import static com.trains.utils.MathUtils.*;
 
 public class Vehicle {
-    private Point2D position; // for rendering only, not the objective source of truth about where the vehicle is
-    // GridPos is a record, and as such the values inside are immutable, trains need to move, so we need something different.
     private boolean isStopped;
     private final CargoHold cargoHold; // CargoHold now manages capacity per hold
     private float speed;
@@ -26,7 +24,6 @@ public class Vehicle {
 
     public Vehicle(Itinerary itinerary, float maxSpeed, float acceleration, CargoHold cargoHold) {
         this.itinerary = Objects.requireNonNull(itinerary);
-        this.position = new Point2D(itinerary.getEntryNode().getX(), itinerary.getEntryNode().getY()); // vehicles should always spawn on a node.
         this.cargoHold = Objects.requireNonNull(cargoHold);
         this.isStopped = true;
         this.maxSpeed = maxSpeed;
