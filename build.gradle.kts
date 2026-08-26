@@ -24,6 +24,8 @@ java {
 }
 
 
+
+
 dependencies {
     testImplementation(platform("org.junit:junit-bom:6.0.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -32,6 +34,16 @@ dependencies {
 
 application {
     mainClass.set("com.trains.App")
+    mainModule.set("com.trains")
+}
+
+
+
+jlink {
+    options.set(listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"))
+    launcher {
+        name = "COMP2000-Semester-1-Project"
+    }
 }
 
 
