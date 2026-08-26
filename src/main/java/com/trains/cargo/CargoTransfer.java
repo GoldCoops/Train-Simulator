@@ -1,5 +1,7 @@
 package com.trains.cargo;
 
+import java.util.Objects;
+
 public final class CargoTransfer {
     // This class should manage the boarding removal of cargo from vehicles and stations to ensure no desync between their separate cargo tracking lists
     // This class should ensure that no cargo is lost, when moving cargo between two holds, we should first add the cargo to the new list
@@ -56,5 +58,25 @@ public final class CargoTransfer {
         if (!cargoIsRemoved) {
             throw new IllegalStateException("Cargo was not found");
         }
+    }
+
+    /**
+     * Adds newly created cargo directly to a destination CargoHold
+     * This is used when cargo is first spawned 
+     * @param destination, the cargoHold where cargo will be added
+     * @param cargo, the newly created cargo to add
+     * @return true if the cargo was successfully added
+     */
+    public static boolean insertCargo(CargoHold destination, Cargo cargo){
+        Objects.requireNonNull(destination);
+        Objects.requireNonNull(cargo);
+
+        if(!destination.canAccept(cargo)){
+            return false;
+        }
+
+        destination.addCargo(cargo);
+
+        return destination.hasCargo(cargo);
     }
 }
