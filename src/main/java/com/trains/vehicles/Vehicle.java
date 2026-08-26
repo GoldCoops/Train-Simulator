@@ -163,43 +163,6 @@ public class Vehicle {
         }
     }
 
-        /**
-     * Moves the train towards the target
-     * @param current
-     * @param target
-     * @throws IllegalArgumentException if the nodes supplied to the methods are the same node
-     */
-    protected void moveTowardsNextNode(Node current, Node target) { // to be reworked to use PathwaySegment instead of the current node
-        if(current == target) {
-            throw new IllegalArgumentException("Train cannot move between the nodes at the same position");
-        }
-
-        int currentX = current.getX();
-        int targetX = target.getX();
-        int currentY = current.getY();
-        int targetY = target.getY();
-
-        // Need to implement an error where the nodes supplied are not adjacent
-        // if()
-        // ...
-
-        if(currentX < targetX) {
-            currentX += speed;
-        }
-
-        if(currentX > targetX) {
-            currentX -= speed;
-        }
-
-        if(currentY < targetY) {
-            currentY += speed;
-        }
-
-        if(currentY > targetY) {
-            currentY -= speed;
-        }
-    }
-
     /**
      * Makes sure vehicle statisfes conditions required to depart from station
      * @return a list of delays found for a train to depart
