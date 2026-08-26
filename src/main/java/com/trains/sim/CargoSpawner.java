@@ -17,6 +17,17 @@ public final class CargoSpawner {
         this.network = Objects.requireNonNull(network);
     }
 
+    public boolean spawnPassenger(Station origin, Station destination){
+        Objects.requireNonNull(origin);
+        Objects.requireNonNull(destination);
 
+        if(origin == destination){
+            throw new IllegalArgumentException("Origin and destination must be different");
+        }
+
+        Cargo passenger = Cargo.passenger(destination.getPos());
+
+        return CargoTransfer.insertCargo(origin.getCargoHold(), passenger);
+    }
 
 }
