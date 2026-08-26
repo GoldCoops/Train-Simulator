@@ -62,27 +62,10 @@ public final class MathUtils {
      * @return the interpolated value
      */
     public static Point2D lerp(GridPos origin, GridPos target, double t) {
-        return lerp(gridPosToPoint2D(origin), gridPosToPoint2D(target), t);
+        return lerp(origin.toPoint2D(), target.toPoint2D(), t);
     }
 
-    /**
-     * Converts a given GridPos to a Point2D
-     * @param pos The GridPos to convert to Point2D
-     * @return The created Point2D Object
-     */
-    public static Point2D gridPosToPoint2D(GridPos pos){
-        return new Point2D(pos.x(), pos.y());
-    }
 
-    /**
-     * Converts a given Point2D to a GridPos
-     * This method will round both x and y fields to the nearest int; it will also cast the resulting long to int, potentially losing data.
-     * @param pos The Point2D to convert
-     * @return The created GridPos Object
-     */
-    public static GridPos point2DToGridPos(Point2D pos){
-        return new GridPos((int) round(pos.x),(int) round(pos.y));
-    }
 
 
     /**

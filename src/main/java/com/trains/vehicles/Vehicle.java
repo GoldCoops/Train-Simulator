@@ -81,7 +81,7 @@ public class Vehicle {
 
     public Point2D getPos(){
         if (itinerary.isComplete()) {
-            return gridPosToPoint2D(itinerary.getTargetNode().getPos());
+            return itinerary.getTargetNode().getPos().toPoint2D();
         }
         double t = distanceAlong/itinerary.getCurrentSegment().getLength();
         return lerp(itinerary.getEntryNode().getPos(),itinerary.getTargetNode().getPos(), t);

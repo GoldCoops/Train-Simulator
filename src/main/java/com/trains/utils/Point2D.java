@@ -17,4 +17,12 @@ public final class Point2D {
         this.x = x;
         this.y = y;
     }
+
+    /**
+     * Converts this Point2D into an immutable GridPos record, automatically casts to int
+     * @return The created GridPos record
+     */
+    public GridPos toGridPos() {
+        return new GridPos((int) x, (int) y);
+    }
 }
