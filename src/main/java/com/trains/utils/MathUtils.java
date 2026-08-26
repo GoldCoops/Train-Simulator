@@ -2,47 +2,50 @@ package com.trains.utils;
 
 import java.math.BigDecimal;
 
-public class MathUtils {
+public final class MathUtils {
 
     /**
-     * Linear interpolation between two float values
-     * @param a The first value
-     * @param b The second value
-     * @param t The fraction of the way between the two values
-     * @return The interpolated value
+     * Calculates a value between two numbers based on a progress percentage: {@code t}
+     * @param a the starting number, which will be returned when {@code t <= 0}
+     * @param b the target number, which will be returned when {@code t => 1}
+     * @param t the fraction of the way between the two values
+     * @return the interpolated value
      */
     public static float lerp(float a, float b, float t) {
+        t = Math.clamp(t, 0.0f, 1.0f);
         return a + (b - a) * t;
     }
 
     /**
-     * Linear interpolation between two double values
-     * @param a the first value
-     * @param b the second value
+     * Calculates a value between two numbers based on a progress percentage: {@code t}
+     * @param a starting number, which will be returned when {@code t <= 0}
+     * @param b target number, which will be returned when {@code t => 1}
      * @param t the fraction of the way between the two values
      * @return the interpolated value
      */
     public static double lerp(double a, double b, double t) {
+        t = Math.clamp(t, 0.0, 1.0);
         return a + (b - a) * t;
     }
 
     /**
-     * Linear interpolation between two int values
-     * @param a First value
-     * @param b second value
+     * Calculates a value between two numbers based on a progress percentage: {@code t}
+     * @param a the starting number, which will be returned when {@code t <= 0}
+     * @param b the target number, which will be returned when {@code t => 1}
      * @param t the fraction of the way between the two values
      * @return the interpolated value
      */
     public static int lerp(int a, int b, double t) {
+        t = Math.clamp(t, 0.0, 1.0);
         return (int) (a + (b - a) * t);
     }
 
     /**
-     * Linear interpolation between two Point2D values
-     * @param origin the origin point
-     * @param target the target point
-     * @param t the fraction of the way between the two points
-     * @return the interpolated point
+     * Calculates a value between two Point2D coordinates based on a progress percentage: {@code t}
+     * @param origin the starting number, which will be returned when {@code t <= 0}
+     * @param target the target number, which will be returned when {@code t => 1}
+     * @param t the fraction of the way between the two values
+     * @return the interpolated value
      */
     public static Point2D lerp(Point2D origin, Point2D target, double t) {
         t = Math.clamp(t, 0.0, 1.0);

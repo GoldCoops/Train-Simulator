@@ -18,12 +18,14 @@ public class Vehicle {
     private final float maxSpeed;
     private final float acceleration;
     private Node targetNode;
+    private final Itinerary itinerary;
 
     private double distanceAlong; // We should switch from using x and y values for the coordinates to a position along a PathwaySegment, and then interpolate X and Y when we need them for rendering in getX and getY
 
 
 
-    public Vehicle(int x, int y, float maxSpeed, float acceleration, PathwaySegment curSegment, CargoHold cargoHold, Node targetNode) {
+    public Vehicle(Itinerary itinerary, int x, int y, float maxSpeed, float acceleration, PathwaySegment curSegment, CargoHold cargoHold, Node targetNode) {
+        this.itinerary = itinerary;
         this.x = x;
         this.y = y;
         this.curSegment = curSegment;

@@ -6,7 +6,7 @@ import com.trains.vehicles.Vehicle;
 import java.util.*;
 
 
-public class Simulation {
+public final class Simulation {
     // Should hold the network and a list of vehicles, with a tick method that advances time.
     private final Network network;
     private final List<Vehicle> vehicles;

@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * Stores where we are along the route
  */
-public class Itinerary {
+public final class Itinerary {
     private final Route route;
     private int leg;
     private Node entryNode;

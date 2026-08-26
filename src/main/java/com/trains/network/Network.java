@@ -9,14 +9,13 @@ import java.util.*;
 /**
  * Handles/manages the overall network
  */
-public class Network {
+public final class Network {
     private final Map<GridPos, Node> nodes = new HashMap<>();
     private final Set<PathwaySegment> pathways = new HashSet<>();
 
     /**
      * Network Constructor, doesnt do anything yet
      */
-
     public Network() {}
 
     /**
@@ -26,7 +25,6 @@ public class Network {
      * @return The created node object
      * @throws IllegalArgumentException If a node already exists at the supplied position
      */
-
     public Node addNode(GridPos pos) throws IllegalArgumentException{
         return register(new Node(pos));
     }
@@ -43,6 +41,7 @@ public class Network {
         return register(new Station(pos, capacity));
     }
 
+    /** Registers a node in nodes if one does not already exist, if it does, it throws */
     private <T extends Node> T register(T node) throws IllegalArgumentException{
         Node existing = nodes.putIfAbsent(node.getPos(), node);
         if (existing != null) { // if there is an object already in the map containing node.getPos(), it will be returned by putIfAbsent(), else it returns null if the item has been successfully put in the map
