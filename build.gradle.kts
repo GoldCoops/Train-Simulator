@@ -4,6 +4,7 @@ plugins {
     id("java")
     application
     id("org.openjfx.javafxplugin") version "0.1.0"
+    id("org.beryx.jlink") version "4.1.1"
 }
 
 group = "com.trains"
@@ -15,7 +16,7 @@ repositories {
 
 javafx {
     version = "21" //javafx version should match the JavaVersion set below
-    modules("javafx.controls", "javafx.fxml", "javafx.graphics")
+    modules("javafx.controls", "javafx.graphics")
 }
 
 java {
