@@ -98,9 +98,9 @@ public class Vehicle {
         float initialSpeed = speed;
 
         if (isStopped) {
-            decelerate();
+            decelerate(dt);
         } else {
-            accelerate();
+            accelerate(dt);
         }
 
         double distanceTravelled = ((initialSpeed + speed) / 2.0) * dt;
@@ -111,19 +111,15 @@ public class Vehicle {
     /**
      * Accelerates the train until it reaches its max speed value
      */
-    private void accelerate() {
-        if(speed < maxSpeed) {
-            Math.clamp(speed += acceleration, 0f, maxSpeed);
-        }
+    private void accelerate(double dt) {
+        speed = Math.clamp(speed + acceleration * (float) dt, 0f, maxSpeed);
     }
 
     /**
      * Decelerates the train until it stops
      */
-    private void decelerate() {
-        if(speed > 0) {
-            Math.clamp(speed -= acceleration, 0f, maxSpeed);
-        }
+    private void decelerate(double dt) {
+        speed = Math.clamp(speed - acceleration * (float) dt, 0f, maxSpeed);
     }
 
     /**
@@ -131,6 +127,10 @@ public class Vehicle {
      * @param distanceToMove
      */
     private void moveAlongRoute(double distanceToMove) {
+        if(distanceToMove < 0) {
+            throw new IllegalArgumentException("The value of units to move cannot be negative!");
+        }
+
         while(distanceToMove > 0 && !itinerary.isComplete()) {
             PathwaySegment segment = itinerary.getCurrentSegment();
             double remainingOnSegment = segment.getLength() - distanceAlong;
