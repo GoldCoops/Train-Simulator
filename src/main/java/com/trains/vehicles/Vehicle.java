@@ -17,7 +17,6 @@ public class Vehicle {
     private final float maxSpeed;
     private final float acceleration;
     private final Itinerary itinerary;
-
     private double distanceAlong; // We should switch from using x and y values for the coordinates to a position along a PathwaySegment, and then interpolate X and Y when we need them for rendering in getX and getY
 
 
@@ -63,6 +62,14 @@ public class Vehicle {
     public void go() {
         this.isStopped = false;
     }
+
+    public double getX(){
+        return lerp(itinerary.getCurrentSegment().getStart().getX(), itinerary.getCurrentSegment().getEnd().getX(), distanceAlong/itinerary.getCurrentSegment().getLength());
+    }
+    public double getY(){
+        return lerp(itinerary.getCurrentSegment().getStart().getY(), itinerary.getCurrentSegment().getEnd().getY(), distanceAlong/itinerary.getCurrentSegment().getLength());
+    }
+
 
 
 
