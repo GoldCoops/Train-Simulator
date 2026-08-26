@@ -34,6 +34,19 @@ public class Vehicle {
     }
 
 
+    public PathwaySegment getCurrentSegment() {
+        return itinerary.getCurrentSegment();
+    }
+
+    public Node getTargetNode() {
+        return itinerary.getTargetNode();
+    }
+
+    public Node getEntryNode() {
+        return itinerary.getEntryNode();
+    }
+
+
 
     public float getMaxSpeed() {
         return maxSpeed;
