@@ -5,11 +5,12 @@ import java.util.List;
 
 import com.trains.cargo.CargoHold;
 import com.trains.network.*;
+import com.trains.utils.Point2D;
 
 import static com.trains.utils.MathUtils.*;
 
 public class Vehicle {
-    private double x, y;
+    private Point2D position; // for rendering only, not the objective source of truth about where the vehicle is
     // GridPos is a record, and as such the values inside are immutable, trains need to move, so we need something different.
     private boolean isStopped;
     private PathwaySegment curSegment;
@@ -24,10 +25,9 @@ public class Vehicle {
 
 
 
-    public Vehicle(Itinerary itinerary, int x, int y, float maxSpeed, float acceleration, PathwaySegment curSegment, CargoHold cargoHold, Node targetNode) {
+    public Vehicle(Itinerary itinerary, float maxSpeed, float acceleration, PathwaySegment curSegment, CargoHold cargoHold, Node targetNode) {
         this.itinerary = itinerary;
-        this.x = x;
-        this.y = y;
+        this.position = new Point2D(itinerary.getEntryNode().getX(), itinerary.getEntryNode().getY()); // vehicles should always spawn on a node.
         this.curSegment = curSegment;
         this.cargoHold = cargoHold;
         this.isStopped = true;
@@ -36,13 +36,7 @@ public class Vehicle {
         this.targetNode = targetNode;
     }
 
-
-    public double getX() {
-        return x;
-    }
-    public double getY() {
-        return y;
-    }
+    
 
     public float getMaxSpeed() {
         return maxSpeed;
