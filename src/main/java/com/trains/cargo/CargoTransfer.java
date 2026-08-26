@@ -14,7 +14,14 @@ public final class CargoTransfer {
     @return returns true is cargo was successfully transferred
     */
     public static boolean transferCargo(CargoHold source, CargoHold destination, Cargo cargo) {
-        return false;
+        addCargo(destination, cargo);
+
+        if (!verifyCargo(destination, cargo)) {
+            throw new IllegalStateException("Cargo was not added to destination");
+        }
+
+        removeCargo(source, cargo);
+        return true;
     }
 
     /**
@@ -23,7 +30,7 @@ public final class CargoTransfer {
     @param cargo being transferred
     */
     private static void addCargo(CargoHold destination, Cargo cargo) {
-
+        destination.addCargo(cargo);
     }
 
     /*
@@ -34,7 +41,7 @@ public final class CargoTransfer {
     @return true if destination contains the cargo
     */
     private static boolean verifyCargo(CargoHold destination, Cargo cargo) {
-        return false;
+        return destination.hasCargo(cargo);
     }
 
     /*
@@ -44,6 +51,10 @@ public final class CargoTransfer {
     @param cargo being removed
     */
     private static void removeCargo(CargoHold origin, Cargo cargo) {
-        
+        boolean cargoIsRemoved = origin.removeCargo(cargo);
+
+        if (!cargoIsRemoved) {
+            throw new IllegalStateException("Cargo was not found");
+        }
     }
 }
