@@ -57,7 +57,7 @@ public final class Itinerary {
 
     /**
      * advances the leg of the route we are on by one, only call when moving to the next pathway
-     * @return The next pathway
+     * @return true if the route is now complete, false otherwise
      * @throws IllegalStateException if the route is complete
      */
     public boolean advance() throws IllegalStateException{
