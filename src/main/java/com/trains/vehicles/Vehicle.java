@@ -13,49 +13,36 @@ public class Vehicle {
     private Point2D position; // for rendering only, not the objective source of truth about where the vehicle is
     // GridPos is a record, and as such the values inside are immutable, trains need to move, so we need something different.
     private boolean isStopped;
-    private PathwaySegment curSegment;
     private final CargoHold cargoHold; // CargoHold now manages capacity per hold
     private float speed;
     private final float maxSpeed;
     private final float acceleration;
-    private Node targetNode;
     private final Itinerary itinerary;
 
     private double distanceAlong; // We should switch from using x and y values for the coordinates to a position along a PathwaySegment, and then interpolate X and Y when we need them for rendering in getX and getY
 
 
 
-    public Vehicle(Itinerary itinerary, float maxSpeed, float acceleration, PathwaySegment curSegment, CargoHold cargoHold, Node targetNode) {
+    public Vehicle(Itinerary itinerary, float maxSpeed, float acceleration, CargoHold cargoHold) {
         this.itinerary = itinerary;
         this.position = new Point2D(itinerary.getEntryNode().getX(), itinerary.getEntryNode().getY()); // vehicles should always spawn on a node.
-        this.curSegment = curSegment;
         this.cargoHold = cargoHold;
         this.isStopped = true;
         this.maxSpeed = maxSpeed;
         this.acceleration = acceleration + (1000 / this.cargoHold.getCapacity()); // slightly changes acceleration value based on train capacity (NOT FINAL FORMULA)
-        this.targetNode = targetNode;
     }
 
-    
+
 
     public float getMaxSpeed() {
         return maxSpeed;
     }
 
-    public Node getTargetNode() {
-        return targetNode;
-    }
 
-    public PathwaySegment getCurrentSegment() {
-        return curSegment;
-    }
     public CargoHold getCargoHold() {
         return cargoHold;
     }
 
-    public void setNextSegment(PathwaySegment nextSegment) {
-        this.curSegment = nextSegment;
-    }
 
 
     public void stop() {
@@ -150,7 +137,7 @@ public class Vehicle {
             blockers.add("Vehicle is moving");
         }
 
-        if (curSegment == null) {
+        if (itinerary.getCurrentSegment() == null) {
             blockers.add("Vehicle has no pathway segment");
         }
 
