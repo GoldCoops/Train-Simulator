@@ -14,9 +14,15 @@ repositories {
 }
 
 javafx {
-    version = "25"
+    version = "21" //javafx version should match the JavaVersion set below
     modules("javafx.controls", "javafx.fxml", "javafx.graphics")
 }
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21 //Should match javafx version
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
 
 dependencies {
     testImplementation(platform("org.junit:junit-bom:6.0.0"))
@@ -27,6 +33,7 @@ dependencies {
 application {
     mainClass.set("com.trains.App")
 }
+
 
 tasks.test {
     useJUnitPlatform()
