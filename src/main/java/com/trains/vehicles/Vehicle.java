@@ -91,11 +91,20 @@ public class Vehicle {
 
 
     public void update(double dt) { // this is just an example of what we should be doing, it needs to be edited.
+        if(dt < 0) {
+            throw new IllegalArgumentException("Function argument cannot be negative!");
+        }
+
+        float initialSpeed = speed;
+
         if (isStopped) {
             decelerate();
         } else {
             accelerate();
         }
+
+        double distanceTravelled = ((initialSpeed + speed) / 2.0) * dt;
+        moveAlongRoute(distanceTravelled);
     }
 
 
@@ -104,7 +113,7 @@ public class Vehicle {
      */
     private void accelerate() {
         if(speed < maxSpeed) {
-            Math.clamp(speed += acceleration, 0, maxSpeed);
+            Math.clamp(speed += acceleration, 0f, maxSpeed);
         }
     }
 
@@ -113,7 +122,36 @@ public class Vehicle {
      */
     private void decelerate() {
         if(speed > 0) {
-            Math.clamp(speed -= acceleration, 0, maxSpeed);
+            Math.clamp(speed -= acceleration, 0f, maxSpeed);
+        }
+    }
+
+    /**
+     * Moves the train along the route for the number of travel units passed into the function
+     * @param distanceToMove
+     */
+    private void moveAlongRoute(double distanceToMove) {
+        while(distanceToMove > 0 && !itinerary.isComplete()) {
+            PathwaySegment segment = itinerary.getCurrentSegment();
+            double remainingOnSegment = segment.getLength() - distanceAlong;
+
+            // Prevents overshooting onto the next segment where the train moves past the node
+            if(distanceToMove < remainingOnSegment) {
+                distanceAlong += distanceToMove;
+                return;
+            }
+
+            distanceToMove -= remainingOnSegment;
+            distanceAlong = 0;
+
+            Node arrivedAt = itinerary.getTargetNode(); // gets the node the train arrived to
+            itinerary.advance();
+
+            if(itinerary.isComplete()) {
+                speed = 0;
+                isStopped = true;
+                return;
+            }
         }
     }
 
