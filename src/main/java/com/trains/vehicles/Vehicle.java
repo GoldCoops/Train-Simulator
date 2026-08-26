@@ -104,7 +104,7 @@ public class Vehicle {
      */
     private void accelerate() {
         if(speed < maxSpeed) {
-            speed += acceleration;
+            Math.clamp(speed += acceleration, 0, maxSpeed);
         }
     }
 
@@ -113,11 +113,7 @@ public class Vehicle {
      */
     private void decelerate() {
         if(speed > 0) {
-            speed -= acceleration;
-        }
-
-        if(speed < 0) {
-            speed = 0;
+            Math.clamp(speed -= acceleration, 0, maxSpeed);
         }
     }
 
