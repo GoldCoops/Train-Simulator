@@ -147,7 +147,15 @@ public class Vehicle {
             Node arrivedAt = itinerary.getTargetNode(); // gets the node the train arrived to
             itinerary.advance();
 
+            // Reached the destination
             if(itinerary.isComplete()) {
+                speed = 0;
+                isStopped = true;
+                return;
+            }
+
+            // Arrived at the station
+            if(arrivedAt instanceof Station) {
                 speed = 0;
                 isStopped = true;
                 return;
