@@ -60,10 +60,10 @@ public final class Itinerary {
      * @return The next pathway
      * @throws IllegalStateException if the route is complete
      */
-    public PathwaySegment advance() throws IllegalStateException{
+    public boolean advance() throws IllegalStateException{
         if (isComplete()) {throw new IllegalStateException("Route is complete");}
         entryNode = getTargetNode();
         leg++; // leg++ returns the value of leg then increments leg, which would return the current pathwaySegment we are on, we need to increment then get the segment from the incremented value.
-        return route.getSegments().get(leg);
+        return !isComplete();
     }
 }

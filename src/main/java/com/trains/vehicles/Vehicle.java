@@ -2,6 +2,7 @@ package com.trains.vehicles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.trains.cargo.CargoHold;
 import com.trains.network.*;
@@ -24,9 +25,9 @@ public class Vehicle {
 
 
     public Vehicle(Itinerary itinerary, float maxSpeed, float acceleration, CargoHold cargoHold) {
-        this.itinerary = itinerary;
+        this.itinerary = Objects.requireNonNull(itinerary);
         this.position = new Point2D(itinerary.getEntryNode().getX(), itinerary.getEntryNode().getY()); // vehicles should always spawn on a node.
-        this.cargoHold = cargoHold;
+        this.cargoHold = Objects.requireNonNull(cargoHold);
         this.isStopped = true;
         this.maxSpeed = maxSpeed;
         this.acceleration = acceleration + (1000 / this.cargoHold.getCapacity()); // slightly changes acceleration value based on train capacity (NOT FINAL FORMULA)
