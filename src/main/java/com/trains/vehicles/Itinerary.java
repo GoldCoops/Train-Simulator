@@ -23,8 +23,8 @@ public final class Itinerary {
     }
 
     /**
-     * True if we are at the end segment
-     * @return true if we are at the end segment
+     * True if the route has been completed
+     * @return true if the route has been fully completed
      */
     public boolean isComplete() {
         return leg >= route.getSegments().size();
