@@ -81,12 +81,10 @@ public final class CargoTransfer {
     /**
      * Adds newly created cargo directly to a destination CargoHold
      * This is used when cargo is first spawned
-     * @deprecated
      * @param destination, the cargoHold where cargo will be added
      * @param cargo, the newly created cargo to add
      * @return true if the cargo was successfully added
-     */ // This should be done in CargoSpawner with CargoHold.addCargo(Cargo), it already checks if Cargo is null and if it can be accepted.
-    @Deprecated
+     */
     public static boolean insertCargo(CargoHold destination, Cargo cargo){
         Objects.requireNonNull(destination);
         Objects.requireNonNull(cargo);
