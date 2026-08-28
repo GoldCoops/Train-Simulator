@@ -92,8 +92,9 @@ public final class CargoHold {
      Adds cargo to the contents list and updates the capacity
      @param cargo being added to contents
      @throws IllegalStateException if the hold can't accept the cargo
+     @throws NullPointerException if cargo is null
     */
-    void addCargo(Cargo cargo) {
+    void addCargo(Cargo cargo) throws NullPointerException, IllegalStateException{
         Objects.requireNonNull(cargo);
          if (!canAccept(cargo)) {
             throw new IllegalStateException("Cargo not accepted: " + cargo);
@@ -116,9 +117,20 @@ public final class CargoHold {
         return removed;
     }
 
+
+    /**
+     * If the calling cargoHold can accept a given piece of cargo
+     * @param cargo the cargo to check
+     * @return true if the cargo can be accepted, false otherwise
+     */
     public boolean canAccept(Cargo cargo) { 
         Objects.requireNonNull(cargo);
         return accepted.contains(cargo.getType()) && usedUnits + cargo.getUnits() <= capacity;
+    }
+
+
+    public boolean verifyIntegrity() {
+        return usedUnits == contents.stream().mapToInt(Cargo::getUnits).sum();
     }
 
     
