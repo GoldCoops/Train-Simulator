@@ -83,7 +83,23 @@ public class CargoTransferTest {
         assertThrows(NullPointerException.class, () -> CargoTransfer.transferCargo(null, dest, cargo));
     }
 
-    
+    @Test
+    void nullDestination() {
+        GridPos destination = new GridPos(500, 800);
+        CargoHold source = CargoHold.forType(300, CargoType.FREIGHT);
+        Cargo cargo = Cargo.freight(destination, 15);
+
+        assertThrows(NullPointerException.class, () -> CargoTransfer.transferCargo(source, null, cargo));
+    }
+
+    @Test
+    void nullCargo() {
+        CargoHold source = CargoHold.forType(240, CargoType.FREIGHT);
+        CargoHold dest = CargoHold.forType(305, CargoType.FREIGHT);
+        assertThrows(NullPointerException.class, () -> CargoTransfer.transferCargo(source, dest, null));
+    }
+
+
 
     
 }
