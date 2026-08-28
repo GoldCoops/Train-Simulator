@@ -36,7 +36,7 @@ public final class CargoSpawner {
      * @return a list containing all the stations in the network
      */
 
-    private List<Station> getStation(){
+    private List<Station> getStations(){
         List<Station> stations = new ArrayList<>();
 
         for(Node node: network.getNodes().values()){
@@ -53,7 +53,7 @@ public final class CargoSpawner {
      * @return true if the passenger was siccessfully spawned
      */
     public boolean spawnPassenger(){
-        List<Station> stations = getStation();
+        List<Station> stations = getStations();
 
         if (stations.size() < 2){
             return false;
