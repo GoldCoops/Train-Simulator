@@ -20,6 +20,14 @@ public final class CargoHold {
     }
 
     /**
+     * Returns an unmodifiable copy of the contents of the CargoHold
+     * @return an unmodifiable list of contents
+     */
+    public List<Cargo> getContents() {
+        return List.copyOf(contents);
+    }
+
+    /**
      * Creates a cargo hold for one specific type of cargo
      * @param capacity The capacity of the hold
      * @param accepted The accepted type of cargo
