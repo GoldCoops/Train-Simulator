@@ -18,6 +18,15 @@ public final class CargoSpawner {
         this.network = Objects.requireNonNull(network);
     }
 
+    /**
+     * Spawns a Cargo of CargoType Passenger at the original Station heading toward it's destination
+     * 
+     * @param origin the station Passenger starts at
+     * @param destination the station Passenger ends at
+     * @return true if Passenger was added to the origin's CargoHold
+     * @throws NullPointerException if origin or destination is null
+     * @throws IllegalARgumentException if origin and destination are at the same station
+     */
     public boolean spawnPassenger(Station origin, Station destination){
         Objects.requireNonNull(origin);
         Objects.requireNonNull(destination);
@@ -59,7 +68,8 @@ public final class CargoSpawner {
             return false;
         }
 
-        Random random = new Random();
+        Random random = new Random(); //Creating a new Random on every call on spawnPassenger() could be quite inefficient
+                                      // Might be good to reuse a single Random instance instead 
 
         Station origin = stations.get(random.nextInt(stations.size()));
 
