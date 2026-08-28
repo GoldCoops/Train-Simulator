@@ -4,7 +4,6 @@ import java.util.Objects;
 
 public final class CargoTransfer {
 
-
     /**
      * Tramsfers cargo from origin to destination CargoHold
      * @param source the CargoHold from which the cargo is being transferred
@@ -32,51 +31,6 @@ public final class CargoTransfer {
         return true;
 
     }
-
-
-    /*
-    All of this is already done by CargoHold on each instance, we don't need these static methods
-
-
-    Adds cargo to CargoHold destination
-    @param destination to where the cargo is being transferred to
-    @param cargo being transferred
-
-    private static void addCargo(CargoHold destination, Cargo cargo) {
-        destination.addCargo(cargo);
-    }
-
-
-    Checks whether destination contains the cargo that was transferred from source
-    Helper method for addCargo method
-    @param destination of the CargoHold being checked
-    @param cargo to be found
-    @return true if destination contains the cargo
-
-    private static boolean verifyCargo(CargoHold destination, Cargo cargo) {
-        return destination.hasCargo(cargo);
-    }
-
-
-    Removes cargo from the source
-    Should only be used once verifyCargo() has been called
-    @param origin CargoHold origin that the cargo is being removed from
-    @param cargo being removed
-
-    private static void removeCargo(CargoHold origin, Cargo cargo) {
-        boolean cargoIsRemoved = origin.removeCargo(cargo);
-
-        if (!cargoIsRemoved) {
-            throw new IllegalStateException("Cargo was not found");
-        }
-    }
-
-
-     */
-
-
-
-
 
     /**
      * Adds newly created cargo directly to a destination CargoHold
