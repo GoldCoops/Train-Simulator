@@ -10,8 +10,8 @@ import java.util.*;
  * Handles/manages the overall network
  */
 public final class Network {
-    private final Map<GridPos, Node> nodes = new HashMap<>();
-    private final Set<PathwaySegment> pathways = new HashSet<>();
+    private final Map<GridPos, Node> nodes = new LinkedHashMap<>();
+    private final Set<PathwaySegment> pathways = new LinkedHashSet<>();
 
     /**
      * Network Constructor, doesnt do anything yet

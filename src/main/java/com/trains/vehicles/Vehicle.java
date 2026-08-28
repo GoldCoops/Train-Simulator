@@ -206,4 +206,9 @@ public class Vehicle {
     public boolean canDepart() {
         return checkDepartureBlockers().isEmpty();
     }
+
+
+    public String toString() {
+        return "Vehicle { " + getPos() + ", " + speed + ", " + itinerary.getDestinationNode() + " }";
+    }
 }

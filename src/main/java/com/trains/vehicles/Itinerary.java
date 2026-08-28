@@ -39,6 +39,10 @@ public final class Itinerary {
         return route.getSegments().get(leg);
     }
 
+    public Node getDestinationNode() {
+        return route.getDestination();
+    }
+
     /**
      * Gets the last node we were on
      * @return The last node
