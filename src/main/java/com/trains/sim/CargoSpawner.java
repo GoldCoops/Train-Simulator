@@ -94,4 +94,25 @@ public final class CargoSpawner {
         return spawnPassenger(origin, destination);
     }
 
+    /**
+     * checks the origin and destination Stations are seperate and that both belong to the spawner's network
+     * @param origin the original station being checked
+     * @param destination the destination station being checked
+     * @throws NullPointerException if origin or destination is null
+     * @throws IllegalArgumentException if origin and destination are at the same station 
+     * or if either origin/destination's station doesn't belong to the spawner's network
+     */
+    private void checkStations(Station origin, Station destination) {
+        Objects.requireNonNull(origin);
+        Objects.requireNonNull(destination);
+        
+        if(origin == destination){
+            throw new IllegalArgumentException("Origin and destination must be different");
+        }
+
+        if(!belongsToNetwork(origin) || !belongsToNetwork(destination)) {
+            throw new IllegalArgumentException("Origin and destination stations must belong to CargoSpawner's network");
+        }
+    }
+
 }
