@@ -42,7 +42,7 @@ public class CargoTest {
 
     @Test
     void testPassenger() {
-        //constructor test
+        //test type, unit and destination of passenger()
         Cargo cargo = Cargo.passenger(destination);
         assertEquals(CargoType.PASSENGER, cargo.getType());
         assertEquals(1, cargo.getUnits());
@@ -59,6 +59,37 @@ public class CargoTest {
         //multiple calls of passenger
         Cargo cargoA = Cargo.passenger(destination);
         Cargo cargoB = Cargo.passenger(destination);
+        assertNotSame(cargoA, cargoB);
+    }
+
+    @Test
+    void testFreight()  {
+        //test destination and units of freight()
+        Cargo cargo = Cargo.freight(destination, 10);
+        assertEquals(CargoType.FREIGHT, cargo.getType());
+        assertEquals(10, cargo.getUnits());
+        assertEquals(destination, cargo.getDestination());
+
+        //zero units
+        assertThrows(IllegalArgumentException.class, () -> Cargo.freight(destination, 0));
+
+        //negative units
+        assertThrows(IllegalArgumentException.class, () -> Cargo.freight(destination, -10));
+
+        //one unit
+        Cargo min = Cargo.freight(destination, 1);
+        assertEquals(1, min.getUnits());
+
+        //null destination
+        assertThrows(NullPointerException.class, () -> Cargo.freight(null, 10));
+
+        // unit counts
+        assertEquals(100, Cargo.freight(destination, 100).getUnits());
+        assertEquals(100000, Cargo.freight(destination, 100000).getUnits());
+
+        //multiple calls of freight
+        Cargo cargoA = Cargo.freight(destination, 5);
+        Cargo cargoB = Cargo.freight(destination, 5);
         assertNotSame(cargoA, cargoB);
     }
 
