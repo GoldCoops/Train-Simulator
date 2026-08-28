@@ -2,7 +2,6 @@ package com.trains.cargo;
 
 import com.trains.utils.GridPos;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CargoTransferTest {
@@ -17,4 +16,41 @@ public class CargoTransferTest {
         assertTrue(inserted);
         assertEquals(1, hold.getUsedUnits());
     }
+
+    @Test
+    void movesCargo() {
+        GridPos destination = new GridPos(5, 5);
+        CargoHold source = CargoHold.forType(10, CargoType.FREIGHT);
+        CargoHold dest = CargoHold.forType(10, CargoType.FREIGHT);
+        Cargo cargo = Cargo.freight(destination, 5);
+
+        source.addCargo(cargo);
+        assertTrue(CargoTransfer.transferCargo(source, dest, cargo));
+        assertFalse(source.hasCargo(cargo));
+        assertTrue(dest.hasCargo(cargo));
+    }
+
+    @Test
+    void sameCargoHold() {
+        GridPos destination = new GridPos(15, 5);
+        CargoHold hold = CargoHold.forType(10, CargoType.FREIGHT);
+        Cargo cargo = Cargo.freight(destination, 5);
+        hold.addCargo(cargo);
+
+        assertTrue(CargoTransfer.transferCargo(hold,  hold, cargo));
+        assertTrue(hold.hasCargo(cargo));
+        assertEquals(5, hold.getUsedUnits());
+    }
+
+    @Test
+    void cargoMissingFromSource() {
+        GridPos destination = new GridPos(115, 50);
+        CargoHold source = CargoHold.forType(40, CargoType.FREIGHT);
+        CargoHold dest = CargoHold.forType(10, CargoType.FREIGHT);
+        Cargo cargo = Cargo.freight(destination, 20);
+
+        assertFalse(CargoTransfer.transferCargo(source, dest, cargo));
+    }
+
+    
 }
