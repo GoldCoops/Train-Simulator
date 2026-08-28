@@ -52,5 +52,38 @@ public class CargoTransferTest {
         assertFalse(CargoTransfer.transferCargo(source, dest, cargo));
     }
 
+    @Test
+    void rejectedTypeLeavesCargoInSource() {
+        GridPos destination = new GridPos(200, 35);
+        CargoHold source = CargoHold.forType(40, CargoType.FREIGHT);
+        CargoHold dest = CargoHold.forType(3, CargoType.PASSENGER);
+        Cargo cargo = Cargo.freight(destination,3);
+
+        source.addCargo(cargo);
+        assertFalse(CargoTransfer.transferCargo(source, dest, cargo));
+        assertTrue(source.hasCargo(cargo));
+    }
+
+    @Test
+    void overCapacity() {
+        GridPos destination = new GridPos(300, 500);
+        CargoHold hold = CargoHold.forType(3, CargoType.FREIGHT);
+        Cargo cargo = Cargo.freight(destination, 100);
+
+        assertFalse(CargoTransfer.insertCargo(hold, cargo));
+        assertEquals(0, hold.getUsedUnits());
+    }
+
+    @Test
+    void nullSource() {
+        GridPos destination = new GridPos(1000, 445);
+        CargoHold dest = CargoHold.forType(30, CargoType.FREIGHT);
+        Cargo cargo = Cargo.freight(destination, 35);
+
+        assertThrows(NullPointerException.class, () -> CargoTransfer.transferCargo(null, dest, cargo));
+    }
+
+    
+
     
 }
