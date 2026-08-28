@@ -167,7 +167,7 @@ public class Vehicle {
             }
 
             // Arrived at the station
-            if(arrivedAt instanceof Station) {
+            if(arrivedAt instanceof Station) { // stops the vehicle permanently at the station
                 speed = 0;
                 isStopped = true;
                 return;
