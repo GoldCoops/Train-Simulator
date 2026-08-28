@@ -26,7 +26,7 @@ public class Vehicle {
         this.cargoHold = Objects.requireNonNull(cargoHold);
         this.isStopped = true;
         this.maxSpeed = maxSpeed;
-        this.acceleration = acceleration + (1000 / this.cargoHold.getCapacity()); // slightly changes acceleration value based on train capacity (NOT FINAL FORMULA)
+        this.acceleration = acceleration; // removed the acceleration depending on capacity line, as capacity = 0 is allowed, which would error.
     }
 
 
@@ -63,14 +63,22 @@ public class Vehicle {
         this.isStopped = false;
     }
 
+    /**
+     * Gets the current X coordinate of the vehicle
+     * @return The current X Coordinate
+     */
     public double getX(){
         if (itinerary.isComplete()) {
             return itinerary.getEntryNode().getX();
         }
         double t = distanceAlong/itinerary.getCurrentSegment().getLength();
-        return lerp(itinerary.getEntryNode().getX(), itinerary.getEntryNode().getX(), t);
+        return lerp(itinerary.getEntryNode().getX(), itinerary.getTargetNode().getX(), t);
     }
 
+    /**
+     * Gets the current Y coordinate of the Vehicle
+     * @return The current Y coordinate
+     */
     public double getY(){
         if (itinerary.isComplete()) {
             return itinerary.getEntryNode().getY();
@@ -79,9 +87,13 @@ public class Vehicle {
         return lerp(itinerary.getEntryNode().getY(), itinerary.getTargetNode().getY(), t);
     }
 
+    /**
+     * Gets the current X and Y coordinates as a Point2D Object for ease of use
+     * @return The current X and Y coordinates
+     */
     public Point2D getPos(){
         if (itinerary.isComplete()) {
-            return itinerary.getTargetNode().getPos().toPoint2D();
+            return itinerary.getEntryNode().getPos().toPoint2D();
         }
         double t = distanceAlong/itinerary.getCurrentSegment().getLength();
         return lerp(itinerary.getEntryNode().getPos(),itinerary.getTargetNode().getPos(), t);
