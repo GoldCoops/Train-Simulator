@@ -29,22 +29,30 @@ public final class CargoSpawner {
      * or if either origin/destination's station doesn't belong to the spawner's network
      */
     public boolean spawnPassenger(Station origin, Station destination){
-        Objects.requireNonNull(origin);
-        Objects.requireNonNull(destination);
-
-        if(origin == destination){
-            throw new IllegalArgumentException("Origin and destination must be different");
-        }
-
-        if(!belongsToNetwork(origin) || !belongsToNetwork(destination)) {
-            throw new IllegalArgumentException("Origin and destination stations must belong to CargoSpawner's network");
-        }
-
+        checkStations(origin, destination);
+        
         Cargo passenger = Cargo.passenger(destination.getPos());
 
         return CargoTransfer.insertCargo(origin.getCargoHold(), passenger);
     }
 
+    /**
+     * Spawns a Cargo of CargoType Freight at the original Station heading toward it's destination
+     * @param origin the station Freight starts at
+     * @param destination the station Freight ends at
+     * @param units the number of freight units to spawn
+     * @return true if Freight was added to the origin's CargoHold
+     * @throws NullPointerException if origin or destination is null
+     * @throws IllegalArgumentException if origin and destination are at the same station 
+     * or if either origin/destination's station doesn't belong to the spawner's network
+     */
+    public boolean spawnFreight(Station origin, Station destination, int units) {
+        checkStations(origin, destination);
+        
+        Cargo freight = Cargo.freight(destination.getPos(), units);
+
+        return CargoTransfer.insertCargo(origin.getCargoHold(), freight);
+    }
     /**
      * Get all current stations in the network
      * @return a list containing all the stations in the network
@@ -105,7 +113,7 @@ public final class CargoSpawner {
     private void checkStations(Station origin, Station destination) {
         Objects.requireNonNull(origin);
         Objects.requireNonNull(destination);
-        
+
         if(origin == destination){
             throw new IllegalArgumentException("Origin and destination must be different");
         }
