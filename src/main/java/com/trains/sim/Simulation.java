@@ -36,9 +36,15 @@ public final class Simulation {
     public void removeVehicle(Vehicle vehicle) {
         vehicles.remove(vehicle);
     }
+
+    /**
+     * Advances the simulation by one tick
+     * @param dt elapsed simulated time since last tick
+     */
     public void tick(double dt) {
         for ( Vehicle vehicle : vehicles) {
             vehicle.update(dt);
         }
+        cargoSpawner.tick(dt);
     }
 }

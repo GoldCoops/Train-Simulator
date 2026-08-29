@@ -19,6 +19,14 @@ public final class CargoSpawner {
     }
 
     /**
+     * Advances cargo generation by one step
+     * @param dt elapsed simulation time since last tick
+     */
+    void tick(double dt) {
+
+    }
+
+    /**
      * Spawns a Cargo of CargoType Passenger at the original Station heading toward it's destination
      * 
      * @param origin the station Passenger starts at
