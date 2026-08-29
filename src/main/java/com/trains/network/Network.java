@@ -211,6 +211,19 @@ public final class Network {
     }
 
     /**
+     * Returns the distance between two nodes
+     * <p>
+     *     Nodes do not have to be connected, this will be needed for A*
+     * </p>
+     * @param a The first node
+     * @param b the second node
+     * @return the distance between the two nodes
+     */
+    public double distanceBetween(Node a, Node b) {
+        return a.getPos().distanceTo(b.getPos());
+    }
+
+    /**
      * Gets the Map of nodes in the network
      * @return an unmodifiable Map of GridPos, Node
      */
