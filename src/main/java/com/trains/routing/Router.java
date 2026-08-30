@@ -25,11 +25,17 @@ public class Router {
             throw new IllegalArgumentException("Origin and destination cannot be the same");
         }
 
+        // Guard against nodes that don't actually belong to this Router's network -
+        // without this, we'd silently fail to find a route instead of saying why.
+        if (!network.getNodes().containsValue(origin) || !network.getNodes().containsValue(destination)) {
+            throw new IllegalArgumentException("Origin and destination must belong to this Router's network");
+        }
+
         // gScore(node) = cheapest cost from start to node
         // Nodes not in this map are considered to have infinite gScore
 
-        Map<Node, Integer> gScore = new HashMap<>();
-        gScore.put(origin, 0);
+        Map<Node, Double> gScore = new HashMap<>();
+        gScore.put(origin, 0.0);
 
         // cameFrom(node) = the PathwaySegment that most efficiently leads to node
         // current-cheapest path. This is what lets us walk backwards from the
@@ -69,8 +75,8 @@ public class Router {
                 return buildRoute(origin, destination, cameFrom);
             }
 
-            for (PathwaySegment segment : current.getOutgoingSegments()) {
-                Node neighbor = segment.getOtherNode(current);
+            for (PathwaySegment segment : current.getConnections()) {
+                Node neighbor = segment.opposite(current);
                 if (settled.contains(neighbor)) {
                     continue; // Ignore the neighbor which is already evaluated.
                 }
@@ -79,7 +85,7 @@ public class Router {
                 if (tentativeGScore < gScore.getOrDefault(neighbor, Double.POSITIVE_INFINITY)) {
                     // Found a cheaper way to reach neighbour than any we knew about before,
                     // record it and (re)queue neighbour so it gets explored with this new score.
-                    gScore.put(neighbor, (int) tentativeGScore);
+                    gScore.put(neighbor, tentativeGScore);
                     cameFrom.put(neighbor, segment);
                     openSet.add(neighbor);
                 }
