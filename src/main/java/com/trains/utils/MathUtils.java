@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 
 public final class MathUtils {
 
+
+    private MathUtils() {
+    }
+
     /**
      * Calculates a value between two numbers based on a progress percentage: {@code t}
      * @param a the starting number, which will be returned when {@code t <= 0}
@@ -63,27 +67,6 @@ public final class MathUtils {
      */
     public static Point2D lerp(GridPos origin, GridPos target, double t) {
         return lerp(origin.toPoint2D(), target.toPoint2D(), t);
-    }
-
-
-
-
-    /**
-     * Rounds a double to an integer
-     * @param value the value to round
-     * @return the rounded value
-     */
-    public static long round(double value) {
-        return (long) Math.round(value);
-    }
-
-    /**
-     * Rounds a float to an integer
-     * @param value the value to round
-     * @return the rounded value
-     */
-    public static int round(float value) {
-        return (int) Math.round(value);
     }
 
 

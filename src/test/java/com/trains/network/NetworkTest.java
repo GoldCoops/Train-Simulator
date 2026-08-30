@@ -96,15 +96,24 @@ public class NetworkTest {
         Node c = network.addNode(new GridPos(15, 20));
         Node d = network.addNode(new GridPos(95, 200));
         network.connectNodes(a, b);
+        network.connectNodes(b, c);
         network.connectNodes(c, d);
-        network.connectNodes(a, c);
+        network.connectNodes(a, d);
+        assertEquals(4, network.getPathways().size());
+        assertTrue(a.isConnectedTo(b));
+        assertTrue(b.isConnectedTo(c));
+        assertTrue(c.isConnectedTo(d));
+        assertTrue(a.isConnectedTo(d));
+        network.disconnectNodes(a, b);
         assertEquals(3, network.getPathways().size());
-        assertEquals(b, a.getConnections().getFirst().getEnd());
-        assertEquals(a, b.getConnections().getFirst().getStart());
-        assertEquals(d, c.getConnections().getFirst().getEnd());
-        assertEquals(c, d.getConnections().getFirst().getStart());
-        assertEquals(c, a.getConnections().get(1).getEnd());
-        assertEquals(a, c.getConnections().get(1).getStart());
+        assertFalse(a.isConnectedTo(b));
+        assertFalse(network.disconnectNodes(a, c)); // should return false if the nodes were not connected
+        assertEquals(3, network.getPathways().size());
+        network.disconnectNodes(a, d);
+        assertEquals(2, network.getPathways().size());
+        assertFalse(a.isConnectedTo(d));
+        assertFalse(network.disconnectNodes(a, d));
+
     }
 
     @Test

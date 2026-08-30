@@ -25,4 +25,9 @@ public final class Point2D {
     public GridPos toGridPos() {
         return new GridPos((int) x, (int) y);
     }
+
+    @Override
+    public String toString() {
+        return "Point2D (" + x + ", " + y + ")";
+    }
 }
