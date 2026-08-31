@@ -102,7 +102,7 @@ public class Router {
      * @return the estimated (straight-line) remaining distance
      */
     private double heuristic(Node from, Node destination) {
-        return from.getPos().distanceTo(destination.getPos());
+        return network.distanceBetween(from, destination);
     }
 
     /**
