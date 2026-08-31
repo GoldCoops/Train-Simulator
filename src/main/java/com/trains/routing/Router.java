@@ -14,11 +14,24 @@ import java.util.*;
 public class Router {
     // Handles pathfinding logic, I'm probably going to try using A* here, but if
     // that fails I'll just use Dijkstra
+
+    /*
+    Changed: made openSet hold a Node and an fScore instead of a bare node
+    Old comparator recalculated gScore and heuristic every time it compared two nodes
+     */
+
+
+
     private final Network network;
 
     public Router(Network network) {
         this.network = network;
     }
+
+    private record OpenEntry(Node node, double fScore) {}
+
+
+
 
     public Route findRoute(Node origin, Node destination) {
         if (origin == destination) {
@@ -47,9 +60,9 @@ public class Router {
         // neighbours of
         // yet, ordered cheapest-fScore-first so we always expand the most promising one
         // next.
-        PriorityQueue<Node> openSet = new PriorityQueue<>(
-                Comparator.comparingDouble(node -> gScore.get(node) + heuristic(node, destination)));
-        openSet.add(origin);
+        PriorityQueue<OpenEntry> openSet = new PriorityQueue<>(
+                Comparator.comparingDouble(OpenEntry::fScore));
+        openSet.add(new OpenEntry(origin, heuristic(origin, destination)));
 
         // Nodes we've fully explored already (looked at all their neighbours). Once a
         // node
@@ -57,7 +70,7 @@ public class Router {
         Set<Node> settled = new HashSet<>();
 
         while (!openSet.isEmpty()) {
-            Node current = openSet.poll();
+            Node current = openSet.poll().node();
 
             // Java's PriorityQueue can't update an entry's priority in place, so when we
             // find
@@ -87,7 +100,7 @@ public class Router {
                     // record it and (re)queue neighbour so it gets explored with this new score.
                     gScore.put(neighbor, tentativeGScore);
                     cameFrom.put(neighbor, segment);
-                    openSet.add(neighbor);
+                    openSet.add(new OpenEntry(neighbor, tentativeGScore + heuristic(neighbor, destination)));
                 }
             }
         }
