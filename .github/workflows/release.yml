@@ -44,7 +44,6 @@ jobs:
           - { os: ubuntu-latest,  target: linux-x64,     archive: tar.gz }
           - { os: windows-latest, target: windows-x64,   archive: zip }
           - { os: macos-latest,   target: macos-aarch64, archive: tar.gz }
-          - { os: macos-13,       target: macos-x64,     archive: tar.gz }
     steps:
       - uses: actions/checkout@v7
 
