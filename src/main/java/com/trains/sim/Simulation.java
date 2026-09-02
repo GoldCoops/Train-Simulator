@@ -10,6 +10,7 @@ public final class Simulation {
     // Should hold the network and a list of vehicles, with a tick method that advances time.
     private final Network network;
     private final List<Vehicle> vehicles;
+    private final CargoSpawner cargoSpawner;
 
     public Simulation() {
         this(new Network(), new ArrayList<>());
@@ -18,6 +19,7 @@ public final class Simulation {
     public Simulation(Network network, List<Vehicle> vehicles) {
         this.network = network;
         this.vehicles = vehicles;
+        this.cargoSpawner = new CargoSpawner(network);
     }
 
     public Network getNetwork() {
@@ -34,6 +36,11 @@ public final class Simulation {
     public void removeVehicle(Vehicle vehicle) {
         vehicles.remove(vehicle);
     }
+
+    /**
+     * Advances the simulation by one tick
+     * @param dt elapsed simulated time since last tick
+     */
     public void tick(double dt) {
         for ( Vehicle vehicle : vehicles) {
             vehicle.update(dt);

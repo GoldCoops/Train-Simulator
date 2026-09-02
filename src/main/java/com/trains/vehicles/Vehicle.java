@@ -2,66 +2,83 @@ package com.trains.vehicles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import com.trains.cargo.Cargo;
 import com.trains.cargo.CargoHold;
 import com.trains.network.*;
+import com.trains.routing.Route;
+import com.trains.utils.Point2D;
+import com.trains.cargo.CargoTransfer;
+import com.trains.cargo.CargoType;
 
 import static com.trains.utils.MathUtils.*;
 
 public class Vehicle {
-    private double x, y;
-    // GridPos is a record, and as such the values inside are immutable, trains need to move, so we need something different.
     private boolean isStopped;
-    private PathwaySegment curSegment;
     private final CargoHold cargoHold; // CargoHold now manages capacity per hold
     private float speed;
     private final float maxSpeed;
     private final float acceleration;
-    private Node targetNode;
-    private final Itinerary itinerary;
-
+    private Itinerary itinerary;
     private double distanceAlong; // We should switch from using x and y values for the coordinates to a position along a PathwaySegment, and then interpolate X and Y when we need them for rendering in getX and getY
 
 
 
-    public Vehicle(Itinerary itinerary, int x, int y, float maxSpeed, float acceleration, PathwaySegment curSegment, CargoHold cargoHold, Node targetNode) {
-        this.itinerary = itinerary;
-        this.x = x;
-        this.y = y;
-        this.curSegment = curSegment;
-        this.cargoHold = cargoHold;
+    public Vehicle(Itinerary itinerary, float maxSpeed, float acceleration, CargoHold cargoHold) {
+        this.itinerary = Objects.requireNonNull(itinerary);
+        this.cargoHold = Objects.requireNonNull(cargoHold);
         this.isStopped = true;
         this.maxSpeed = maxSpeed;
-        this.acceleration = acceleration + (1000 / this.cargoHold.getCapacity()); // slightly changes acceleration value based on train capacity (NOT FINAL FORMULA)
-        this.targetNode = targetNode;
+        this.acceleration = acceleration; // removed the acceleration depending on capacity line, as capacity = 0 is allowed, which would error.
     }
 
 
-    public double getX() {
-        return x;
+    public PathwaySegment getCurrentSegment() {
+        return itinerary.getCurrentSegment();
     }
-    public double getY() {
-        return y;
+
+    public Node getTargetNode() {
+        return itinerary.getTargetNode();
     }
+
+    public Node getEntryNode() {
+        return itinerary.getEntryNode();
+    }
+
+
 
     public float getMaxSpeed() {
         return maxSpeed;
     }
 
-    public Node getTargetNode() {
-        return targetNode;
+    /** @return the current speed in units per second */
+    public float getSpeed() { return speed; }
+
+    /** @return true if the vehicle is stopped or braking to a stop */
+    public boolean isStopped() { return isStopped; }
+
+    /** @return true if the vehicle has finished its route */
+    public boolean isRouteComplete() { return itinerary.isComplete(); }
+
+    /**
+     * Puts the vehicle onto a new route, stationary at that route's origin.
+     * Cargo already on board is kept.
+     * @param route the new route to follow
+     * @throws NullPointerException if route is null
+     */
+    public void dispatch(Route route) {
+        this.itinerary = new Itinerary(route);
+        this.distanceAlong = 0;
+        this.speed = 0;
+        this.isStopped = true;
     }
 
-    public PathwaySegment getCurrentSegment() {
-        return curSegment;
-    }
+
     public CargoHold getCargoHold() {
         return cargoHold;
     }
 
-    public void setNextSegment(PathwaySegment nextSegment) {
-        this.curSegment = nextSegment;
-    }
 
 
     public void stop() {
@@ -72,73 +89,115 @@ public class Vehicle {
         this.isStopped = false;
     }
 
+    /**
+     * Gets the current X coordinate of the vehicle
+     * @return The current X Coordinate
+     */
+    public double getX(){
+        if (itinerary.isComplete()) {
+            return itinerary.getEntryNode().getX();
+        }
+        double t = distanceAlong/itinerary.getCurrentSegment().getLength();
+        return lerp(itinerary.getEntryNode().getX(), itinerary.getTargetNode().getX(), t);
+    }
+
+    /**
+     * Gets the current Y coordinate of the Vehicle
+     * @return The current Y coordinate
+     */
+    public double getY(){
+        if (itinerary.isComplete()) {
+            return itinerary.getEntryNode().getY();
+        }
+        double t = distanceAlong/itinerary.getCurrentSegment().getLength();
+        return lerp(itinerary.getEntryNode().getY(), itinerary.getTargetNode().getY(), t);
+    }
+
+    /**
+     * Gets the current X and Y coordinates as a Point2D Object for ease of use
+     * @return The current X and Y coordinates
+     */
+    public Point2D getPos(){
+        if (itinerary.isComplete()) {
+            return itinerary.getEntryNode().getPos().toPoint2D();
+        }
+        double t = distanceAlong/itinerary.getCurrentSegment().getLength();
+        return lerp(itinerary.getEntryNode().getPos(),itinerary.getTargetNode().getPos(), t);
+    }
+
+
 
 
     public void update(double dt) { // this is just an example of what we should be doing, it needs to be edited.
-        if (isStopped) {
-            decelerate();
-        } else {
-            accelerate();
+        if(dt < 0) {
+            throw new IllegalArgumentException("Function argument cannot be negative!");
         }
+
+        float initialSpeed = speed;
+
+        if (isStopped) {
+            decelerate(dt);
+        } else {
+            accelerate(dt);
+        }
+
+        double distanceTravelled = ((initialSpeed + speed) / 2.0) * dt;
+        moveAlongRoute(distanceTravelled);
     }
 
 
     /**
      * Accelerates the train until it reaches its max speed value
      */
-    private void accelerate() {
-        if(speed < maxSpeed) {
-            speed += acceleration;
-        }
+    private void accelerate(double dt) {
+        speed = Math.clamp(speed + acceleration * (float) dt, 0f, maxSpeed);
     }
 
     /**
      * Decelerates the train until it stops
      */
-    private void decelerate() {
-        if(speed > 0) {
-            speed -= acceleration;
-        }
-
-        if(speed < 0) {
-            speed = 0;
-        }
+    private void decelerate(double dt) {
+        speed = Math.clamp(speed - acceleration * (float) dt, 0f, maxSpeed);
     }
 
-        /**
-     * Moves the train towards the target
-     * @param current
-     * @param target
-     * @throws IllegalArgumentException if the nodes supplied to the methods are the same node
+    /**
+     * Moves the train along the route for the number of travel units passed into the function
+     * @param distanceToMove
      */
-    protected void moveTowardsNextNode(Node current, Node target) { // to be reworked to use PathwaySegment instead of the current node
-        if(current == target) {
-            throw new IllegalArgumentException("Train cannot move between the nodes at the same position");
+    private void moveAlongRoute(double distanceToMove) {
+        if(distanceToMove < 0) {
+            throw new IllegalArgumentException("The value of units to move cannot be negative!");
         }
 
-        int currentX = current.getX();
-        int targetX = target.getX();
-        int currentY = current.getY();
-        int targetY = target.getY();
+        while(distanceToMove > 0 && !itinerary.isComplete()) {
+            PathwaySegment segment = itinerary.getCurrentSegment();
+            double remainingOnSegment = segment.getLength() - distanceAlong;
 
-        // Need to implement an error where the nodes supplied are not adjacent
-        // if()
-        // ...
+            // Prevents overshooting onto the next segment where the train moves past the node
+            if(distanceToMove < remainingOnSegment) {
+                distanceAlong += distanceToMove;
+                return;
+            }
 
-        if(currentX < targetX) {
-            currentX += speed;
-        }
+            distanceToMove -= remainingOnSegment;
+            distanceAlong = 0;
 
-        if(currentX > targetX) {
-            currentX -= speed;
-        }
+            Node arrivedAt = itinerary.getTargetNode(); // gets the node the train arrived to
+            itinerary.advance();
 
-        if(currentY < targetY) {
-            currentY += speed;
-        }
+            // Reached the destination
+            if(itinerary.isComplete()) {
+                speed = 0;
+                isStopped = true;
+                return;
+            }
 
-        if(currentY > targetY) {
-            currentY -= speed;
+            // Arrived at the station
+            if(arrivedAt instanceof Station) { // stops the vehicle permanently at the station
+                speed = 0;
+                isStopped = true;
+                return;
+            }
         }
     }
 
@@ -156,7 +215,7 @@ public class Vehicle {
             blockers.add("Vehicle is moving");
         }
 
-        if (curSegment == null) {
+        if (itinerary.getCurrentSegment() == null) {
             blockers.add("Vehicle has no pathway segment");
         }
 
@@ -172,5 +231,34 @@ public class Vehicle {
 
     public boolean canDepart() {
         return checkDepartureBlockers().isEmpty();
+    }
+
+
+    public String toString() {
+        return "Vehicle { " + getPos() + ", " + speed + ", " + itinerary.getDestinationNode() + " }";
+    }
+
+    public int boardPassengers(Station station){
+        Objects.requireNonNull(station);
+
+        int boarded = 0;
+
+        for (Cargo cargo : station.getCargoHold().getContents()){
+            if (cargo.getType() != CargoType.PASSENGER){
+                continue;
+            }
+
+            if (!itinerary.willVisit(cargo.getDestination())){
+            continue;
+            }
+
+            boolean transferred = CargoTransfer.transferCargo(station.getCargoHold(), cargoHold, cargo);
+
+            if (transferred){
+                boarded++;
+            }
+        }
+
+        return boarded;
     }
 }

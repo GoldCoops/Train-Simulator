@@ -1,0 +1,80 @@
+name: Javadoc
+
+on:
+  push:
+    branches: ["master", "dev"]
+  pull_request:
+    branches: ["master", "dev"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: javadoc-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  javadoc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Generate Javadoc
+        run: ./gradlew javadoc
+
+      - name: Verify output
+        env:
+          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [ ! -f build/docs/javadoc/index.html ]; then
+            echo "::error::javadoc produced no index.html"
+            exit 1
+          fi
+          echo "docsize=$(du -sh build/docs/javadoc | cut -f1)" >> "$GITHUB_ENV"
+          echo "sha_short=${SHA:0:7}" >> "$GITHUB_ENV"
+
+      - name: Upload Javadoc
+        id: upload
+        uses: actions/upload-artifact@v7
+        with:
+          name: javadoc-${{ github.run_number }}
+          path: build/docs/javadoc
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Write job summary
+        run: |
+          {
+            echo "### Javadoc built"
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Commit | \`${sha_short}\` |"
+            echo "| Size | ${docsize} |"
+            echo "| Download | [javadoc-${{ github.run_number }}](${{ steps.upload.outputs.artifact-url }}) |"
+            echo
+            echo "Unzip and open \`index.html\`."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment link on PR
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          URL: ${{ steps.upload.outputs.artifact-url }}
+        run: |
+          gh pr comment "$PR" --edit-last --create-if-none \
+            --body "Javadoc for \`${sha_short}\`: $URL"

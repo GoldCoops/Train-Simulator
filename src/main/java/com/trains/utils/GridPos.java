@@ -29,4 +29,12 @@ public record GridPos(int x, int y) {
     public double distanceTo(GridPos other) {
         return Math.sqrt(Math.pow(other.x - x, 2) + Math.pow(other.y - y, 2));
     }
+
+    /**
+     * Converts this GridPos record to a mutable Point2D
+     * @return The created Point2D Object
+     */
+    public Point2D toPoint2D() {
+        return new Point2D(x, y);
+    }
 }
