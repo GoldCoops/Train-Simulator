@@ -45,6 +45,5 @@ public final class Simulation {
         for ( Vehicle vehicle : vehicles) {
             vehicle.update(dt);
         }
-        cargoSpawner.tick(dt);
     }
 }
