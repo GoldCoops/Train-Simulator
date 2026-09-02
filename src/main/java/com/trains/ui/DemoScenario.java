@@ -73,7 +73,7 @@ public final class DemoScenario {
         network.connectNodes(harbour, junction2);
 
         // mutable list, so Simulation.addVehicle works
-        Simulation sim = new Simulation(network, new ArrayList<>());
+        Simulation sim = new Simulation(network);
         Router router = new Router(network);
 
         addVehicle(sim, router, central, eastfield);
