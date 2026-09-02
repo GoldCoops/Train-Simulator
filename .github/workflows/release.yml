@@ -1,0 +1,109 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+
+jobs:
+  guard:
+    name: Verify tag is on master
+    runs-on: ubuntu-latest
+    steps:
+      # fetch-depth: 0 fetches every branch, so origin/master is present.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # A tag push can't be filtered by branch, and github.event.base_ref is
+      # only set for lightweight tags, so check ancestry directly.
+      - name: Check tag is on master
+        run: |
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/master \
+            || { echo "::error::Tag $GITHUB_REF_NAME is not on master; not releasing."; exit 1; }
+
+  # jlink images are platform-specific: each one has to be built on its target.
+  build:
+    name: ${{ matrix.target }}
+    needs: guard
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest,  target: linux-x64,     archive: tar.gz }
+          - { os: windows-latest, target: windows-x64,   archive: zip }
+          - { os: macos-latest,   target: macos-aarch64, archive: tar.gz }
+          - { os: macos-13,       target: macos-x64,     archive: tar.gz }
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v6 # validates the wrapper by default
+
+      - run: ./gradlew test jlink
+
+      - name: Package runtime image
+        env:
+          TARGET: ${{ matrix.target }}
+          ARCHIVE: ${{ matrix.archive }}
+        run: |
+          set -euo pipefail
+          dir="COMP2000-Semester-1-Project-${GITHUB_REF_NAME#v}-$TARGET"
+          asset="$dir.$ARCHIVE"
+          mv build/image "build/$dir"
+          mkdir dist
+          # tar on Unix so the bin/ launchers keep their +x bit; zip for Windows.
+          if [ "$ARCHIVE" = zip ]; then
+            ( cd build && 7z a -tzip -bso0 -bsp0 "../dist/$asset" "$dir" )
+          else
+            tar -czf "dist/$asset" -C build "$dir"
+          fi
+          # macOS runners have shasum, not sha256sum.
+          ( cd dist && { command -v sha256sum >/dev/null && sha256sum "$asset" \
+              || shasum -a 256 "$asset"; } > "$asset.sha256" )
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-${{ matrix.target }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          pattern: release-*
+          merge-multiple: true
+
+      # --generate-notes supplies the title and body. Re-running an existing
+      # tag falls through to upload --clobber instead of failing.
+      - name: Publish
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* --generate-notes \
+              ${{ contains(github.ref_name, '-') && '--prerelease' || '' }} \
+            || gh release upload "$GITHUB_REF_NAME" dist/* --clobber
