@@ -18,13 +18,6 @@ public final class CargoSpawner {
         this.network = Objects.requireNonNull(network);
     }
 
-    /**
-     * Advances cargo generation by one step
-     * @param dt elapsed simulation time since last tick
-     */
-    void tick(double dt) {
-
-    }
 
     /**
      * Spawns a Cargo of CargoType Passenger at the original Station heading toward it's destination
