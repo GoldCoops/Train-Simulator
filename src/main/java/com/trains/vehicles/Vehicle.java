@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.trains.cargo.Cargo;
 import com.trains.cargo.CargoHold;
 import com.trains.network.*;
 import com.trains.utils.Point2D;
+import com.trains.cargo.CargoTransfer;
+import com.trains.cargo.CargoType;
 
 import static com.trains.utils.MathUtils.*;
 
@@ -210,5 +213,29 @@ public class Vehicle {
 
     public String toString() {
         return "Vehicle { " + getPos() + ", " + speed + ", " + itinerary.getDestinationNode() + " }";
+    }
+
+    public int boardPassengers(Station station){
+        Objects.requireNonNull(station);
+
+        int boarded = 0;
+
+        for (Cargo cargo : station.getCargoHold().getContents()){
+            if (cargo.getType() != CargoType.PASSENGER){
+                continue;
+            }
+
+            if (!itinerary.willVisit(cargo.getDestination())){
+            continue;
+            }
+
+            boolean transferred = CargoTransfer.transferCargo(station.getCargoHold(), cargoHold, cargo);
+
+            if (transferred){
+                boarded++;
+            }
+        }
+
+        return boarded;
     }
 }
