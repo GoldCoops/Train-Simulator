@@ -3,6 +3,7 @@ package com.trains.vehicles;
 import com.trains.network.Node;
 import com.trains.network.PathwaySegment;
 import com.trains.routing.Route;
+import com.trains.utils.GridPos;
 
 import java.util.Objects;
 
@@ -57,6 +58,28 @@ public final class Itinerary {
      */
     public Node getTargetNode() {
         return getCurrentSegment().opposite(entryNode);
+    }
+    /**
+     * Checks whether thr vehicle will visit a given destination on the remaining part of it's route
+     * @param destination, the position the passenger wants to reach
+     * @return true if the destination is still ahead on the route
+     */
+    public boolean willVisit(GridPos destination){
+        Objects.requireNonNull(destination);
+
+        Node current = entryNode;
+
+        for (int i = leg; i < route.getSegments().size(); i++){
+            PathwaySegment segment = route.getSegments().get(i);
+
+            current = segment.opposite(current);
+
+            if (current.getPos().equals(destination)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
