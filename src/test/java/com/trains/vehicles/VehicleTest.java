@@ -104,4 +104,58 @@ public class VehicleTest {
         assertEquals(0, unload);
         assertEquals(1, vehicle.getCargoHold().getUsedUnits());
     }
+
+    @Test
+    void passengerUnloadOnArrival(){
+        Network network = new Network();
+
+        Station origin = network.addStation(new GridPos(0,0), 10);
+        Station destination = network.addStation(new GridPos(10, 0), 10);
+
+        network.connectNodes(origin, destination);
+        Router router = new Router(network);
+        Route route = router.findRoute(origin, destination);
+        Itinerary itinerary = new Itinerary(route);
+
+        CargoHold vehicleHold = CargoHold.forType(10, CargoType.PASSENGER);
+
+        Vehicle vehicle = new Vehicle(itinerary, 10, 10, vehicleHold);
+
+        Cargo passenger = Cargo.passenger(destination.getPos());
+        CargoTransfer.insertCargo(vehicle.getCargoHold(), passenger);
+        vehicle.go();
+
+        vehicle.update(2.0);
+
+        assertEquals(0, vehicle.getCargoHold().getUsedUnits());
+
+    }
+
+    @Test
+    void passengerBoardOnArrival(){
+        Network network = new Network();
+
+        Station origin = network.addStation(new GridPos(0,0), 10);
+        Station middle = network.addStation(new GridPos(10,0), 10);
+        Station destination = network.addStation(new GridPos(20,0), 10);
+
+        network.connectNodes(origin, middle);
+        network.connectNodes(middle, destination);
+
+        Router router = new Router(network);
+        Route route = router.findRoute(origin, destination);
+        Itinerary itinerary = new Itinerary(route);
+
+        CargoHold vehicleHold = CargoHold.forType(10, CargoType.PASSENGER);
+        Vehicle vehicle = new Vehicle(itinerary, 10, 10, vehicleHold);
+
+        Cargo passenger = Cargo.passenger(destination.getPos());
+
+        CargoTransfer.insertCargo(middle.getCargoHold(), passenger);
+
+        vehicle.go();
+        vehicle.update(2.0);
+        assertEquals(0, middle.getCargoHold().getUsedUnits());
+        assertEquals(1, vehicle.getCargoHold().getUsedUnits());
+    }
 }

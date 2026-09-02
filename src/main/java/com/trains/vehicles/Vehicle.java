@@ -185,15 +185,22 @@ public class Vehicle {
             Node arrivedAt = itinerary.getTargetNode(); // gets the node the train arrived to
             itinerary.advance();
 
-            // Reached the destination
-            if(itinerary.isComplete()) {
+            // Arrived at the station
+            if(arrivedAt instanceof Station station) { // stops the vehicle permanently at the station
                 speed = 0;
                 isStopped = true;
+
+                unloadPassengers(station); //let passengers off
+                
+                //only board passengers if vehicle still has somewhere to travel
+                if(!itinerary.isComplete()){
+                    boardPassengers(station);
+                }
                 return;
             }
 
-            // Arrived at the station
-            if(arrivedAt instanceof Station) { // stops the vehicle permanently at the station
+            //if route ends at a node that is not a station, stop vehicle
+            if (itinerary.isComplete()){
                 speed = 0;
                 isStopped = true;
                 return;
