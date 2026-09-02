@@ -18,7 +18,7 @@ public class GUIMainMenu extends GUI {
 	@Override
 	protected void drawMenuItems() {
 		buttonContainer.getChildren().addAll(
-				createMenuButton("menu.main.button.start", null),
+				createMenuButton("menu.main.button.start", () -> openMenu(new GUISimulation(stage, this))),
 				createButtonRow(
 						createMenuButton("menu.main.button.settings", () -> openMenu(new GUISettings(stage, this))),
 						createMenuButton("menu.main.button.about", () -> openMenu(new GUIAbout(stage, this)))

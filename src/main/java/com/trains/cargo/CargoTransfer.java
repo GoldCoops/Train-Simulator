@@ -1,5 +1,7 @@
 package com.trains.cargo;
 
+import com.trains.utils.GridPos;
+
 import java.util.Objects;
 
 public final class CargoTransfer {
@@ -29,7 +31,23 @@ public final class CargoTransfer {
             throw e; // And throw the exception so the caller knows this process failed
         }
         return true;
-
+    }
+    /**
+     * Removes cargo from a hold, but only once it has reached its destination.
+     * @param source the hold the cargo is leaving
+     * @param cargo the cargo being delivered
+     * @param location where the delivery is being attempted
+     * @return true if the cargo was at its destination and has been removed,
+     *         false if it is not yet there or was not in the hold
+     */
+    public static boolean deliverCargo(CargoHold source, Cargo cargo, GridPos location) {
+        Objects.requireNonNull(source);
+        Objects.requireNonNull(cargo);
+        Objects.requireNonNull(location);
+        if (!cargo.getDestination().equals(location)) {
+            return false; // not there yet, so it stays on board
+        }
+        return source.removeCargo(cargo);
     }
 
     /**

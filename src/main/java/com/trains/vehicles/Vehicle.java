@@ -7,6 +7,7 @@ import java.util.Objects;
 import com.trains.cargo.Cargo;
 import com.trains.cargo.CargoHold;
 import com.trains.network.*;
+import com.trains.routing.Route;
 import com.trains.utils.Point2D;
 import com.trains.cargo.CargoTransfer;
 import com.trains.cargo.CargoType;
@@ -19,7 +20,7 @@ public class Vehicle {
     private float speed;
     private final float maxSpeed;
     private final float acceleration;
-    private final Itinerary itinerary;
+    private Itinerary itinerary;
     private double distanceAlong; // We should switch from using x and y values for the coordinates to a position along a PathwaySegment, and then interpolate X and Y when we need them for rendering in getX and getY
 
 
@@ -49,6 +50,28 @@ public class Vehicle {
 
     public float getMaxSpeed() {
         return maxSpeed;
+    }
+
+    /** @return the current speed in units per second */
+    public float getSpeed() { return speed; }
+
+    /** @return true if the vehicle is stopped or braking to a stop */
+    public boolean isStopped() { return isStopped; }
+
+    /** @return true if the vehicle has finished its route */
+    public boolean isRouteComplete() { return itinerary.isComplete(); }
+
+    /**
+     * Puts the vehicle onto a new route, stationary at that route's origin.
+     * Cargo already on board is kept.
+     * @param route the new route to follow
+     * @throws NullPointerException if route is null
+     */
+    public void dispatch(Route route) {
+        this.itinerary = new Itinerary(route);
+        this.distanceAlong = 0;
+        this.speed = 0;
+        this.isStopped = true;
     }
 
 
