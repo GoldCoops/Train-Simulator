@@ -238,6 +238,15 @@ public class Vehicle {
         return "Vehicle { " + getPos() + ", " + speed + ", " + itinerary.getDestinationNode() + " }";
     }
 
+    /**
+     * Attempts to board passengers from a station onto this vehicle
+     * A passenger can board if:
+     * - the cargo is passenger
+     * -the passenger's destination is still ahead on this's vehicle's route
+     * -the vehicle has enough capacity
+     * @param station, the station passengers are boarding from
+     * @return the number of passengers successfully boarded
+     */
     public int boardPassengers(Station station){
         Objects.requireNonNull(station);
 
@@ -260,5 +269,28 @@ public class Vehicle {
         }
 
         return boarded;
+    }
+
+    public int unloadPassengers(Station station){
+        Objects.requireNonNull(station);
+
+        int unload = 0;
+
+        for (Cargo cargo : cargoHold.getContents()){
+            if (cargo.getType() != CargoType.PASSENGER){
+                continue;
+            }
+
+            if (!cargo.getDestination().equals(station.getPos())){
+                continue;
+            }
+
+            boolean removed = CargoTransfer.removeCargo(cargoHold, cargo);
+
+            if (removed){
+                unload++;
+            }
+        }
+        return unload;
     }
 }

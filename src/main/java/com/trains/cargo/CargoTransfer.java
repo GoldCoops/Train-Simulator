@@ -69,4 +69,20 @@ public final class CargoTransfer {
 
         return destination.hasCargo(cargo);
     }
+    /**
+     * Removes cargo from a cargo hold
+     * @param source, the cargo hold containing the cargo
+     * @param cargo, the cargo to be removed
+     * @return true if the cargo was successfully removed
+     */
+    public static boolean removeCargo(CargoHold source, Cargo cargo){
+        Objects.requireNonNull(source);
+        Objects.requireNonNull(cargo);
+
+        if (!source.hasCargo(cargo)){
+            return false;
+        }
+
+        return source.removeCargo(cargo);
+    }
 }
