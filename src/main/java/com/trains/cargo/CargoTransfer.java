@@ -61,28 +61,15 @@ public final class CargoTransfer {
         Objects.requireNonNull(destination);
         Objects.requireNonNull(cargo);
 
+        //check that the hold accepts this cargo type and has enough remaining capacity
         if(!destination.canAccept(cargo)){
             return false;
         }
 
+        //add the newly created acrgo directly to the destination hold
         destination.addCargo(cargo);
 
         return destination.hasCargo(cargo);
     }
-    /**
-     * Removes cargo from a cargo hold
-     * @param source, the cargo hold containing the cargo
-     * @param cargo, the cargo to be removed
-     * @return true if the cargo was successfully removed
-     */
-    public static boolean removeCargo(CargoHold source, Cargo cargo){
-        Objects.requireNonNull(source);
-        Objects.requireNonNull(cargo);
 
-        if (!source.hasCargo(cargo)){
-            return false;
-        }
-
-        return source.removeCargo(cargo);
-    }
 }

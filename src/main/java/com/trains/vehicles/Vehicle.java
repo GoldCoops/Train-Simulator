@@ -259,15 +259,18 @@ public class Vehicle {
 
         int boarded = 0;
 
+        //check all the cargo currently waiting at the station
         for (Cargo cargo : station.getCargoHold().getContents()){
             if (cargo.getType() != CargoType.PASSENGER){
                 continue;
             }
 
+            //do not board the passengers whose destination is not ahead on the route
             if (!itinerary.willVisit(cargo.getDestination())){
             continue;
             }
 
+            //Transfer the passengers from station to vehicle if vehicle has enough capacity
             boolean transferred = CargoTransfer.transferCargo(station.getCargoHold(), cargoHold, cargo);
 
             if (transferred){
@@ -277,24 +280,22 @@ public class Vehicle {
 
         return boarded;
     }
-
+    /**
+     * Unloads passengers from the vehicle when they reach their destination station
+     * @param station, the station at which vehicle has arrived
+     * @return number of passengers successfully unloaded
+     */
     public int unloadPassengers(Station station){
         Objects.requireNonNull(station);
 
         int unload = 0;
-
+        //Check each piece of the cargo currently on vehicle
         for (Cargo cargo : cargoHold.getContents()){
             if (cargo.getType() != CargoType.PASSENGER){
                 continue;
             }
-
-            if (!cargo.getDestination().equals(station.getPos())){
-                continue;
-            }
-
-            boolean removed = CargoTransfer.removeCargo(cargoHold, cargo);
-
-            if (removed){
+            //deliverCargo only removes the passenger if this is their destination
+            if (CargoTransfer.deliverCargo(cargoHold, cargo, station.getPos())){
                 unload++;
             }
         }
