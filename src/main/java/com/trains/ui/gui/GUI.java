@@ -26,8 +26,6 @@ public abstract class GUI extends BorderPane {
 		this.buttonContainer = new VBox(15);
 		buttonContainer.setAlignment(Pos.CENTER);
 
-//		setPadding(new Insets(50));
-
 		Label menuTitle = new Label();
 		menuTitle.textProperty().bind(I18N.createStringBinding(getTitle()));
 		menuTitle.styleProperty().bind(Bindings.concat(
@@ -55,7 +53,7 @@ public abstract class GUI extends BorderPane {
 			setBottom(backButtonContainer);
 
 			BorderPane.setAlignment(backButtonContainer, Pos.CENTER);
-			BorderPane.setMargin(backButtonContainer, new Insets(0,0, 50, 0));
+			BorderPane.setMargin(backButtonContainer, new Insets(15,0, 50, 0));
 		}
 	}
 

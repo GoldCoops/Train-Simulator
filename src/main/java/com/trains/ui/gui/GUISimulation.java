@@ -53,7 +53,7 @@ public class GUISimulation extends GUI {
 
 		// GUI put buttonContainer in the centre, so claim the centre first and then re-home it
 		setCenter(view.getRoot());
-		setRight(buttonContainer);
+		setLeft(buttonContainer);
 		BorderPane.setMargin(buttonContainer, new Insets(25));
 		BorderPane.setAlignment(buttonContainer, Pos.TOP_CENTER);
 
@@ -63,7 +63,7 @@ public class GUISimulation extends GUI {
 
 	@Override
 	protected String getTitle() {
-		return "menu.title.simulation";
+		return "";
 	}
 
 	/**
@@ -135,8 +135,8 @@ public class GUISimulation extends GUI {
 		speedLabel.setText(I18N.getString("sim.label.speed", controller.getSpeedMultiplier()));
 		timeLabel.setText(I18N.getString("sim.label.time", (int) controller.getElapsedSeconds()));
 		vehicleLabel.setText(I18N.getString("sim.label.vehicles", controller.getSimulation().getVehicles().size()));
-		waitingLabel.setText(I18N.getString("sim.label.waiting", controller.getWaitingUnits()));
-		onboardLabel.setText(I18N.getString("sim.label.onboard", controller.getOnboardUnits()));
+		waitingLabel.setText(I18N.getString("sim.label.passengers.waiting", controller.getWaitingUnits()));
+		onboardLabel.setText(I18N.getString("sim.label.passengers.onBoard", controller.getOnboardUnits()));
 		deliveredLabel.setText(I18N.getString("sim.label.delivered", controller.getDeliveredCount()));
 	}
 

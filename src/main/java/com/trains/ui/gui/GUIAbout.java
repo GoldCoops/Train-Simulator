@@ -1,6 +1,7 @@
 package com.trains.ui.gui;
 
 import com.trains.utils.lang.I18N;
+import javafx.beans.binding.Bindings;
 import javafx.scene.control.Label;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -20,11 +21,9 @@ public class GUIAbout extends GUI {
 	protected void drawMenuItems() {
 		Label textBlock = new Label();
 		textBlock.textProperty().bind(I18N.createStringBinding("menu.about.description"));
+		textBlock.styleProperty().bind(Bindings.concat("-fx-font-size:", "16px"));
 
 		textBlock.setTextAlignment(TextAlignment.CENTER);
-		buttonContainer.getChildren().addAll(
-				textBlock
-		);
+		buttonContainer.getChildren().addAll(textBlock);
 	}
-
 }

@@ -20,8 +20,8 @@ public class GUIMainMenu extends GUI {
 		buttonContainer.getChildren().addAll(
 				createMenuButton("menu.main.button.start", () -> openMenu(new GUISimulation(stage, this))),
 				createButtonRow(
-						createMenuButton("menu.main.button.settings", () -> openMenu(new GUISettings(stage, this))),
-						createMenuButton("menu.main.button.about", () -> openMenu(new GUIAbout(stage, this)))
+						createMenuButton("menu.main.button.about", () -> openMenu(new GUIAbout(stage, this))),
+						createMenuButton("menu.main.button.language", () -> openMenu(new GUILanguage(stage, this)))
 				),
 				createMenuButton("menu.main.button.quit", Platform::exit)
 		);
