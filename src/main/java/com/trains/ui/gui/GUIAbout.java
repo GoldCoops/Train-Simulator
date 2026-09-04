@@ -1,15 +1,16 @@
 package com.trains.ui.gui;
 
 import com.trains.utils.lang.I18N;
-import javafx.beans.binding.Bindings;
-import javafx.scene.control.Label;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+
 
 public class GUIAbout extends GUI {
 
-	public GUIAbout(Stage stage, GUI previous) {
-		super(stage, previous);
+	public GUIAbout(JFrame frame, GUI previous) {
+		super(frame, previous);
 	}
 
 	@Override
@@ -19,11 +20,17 @@ public class GUIAbout extends GUI {
 
 	@Override
 	protected void drawMenuItems() {
-		Label textBlock = new Label();
-		textBlock.textProperty().bind(I18N.createStringBinding("menu.about.description"));
-		textBlock.styleProperty().bind(Bindings.concat("-fx-font-size:", "16px"));
+		JLabel textBlock = new JLabel("", SwingConstants.CENTER);
+		bind(() -> textBlock.setText(toHtml(I18N.getString("menu.about.description"))));
+		addMenuItems(textBlock);
+	}
 
-		textBlock.setTextAlignment(TextAlignment.CENTER);
-		buttonContainer.getChildren().addAll(textBlock);
+	private static String toHtml(String text) {
+		return "<html><div style='text-align:center'>"
+				+ text.replace("&", "&amp;")
+						.replace("<", "&lt;")
+						.replace(">", "&gt;")
+						.replace("\n", "<br>")
+				+ "</div></html>";
 	}
 }
