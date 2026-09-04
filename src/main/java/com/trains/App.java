@@ -21,7 +21,7 @@ public class App {
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setSize(800, 600);
 		frame.setLocationRelativeTo(null);
-		//Will need to add a Pane/frame for the MainMenu
+		frame.setContentPane(new GUIMainMenu(frame));
 		frame.setVisible(true);
 	}
 }
