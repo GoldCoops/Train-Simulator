@@ -96,7 +96,7 @@ public class GUISimulation extends GUI {
 	 * </p>
 	 */
 	@Override
-	protected Button createBackButton() {
+	protected JButton createBackButton() {
 		// called during super(), but the action only runs on click, by which point controller exists
 		return createMenuButton("menu.button.back", () -> {
 			controller.stop();
@@ -105,18 +105,15 @@ public class GUISimulation extends GUI {
 	}
 
 	private void buildSidebar() {
-		Slider speedSlider = new Slider(
-				SimulationController.MIN_SPEED_MULTIPLIER,
-				SimulationController.MAX_SPEED_MULTIPLIER,
-				controller.getSpeedMultiplier());
-		speedSlider.setMaxWidth(SIDEBAR_WIDTH);
-		speedSlider.valueProperty().addListener(
-				(observable, oldValue, newValue) -> controller.setSpeedMultiplier(newValue.doubleValue()));
+		int min = (int) Math.round(SimulationController.MIN_SPEED_MULTIPLIER * SPEED_SCALE);
+		int max = (int) Math.round(SimulationController.MAX_SPEED_MULTIPLIER * SPEED_SCALE);
+		int value = (int) Math.round(controller.getSpeedMultiplier() * SPEED_SCALE);
+		JSlider speedSlider = new JSlider(min, max, value);
+		speedSlider.setMaximumSize(new Dimension(SIDEBAR_WIDTH, speedSlider.getPreferredSize().height));
+		speedSlider.addChangeListener(event ->
+				controller.setSpeedMultiplier(speedSlider.getValue() / (double) SPEED_SCALE));
 
-		buttonContainer.setAlignment(Pos.TOP_CENTER);
-		buttonContainer.setPrefWidth(SIDEBAR_WIDTH);
-		buttonContainer.setMaxWidth(SIDEBAR_WIDTH);
-		buttonContainer.getChildren().addAll(
+		addMenuItems(
 				createSectionLabel("sim.label.controls"),
 				createButtonRow(playPauseButton, createMenuButton("sim.button.reset", this::reset)),
 				speedLabel,
@@ -171,13 +168,13 @@ public class GUISimulation extends GUI {
 	 */
 	private void reset() {
 		controller.stop();
-		openMenu(new GUISimulation(stage, previous));
+		openMenu(new GUISimulation(frame, previous));
 	}
 
-	private Label createSectionLabel(String key) {
-		Label label = new Label();
-		label.textProperty().bind(I18N.createStringBinding(key));
-		label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+	private JLabel createSectionLabel(String key) {
+		JLabel label = new JLabel();
+		label.setFont(label.getFont().deriveFont(Font.BOLD, 16f));
+		bind(label, key);
 		return label;
 	}
 
