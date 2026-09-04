@@ -10,8 +10,8 @@ import com.trains.sim.CargoSpawner;
 import com.trains.sim.Simulation;
 import com.trains.utils.GridPos;
 import com.trains.vehicles.Vehicle;
-import javafx.animation.AnimationTimer;
 
+import javax.swing.Timer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -52,6 +52,7 @@ public class SimulationController {
     private static final int SPAWN_ATTEMPTS = 8;
     /** Passengers placed on the network up front, so the screen is not empty at t=0. */
     private static final int SEED_PASSENGERS = 12;
+    private static final int FRAME_DELAY_MS = 16;
 
     public static final double MIN_SPEED_MULTIPLIER = 0.25;
     public static final double MAX_SPEED_MULTIPLIER = 8.0;
@@ -81,7 +82,7 @@ public class SimulationController {
      * AnimationTimer's constructor reaches for the JavaFX toolkit and so needs a display. Building
      * it lazily keeps a controller constructible on a headless machine.
      */
-    private AnimationTimer timer;
+    private Timer timer;
 
     private Runnable onFrame;
     private boolean running;
@@ -127,12 +128,7 @@ public class SimulationController {
      */
     public void start() {
         if (timer == null) {
-            timer = new AnimationTimer() {
-                @Override
-                public void handle(long now) {
-                    pulse(now);
-                }
-            };
+            timer = new Timer(FRAME_DELAY_MS, event -> pulse(System.nanoTime()));
         }
         lastFrameNanos = 0;
         running = true;
