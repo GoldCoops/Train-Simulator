@@ -1,6 +1,6 @@
 package com.trains.ui.gui;
 
-import com.trains.ui.DemoScenario;
+import com.trains.ui.RandomScenario;
 import com.trains.ui.SimulationController;
 import com.trains.ui.SimulationView;
 import com.trains.utils.lang.I18N;
@@ -43,13 +43,13 @@ public class GUISimulation extends GUI {
 		setTitleSize(TITLE_SIZE);
 
 		this.view = new SimulationView();
-		this.controller = new SimulationController(DemoScenario.build());
+		this.controller = new SimulationController(RandomScenario.build());
 
 		this.playPauseButton = new JButton();
 		this.playPauseButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lockButtonSize(this.playPauseButton, MAX_BUTTON_SIZE / 2);
 		this.playPauseButton.addActionListener(event -> togglePlayPause());
 		bind(this::updatePlayPauseText);
+		lockButtonSize(this.playPauseButton, MAX_BUTTON_SIZE / 2);
 		this.speedLabel = createStatLabel();
 		this.timeLabel = createStatLabel();
 		this.vehicleLabel = createStatLabel();
@@ -73,7 +73,7 @@ public class GUISimulation extends GUI {
 
 	@Override
 	protected String getTitle() {
-		return "menu.title.simulation";
+		return "Simulation";
 	}
 
 	/**
@@ -113,18 +113,19 @@ public class GUISimulation extends GUI {
 				controller.setSpeedMultiplier(speedSlider.getValue() / (double) SPEED_SCALE));
 
 		addMenuItems(
-				createSectionLabel("sim.label.controls"),
-				createButtonRow(playPauseButton, createMenuButton("sim.button.reset", this::reset)),
-				speedLabel,
-				speedSlider,
-				createMenuButton("sim.button.spawn", controller::spawnPassenger),
-				createMenuButton("sim.button.fit", view::requestFit),
-				createSectionLabel("sim.label.stats"),
-				timeLabel,
-				vehicleLabel,
-				waitingLabel,
-				onboardLabel,
-				deliveredLabel
+			createSectionLabel("sim.label.controls"),
+			createButtonRow(playPauseButton, createMenuButton("sim.button.reset", this::reset)),
+			speedLabel,
+			speedSlider,
+			createMenuButton("sim.button.spawn", controller::spawnPassenger),
+			createMenuButton("sim.button.spawnTrain", controller::spawnVehicle),
+			createMenuButton("sim.button.fit", view::requestFit),
+			createSectionLabel("sim.label.stats"),
+			timeLabel,
+			vehicleLabel,
+			waitingLabel,
+			onboardLabel,
+			deliveredLabel
 		);
 	}
 

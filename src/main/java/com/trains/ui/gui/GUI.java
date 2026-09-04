@@ -47,11 +47,13 @@ public abstract class GUI extends JPanel {
 		bind(menuTitle, getTitle());
 
 		JPanel titleContainer = new JPanel(new BorderLayout());
-		titleContainer.setOpaque(false);
-		titleContainer.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 0));
-		titleContainer.add(menuTitle, BorderLayout.CENTER);
+titleContainer.setOpaque(false);
+titleContainer.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 0));
+titleContainer.add(menuTitle, BorderLayout.CENTER);
 
-		drawMenuItems();
+buttonContainer.add(Box.createVerticalGlue());
+drawMenuItems();
+buttonContainer.add(Box.createVerticalGlue());
 
 		add(titleContainer, BorderLayout.NORTH);
 		add(buttonContainer, BorderLayout.CENTER);
@@ -91,7 +93,8 @@ public abstract class GUI extends JPanel {
 		buttonRow.setOpaque(false);
 		buttonRow.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		int buttonWidth = (MAX_BUTTON_SIZE / 2) - (spacing / 2);
+		int gaps = buttons.length + 1;
+		int buttonWidth = (MAX_BUTTON_SIZE - spacing * gaps) / buttons.length;
 		for (JButton button : buttons) {
 			lockButtonSize(button, buttonWidth);
 			buttonRow.add(button);

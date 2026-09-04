@@ -10,6 +10,8 @@ import com.trains.sim.CargoSpawner;
 import com.trains.sim.Simulation;
 import com.trains.utils.GridPos;
 import com.trains.vehicles.Vehicle;
+import com.trains.cargo.CargoHold;
+import com.trains.vehicles.Itinerary;
 
 import javax.swing.Timer;
 import java.util.ArrayList;
@@ -36,6 +38,10 @@ public class SimulationController {
      * Simulated seconds per tick. Vehicle.update integrates speed against dt, so holding the step
      * constant keeps movement identical no matter the frame rate or the speed multiplier.
      */
+
+    private static final int TRAIN_CAPACITY = 12;
+    private static final float TRAIN_MAX_SPEED = 14f;
+    private static final float TRAIN_ACCELERATION = 6f;
     private static final double FIXED_DT = 1.0 / 60.0;
     /** Longest real frame we will act on, so a stall cannot teleport vehicles across the network. */
     private static final double MAX_FRAME_SECONDS = 0.25;
@@ -499,4 +505,31 @@ public class SimulationController {
         }
         return stations;
     }
+
+    public boolean spawnVehicle() {
+    List<Station> stations = connectedStations();
+    if (stations.size() < 2) {
+        return false;
+    }
+
+    for (int attempt = 0; attempt < SPAWN_ATTEMPTS; attempt++) {
+        Station origin = stations.get(random.nextInt(stations.size()));
+        Station destination = stations.get(random.nextInt(stations.size()));
+        if (origin == destination) {
+            continue;
+        }
+        Route route = router.findRoute(origin, destination);
+        if (route == null) {
+            continue;
+        }
+        sim.addVehicle(new Vehicle(
+                new Itinerary(route),
+                TRAIN_MAX_SPEED,
+                TRAIN_ACCELERATION,
+                CargoHold.mixed(TRAIN_CAPACITY)));
+        return true;
+    }
+    return false;
+    }
+
 }
