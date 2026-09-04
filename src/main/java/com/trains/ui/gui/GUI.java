@@ -3,9 +3,14 @@ package com.trains.ui.gui;
 
 import com.trains.utils.lang.I18N;
 
+import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public abstract class GUI extends JPanel {
 	private static final float DEFAULT_TITLE_SIZE = 24.0f;
@@ -58,31 +63,39 @@ public abstract class GUI extends JPanel {
 
 	protected abstract void drawMenuItems();
 
-	
-
-	protected Button createMenuButton(String label, Runnable action) {
-		Button button = new Button();
-		button.textProperty().bind(I18N.createStringBinding(label));
-		button.setPrefWidth(MAX_BUTTON_SIZE);
-		button.setMaxWidth(MAX_BUTTON_SIZE);
-		button.setOnAction(event -> action.run());
+	protected JButton createMenuButton(String label, Runnable action) {
+		JButton button = new JButton();
+		bind(button, label);
+		button.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lockButtonSize(button, MAX_BUTTON_SIZE);
+		button.addActionListener(event -> action.run());
 		return button;
 	}
 
-	protected HBox createButtonRow(Button... buttons) {
-		double spacing = 15;
-		HBox buttonRow = new HBox(spacing, buttons);
-		buttonRow.setAlignment(Pos.CENTER);
+	protected JPanel createButtonRow(JButton... buttons) {
+		int spacing = 15;
+		JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.CENTER, spacing, 0));
+		buttonRow.setOpaque(false);
+		buttonRow.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		for (Button button : buttons) {
-			HBox.setHgrow(button, Priority.ALWAYS);
-			button.setMaxWidth((MAX_BUTTON_SIZE / 2) - (spacing / 2));
+		int buttonWidth = (MAX_BUTTON_SIZE / 2) - (spacing / 2);
+		for (JButton button : buttons) {
+			lockButtonSize(button, buttonWidth);
+			buttonRow.add(button);
 		}
-
+		buttonRow.setMaximumSize(new Dimension(MAX_BUTTON_SIZE, buttonRow.getPreferredSize().height));
 		return buttonRow;
 	}
 
-	protected Button createBackButton() {
+	protected static void lockButtonSize(AbstractButton button, int width) {
+		int height = button.getPreferredSize().height;
+		Dimension size = new Dimension(width, height);
+		button.setPreferredSize(size);
+		button.setMinimumSize(size);
+		button.setMaximumSize(size);
+	}
+
+	protected JButton createBackButton() {
 		return createMenuButton("menu.button.back", () -> openMenu(previous));
 	}
 
