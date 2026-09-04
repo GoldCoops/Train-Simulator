@@ -1,15 +1,6 @@
 package com.trains.ui.gui;
 
-import com.trains.utils.lang.I18N;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
+import javax.swing.*;
 
 public abstract class GUI extends BorderPane {
 	private static final double DEFAULT_TITLE_SIZE = 24.0;
@@ -90,4 +81,11 @@ public abstract class GUI extends BorderPane {
 	protected void openMenu(GUI menu) {
 		stage.getScene().setRoot(menu);
 	}
+
+	
+	protected void setTItleSize(float size) {
+		
+	}
+
+	
 }

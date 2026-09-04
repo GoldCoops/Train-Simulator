@@ -1,13 +1,12 @@
 package com.trains.ui.gui;
 
-import javafx.application.Platform;
-import javafx.stage.Stage;
+import javax.swing.JFrame;
 
 public class GUIMainMenu extends GUI {
 
-	public GUIMainMenu(Stage stage) {
-		super(stage, null);
-		titleSize.set(32.0);
+	public GUIMainMenu(JFrame frame) {
+		super(frame, null);
+		setTitleSize(32.0f);
 	}
 
 	@Override
