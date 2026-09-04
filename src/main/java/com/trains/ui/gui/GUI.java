@@ -1,11 +1,6 @@
 package com.trains.ui.gui;
 
-
 import com.trains.utils.lang.I18N;
-
-import javafx.geometry.Pos;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +17,7 @@ public abstract class GUI extends JPanel {
 	protected GUI previous;
 
 	private final JLabel menuTitle;
-	private final List<Runnable> i18nRefreshers = new Arrayist<>();
+	private final List<Runnable> i18nRefreshers = new ArrayList<>();
 	private final Runnable localeRefresh = this::refreshI18n;
 
 	public GUI(JFrame frame, GUI previous) {
@@ -119,11 +114,8 @@ public abstract class GUI extends JPanel {
 
 	
 	protected void setTitleSize(float size) {
-		I18N.removeListener(localeRefresh);
-		menu.attachLocale();
-		frame.setContentPane(menu);
-		frame.revalidate();
-		frame.repaint();
+		this.titleSize = size;
+		applyTitleFont();
 	}
 
 	private void attachLocale() {
@@ -133,6 +125,19 @@ public abstract class GUI extends JPanel {
 	}
 
 	protected void bind(Runnable refresher) {
+		i18nRefreshers.add(refresher);
+		refresher.run();
+	}
+
+	
+	protected void bind(JLabel label, String key) {
+		Runnable refresher = () -> label.setText(I18N.getString(key));
+		i18nRefreshers.add(refresher);
+		refresher.run();
+	}
+
+	protected void bind(AbstractButton button, String key) {
+		Runnable refresher = () -> button.setText(I18N.getString(key));
 		i18nRefreshers.add(refresher);
 		refresher.run();
 	}
