@@ -158,9 +158,8 @@ public class GUISimulation extends GUI {
 	}
 
 	private void updatePlayPauseText() {
-		// binding again replaces the previous one, so the button follows both state and locale
-		playPauseButton.textProperty().bind(
-				I18N.createStringBinding(controller.isRunning() ? "sim.button.pause" : "sim.button.play"));
+		String key = controller.isRunning() ? "sim.button.pause" : "sim.button.play";
+		playPauseButton.setText(I18N.getString(key));
 	}
 
 	/**
