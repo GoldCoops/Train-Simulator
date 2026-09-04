@@ -3,15 +3,9 @@ package com.trains.ui.gui;
 
 import com.trains.utils.lang.I18N;
 
-import javafx.geometry.Pos;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
-import java.util.List;
-
 
 public abstract class GUI extends JPanel {
 	private static final float DEFAULT_TITLE_SIZE = 24.0f;
@@ -64,6 +58,8 @@ public abstract class GUI extends JPanel {
 
 	protected abstract void drawMenuItems();
 
+	
+
 	protected Button createMenuButton(String label, Runnable action) {
 		Button button = new Button();
 		button.textProperty().bind(I18N.createStringBinding(label));
@@ -95,8 +91,9 @@ public abstract class GUI extends JPanel {
 	}
 
 	
-	protected void setTItleSize(float size) {
-		
+	protected void setTitleSize(float size) {
+		this.titleSize = size;
+		applyTitleFont();
 	}
 
 	protected void bind(Runnable refresher) {
