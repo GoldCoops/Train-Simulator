@@ -6,7 +6,7 @@ public class GUIMainMenu extends GUI {
 
 	public GUIMainMenu(JFrame frame) {
 		super(frame, null);
-		setTitleSize(32.0f);
+		setTItleSize(32.0f);
 	}
 
 	@Override
@@ -16,13 +16,6 @@ public class GUIMainMenu extends GUI {
 
 	@Override
 	protected void drawMenuItems() {
-		buttonContainer.getChildren().addAll(
-				createMenuButton("menu.main.button.start", () -> openMenu(new GUISimulation(stage, this))),
-				createButtonRow(
-						createMenuButton("menu.main.button.about", () -> openMenu(new GUIAbout(stage, this))),
-						createMenuButton("menu.main.button.language", () -> openMenu(new GUILanguage(stage, this)))
-				),
-				createMenuButton("menu.main.button.quit", Platform::exit)
-		);
+
 	}
 }

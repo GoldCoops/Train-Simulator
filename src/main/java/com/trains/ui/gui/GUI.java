@@ -2,14 +2,31 @@ package com.trains.ui.gui;
 
 import javax.swing.*;
 
-public abstract class GUI extends BorderPane {
-	private static final double DEFAULT_TITLE_SIZE = 24.0;
-	protected static final double MAX_BUTTON_SIZE = 300.0;
-	protected final Stage stage;
-	protected final VBox buttonContainer;
-	protected DoubleProperty titleSize = new SimpleDoubleProperty(DEFAULT_TITLE_SIZE);
+import com.trains.utils.lang.I18N;
+
+import javafx.geometry.Pos;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
+
+public abstract class GUI extends JPanel {
+	private static final float DEFAULT_TITLE_SIZE = 24.0f;
+	protected static final int MAX_BUTTON_SIZE = 300;
+	protected final JFrame frame;
+	protected final JPanel buttonContainer;
+	protected float titleSize = DEFAULT_TITLE_SIZE;
 
 	protected GUI previous;
+
+	private final JLabel menuTitle;
+	private final List<Runnable> i18nRefreshers = new Arrayist<>();
+	private final Runnable localeRefresh = this::refreshI18n;
 
 	public GUI(Stage stage, GUI previous) {
 		this.stage = stage;
@@ -87,5 +104,10 @@ public abstract class GUI extends BorderPane {
 		
 	}
 
+		private void refreshI18n() {
+		for (Runnable refresher : i18nRefreshers) {
+			refresher.run();
+		}
+	}
 	
 }
