@@ -99,14 +99,37 @@ public abstract class GUI extends JPanel {
 		return createMenuButton("menu.button.back", () -> openMenu(previous));
 	}
 
+	protected void addMenuItems(JComponent... items) {
+		for (JComponent item : items) {
+			if (buttonContainer.getComponentCount() > 0) {
+				buttonContainer.add(Box.createRigidArea(new Dimension(0, 15)));
+			}
+			item.setAlignmentX(Component.CENTER_ALIGNMENT);
+			buttonContainer.add(item);
+		}
+	}
+
 	protected void openMenu(GUI menu) {
-		stage.getScene().setRoot(menu);
+		I18N.removeListener(localeRefresh);
+		menu.attachLocale();
+		frame.setContentPane(menu);
+		frame.revalidate();
+		frame.repaint();
 	}
 
 	
 	protected void setTitleSize(float size) {
-		this.titleSize = size;
-		applyTitleFont();
+		I18N.removeListener(localeRefresh);
+		menu.attachLocale();
+		frame.setContentPane(menu);
+		frame.revalidate();
+		frame.repaint();
+	}
+
+	private void attachLocale() {
+		I18N.removeListener(localeRefresh);
+		I18N.addListener(localeRefresh);
+		refreshI18n();
 	}
 
 	protected void bind(Runnable refresher) {
