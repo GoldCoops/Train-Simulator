@@ -10,16 +10,19 @@ import com.trains.utils.GridPos;
 import com.trains.utils.Point2D;
 import com.trains.utils.lang.I18N;
 import com.trains.vehicles.Vehicle;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
-import javafx.util.Duration;
 
+import javax.swing.JPanel;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.geom.AffineTransform;
 import java.util.Objects;
 
 /**
@@ -33,7 +36,7 @@ import java.util.Objects;
  * canvas pixels. The two are related by a scale and an offset, which zooming and panning change.
  * </p>
  */
-public final class SimulationView {
+public final class SimulationView extends JPanel {
 	/**
 	 * Canvas size used before the pane has been laid out, and the fallback world extent.
 	 */
@@ -54,21 +57,19 @@ public final class SimulationView {
 	 */
 	private static final double MIN_GRID_PIXELS = 14.0;
 
-	private static final Color BACKGROUND = Color.web("#1b2130");
-	private static final Color GRID = Color.web("#252d3f");
-	private static final Color PATHWAY = Color.web("#7d8799");
-	private static final Color NODE = Color.web("#5c6b82");
-	private static final Color STATION = Color.web("#e8b339");
-	private static final Color STATION_FULL = Color.web("#d95f5f");
-	private static final Color VEHICLE_MOVING = Color.web("#4bab6a");
-	private static final Color VEHICLE_STOPPED = Color.web("#c9d1d9");
-	private static final Color TEXT = Color.web("#e6edf3");
-	private static final Color TEXT_DIM = Color.web("#9aa5b1");
+	private static final Color BACKGROUND = Color.decode("#1b2130");
+	private static final Color GRID = Color.decode("#252d3f");
+	private static final Color PATHWAY = Color.decode("#7d8799");
+	private static final Color NODE = Color.decode("#5c6b82");
+	private static final Color STATION = Color.decode("#e8b339");
+	private static final Color STATION_FULL = Color.decode("#d95f5f");
+	private static final Color VEHICLE_MOVING = Color.decode("#4bab6a");
+	private static final Color VEHICLE_STOPPED = Color.decode("#c9d1d9");
+	private static final Color TEXT = Color.decode("#e6edf3");
+	private static final Color TEXT_DIM = Color.decode("#9aa5b1");
 
-	private final Canvas canvas;
-	private final Pane root;
 	private final double worldSize;
-	private final Tooltip tooltip = new Tooltip();
+	private Simulation simulation;
 	private double scale = 4.0;
 	/**
 	 * World coordinate drawn at the left edge of the canvas.
@@ -105,16 +106,9 @@ public final class SimulationView {
 			throw new IllegalArgumentException("World size must be greater than 0");
 		}
 		this.worldSize = worldSize;
-		this.canvas = new Canvas(worldSize, worldSize);
-		this.root = new Pane(canvas);
-
-		root.setStyle("-fx-background-color: #1b2130;");
-		// Canvas is not resizable, so Pane leaves its size alone and these bindings make it fill
-		canvas.widthProperty().bind(root.widthProperty());
-		canvas.heightProperty().bind(root.heightProperty());
-
+		setBackground(BACKGROUND);
+        setOpaque(true);
 		installPanAndZoom();
-		installHover();
 	}
 
 	/**
@@ -122,8 +116,8 @@ public final class SimulationView {
 	 *
 	 * @return the root pane
 	 */
-	public Pane getRoot() {
-		return root;
+	public JPanel getRoot() {
+		return this;
 	}
 
 	/**
@@ -145,8 +139,8 @@ public final class SimulationView {
 	public void fitToNetwork(Network network) {
 		Objects.requireNonNull(network);
 
-		double width = canvas.getWidth();
-		double height = canvas.getHeight();
+		double width = getWidth();
+		double height = getHeight();
 		if (width <= 0 || height <= 0) {
 			fitPending = true; // not laid out yet, try again next frame
 			return;
