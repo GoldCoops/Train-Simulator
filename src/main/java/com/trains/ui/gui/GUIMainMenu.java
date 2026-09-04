@@ -6,7 +6,7 @@ public class GUIMainMenu extends GUI {
 
 	public GUIMainMenu(JFrame frame) {
 		super(frame, null);
-		setTItleSize(32.0f);
+		setTitleSize(32.0f);
 	}
 
 	@Override
@@ -16,6 +16,6 @@ public class GUIMainMenu extends GUI {
 
 	@Override
 	protected void drawMenuItems() {
-
+		
 	}
 }

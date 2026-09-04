@@ -4,13 +4,16 @@ import com.trains.ui.DemoScenario;
 import com.trains.ui.SimulationController;
 import com.trains.ui.SimulationView;
 import com.trains.utils.lang.I18N;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JSlider;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 
 /**
  * The simulation screen.
@@ -21,27 +24,33 @@ import javafx.stage.Stage;
  * </p>
  */
 public class GUISimulation extends GUI {
-	private static final double SIDEBAR_WIDTH = MAX_BUTTON_SIZE;
-	private static final double TITLE_SIZE = 28.0;
+	private static final int SIDEBAR_WIDTH = MAX_BUTTON_SIZE;
+	private static final float TITLE_SIZE = 28.0f;
+	private static final int SPEED_SCALE = 100;
+
 
 	private final SimulationView view;
 	private final SimulationController controller;
-	private final Button playPauseButton;
-	private final Label speedLabel;
-	private final Label timeLabel;
-	private final Label vehicleLabel;
-	private final Label waitingLabel;
-	private final Label onboardLabel;
-	private final Label deliveredLabel;
+	private final JButton playPauseButton;
+	private final JLabel speedLabel;
+	private final JLabel timeLabel;
+	private final JLabel vehicleLabel;
+	private final JLabel waitingLabel;
+	private final JLabel onboardLabel;
+	private final JLabel deliveredLabel;
 
-	public GUISimulation(Stage stage, GUI previous) {
-		super(stage, previous);
-		titleSize.set(TITLE_SIZE);
+	public GUISimulation(JFrame frame, GUI previous) {
+		super(frame, previous);
+		setTitleSize(TITLE_SIZE);
 
 		this.view = new SimulationView();
 		this.controller = new SimulationController(DemoScenario.build());
 
-		this.playPauseButton = createMenuButton("sim.button.pause", this::togglePlayPause);
+		this.playPauseButton = new JButton();
+		this.playPauseButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lockButtonSize(this.playPauseButton, MAX_BUTTON_SIZE / 2);
+		this.playPauseButton.addActionListener(event -> togglePlayPause());
+		bind(this::updatePlayPauseText);
 		this.speedLabel = createStatLabel();
 		this.timeLabel = createStatLabel();
 		this.vehicleLabel = createStatLabel();
@@ -52,18 +61,20 @@ public class GUISimulation extends GUI {
 		buildSidebar();
 
 		// GUI put buttonContainer in the centre, so claim the centre first and then re-home it
-		setCenter(view.getRoot());
-		setLeft(buttonContainer);
-		BorderPane.setMargin(buttonContainer, new Insets(25));
-		BorderPane.setAlignment(buttonContainer, Pos.TOP_CENTER);
+		remove(buttonContainer);
+		add(view.getRoot(), BorderLayout.CENTER);
+		buttonContainer.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+		buttonContainer.setPreferredSize(new Dimension(SIDEBAR_WIDTH + 50, 0));
+		add(buttonContainer, BorderLayout.EAST);
 
 		controller.setOnFrame(this::onFrame);
 		controller.start();
+		updatePlayPauseText();
 	}
 
 	@Override
 	protected String getTitle() {
-		return "";
+		return "menu.title.simulation";
 	}
 
 	/**
@@ -170,9 +181,9 @@ public class GUISimulation extends GUI {
 		return label;
 	}
 
-	private Label createStatLabel() {
-		Label label = new Label();
-		label.setStyle("-fx-font-size: 13px;");
+	private JLabel createStatLabel() {
+		JLabel label = new JLabel();
+		label.setFont(label.getFont().deriveFont(13f));
 		return label;
 	}
 }
