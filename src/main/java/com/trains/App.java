@@ -1,14 +1,15 @@
 package com.trains;
 
 import com.trains.ui.gui.GUIMainMenu;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
-public class App extends Application {
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
+public class App {
 	public static void main(String[] args) {
 		// Main should only contain this line
-		launch(args);
+		SwingUtilities.invokeLater(App::start);
 	}
 
 	@Override

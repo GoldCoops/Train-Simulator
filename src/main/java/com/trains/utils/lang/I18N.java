@@ -11,7 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public final class I18N {
 
 	private static Locale locale;
-	private static final List<Runnable> listeners = new CopyOnWriteArrayList<>():
+	private static final List<Runnable> listeners = new CopyOnWriteArrayList<>();
 	public static final Set<Locale> availableLocales = Set.of(
 			Locale.of("en", "AU")
 	);
