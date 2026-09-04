@@ -23,7 +23,7 @@ public class GUILanguage extends GUI {
 
 	@Override
 	protected String getTitle() {
-		return "menu.title.language";
+		return "menu.title.settings.language";
 	}
 
 	@Override

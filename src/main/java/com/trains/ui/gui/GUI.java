@@ -2,9 +2,22 @@ package com.trains.ui.gui;
 
 import com.trains.utils.lang.I18N;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.*;
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GUI extends JPanel {
@@ -58,6 +71,11 @@ public abstract class GUI extends JPanel {
 
 	protected abstract void drawMenuItems();
 
+	protected void setTitleSize(float size) {
+		this.titleSize = size;
+		applyTitleFont();
+	}
+
 	protected JButton createMenuButton(String label, Runnable action) {
 		JButton button = new JButton();
 		bind(button, label);
@@ -78,6 +96,7 @@ public abstract class GUI extends JPanel {
 			lockButtonSize(button, buttonWidth);
 			buttonRow.add(button);
 		}
+
 		buttonRow.setMaximumSize(new Dimension(MAX_BUTTON_SIZE, buttonRow.getPreferredSize().height));
 		return buttonRow;
 	}
@@ -104,32 +123,6 @@ public abstract class GUI extends JPanel {
 		}
 	}
 
-	protected void openMenu(GUI menu) {
-		I18N.removeListener(localeRefresh);
-		menu.attachLocale();
-		frame.setContentPane(menu);
-		frame.revalidate();
-		frame.repaint();
-	}
-
-	
-	protected void setTitleSize(float size) {
-		this.titleSize = size;
-		applyTitleFont();
-	}
-
-	private void attachLocale() {
-		I18N.removeListener(localeRefresh);
-		I18N.addListener(localeRefresh);
-		refreshI18n();
-	}
-
-	protected void bind(Runnable refresher) {
-		i18nRefreshers.add(refresher);
-		refresher.run();
-	}
-
-	
 	protected void bind(JLabel label, String key) {
 		Runnable refresher = () -> label.setText(I18N.getString(key));
 		i18nRefreshers.add(refresher);
@@ -142,6 +135,25 @@ public abstract class GUI extends JPanel {
 		refresher.run();
 	}
 
+	protected void bind(Runnable refresher) {
+		i18nRefreshers.add(refresher);
+		refresher.run();
+	}
+
+	protected void openMenu(GUI menu) {
+		I18N.removeListener(localeRefresh);
+		menu.attachLocale();
+		frame.setContentPane(menu);
+		frame.revalidate();
+		frame.repaint();
+	}
+
+	private void attachLocale() {
+		I18N.removeListener(localeRefresh);
+		I18N.addListener(localeRefresh);
+		refreshI18n();
+	}
+
 	private void refreshI18n() {
 		for (Runnable refresher : i18nRefreshers) {
 			refresher.run();
@@ -151,5 +163,4 @@ public abstract class GUI extends JPanel {
 	private void applyTitleFont() {
 		menuTitle.setFont(menuTitle.getFont().deriveFont(Font.BOLD, titleSize));
 	}
-	
 }

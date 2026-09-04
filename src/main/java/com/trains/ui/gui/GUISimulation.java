@@ -28,7 +28,6 @@ public class GUISimulation extends GUI {
 	private static final float TITLE_SIZE = 28.0f;
 	private static final int SPEED_SCALE = 100;
 
-
 	private final SimulationView view;
 	private final SimulationController controller;
 	private final JButton playPauseButton;
@@ -136,15 +135,15 @@ public class GUISimulation extends GUI {
 		view.render(controller.getSimulation());
 
 		/*
-		 * setText rather than a binding, because createStringBinding captures its parameters once
+		 * setText rather than a binding, because a binding would capture its parameters once
 		 * and so cannot show a changing value. getString still reads the current locale each call,
 		 * so these stay translated.
 		 */
 		speedLabel.setText(I18N.getString("sim.label.speed", controller.getSpeedMultiplier()));
 		timeLabel.setText(I18N.getString("sim.label.time", (int) controller.getElapsedSeconds()));
 		vehicleLabel.setText(I18N.getString("sim.label.vehicles", controller.getSimulation().getVehicles().size()));
-		waitingLabel.setText(I18N.getString("sim.label.passengers.waiting", controller.getWaitingUnits()));
-		onboardLabel.setText(I18N.getString("sim.label.passengers.onBoard", controller.getOnboardUnits()));
+		waitingLabel.setText(I18N.getString("sim.label.waiting", controller.getWaitingUnits()));
+		onboardLabel.setText(I18N.getString("sim.label.onboard", controller.getOnboardUnits()));
 		deliveredLabel.setText(I18N.getString("sim.label.delivered", controller.getDeliveredCount()));
 	}
 
