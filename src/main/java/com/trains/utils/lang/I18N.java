@@ -38,8 +38,19 @@ public final class I18N {
 	}
 
 	public static void setLocale(Locale newLocale) {
-		locale.set(newLocale);
+		locale = newLocale;
+		for (Runnable listener : listeners) {
+			listener.run();
+		}
 
+	}
+
+	public static void addListener(Runnable listener) {
+		listeners.add(listener);
+	}
+
+	public static void removeListener(Runnable listener) {
+		listeners.remove(listener);
 	}
 
 	public static String getString(String key, Object... params) {
