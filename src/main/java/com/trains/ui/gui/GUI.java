@@ -1,19 +1,17 @@
 package com.trains.ui.gui;
 
-import javax.swing.*;
 
 import com.trains.utils.lang.I18N;
 
 import javafx.geometry.Pos;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+
 
 public abstract class GUI extends JPanel {
 	private static final float DEFAULT_TITLE_SIZE = 24.0f;
@@ -28,41 +26,38 @@ public abstract class GUI extends JPanel {
 	private final List<Runnable> i18nRefreshers = new Arrayist<>();
 	private final Runnable localeRefresh = this::refreshI18n;
 
-	public GUI(Stage stage, GUI previous) {
-		this.stage = stage;
+	public GUI(JFrame frame, GUI previous) {
+		super(new BorderLayout());
+		this.frame = frame;
 		this.previous = previous;
-		this.buttonContainer = new VBox(15);
-		buttonContainer.setAlignment(Pos.CENTER);
+		this.buttonContainer = new JPanel();
+		buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.Y_AXIS));
+		buttonContainer.setOpaque(false);
+		buttonContainer.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 
-		Label menuTitle = new Label();
-		menuTitle.textProperty().bind(I18N.createStringBinding(getTitle()));
-		menuTitle.styleProperty().bind(Bindings.concat(
-				"-fx-font-size:",
-				titleSize.asString(),
-				"px"));
+		menuTitle = new JLabel("", SwingConstants.CENTER);
+		applyTitleFont();
+		bind(menuTitle, getTitle());
 
-		HBox titleContainer = new HBox(menuTitle);
-		titleContainer.setAlignment(Pos.CENTER);
-		BorderPane.setMargin(titleContainer, new Insets(25,0, 0, 0));
+		JPanel titleContainer = new JPanel(new BorderLayout());
+		titleContainer.setOpaque(false);
+		titleContainer.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 0));
+		titleContainer.add(menuTitle, BorderLayout.CENTER);
 
 		drawMenuItems();
 
-		setTop(titleContainer);
-		setCenter(buttonContainer);
-
-		BorderPane.setMargin(buttonContainer, new Insets(50));
-
-		BorderPane.setAlignment(titleContainer, Pos.CENTER);
-		BorderPane.setAlignment(buttonContainer, Pos.TOP_CENTER);
+		add(titleContainer, BorderLayout.NORTH);
+		add(buttonContainer, BorderLayout.CENTER);
 
 		if (previous != null) {
-			HBox backButtonContainer = new HBox(createBackButton());
-			backButtonContainer.setAlignment(Pos.CENTER);
-			setBottom(backButtonContainer);
-
-			BorderPane.setAlignment(backButtonContainer, Pos.CENTER);
-			BorderPane.setMargin(backButtonContainer, new Insets(15,0, 50, 0));
+			JPanel backButtonContainer = new JPanel(new FlowLayout(FlowLayout.CENTER));
+			backButtonContainer.setOpaque(false);
+			backButtonContainer.setBorder(BorderFactory.createEmptyBorder(0, 0, 50, 0));
+			backButtonContainer.add(createBackButton());
+			add(backButtonContainer, BorderLayout.SOUTH);
 		}
+
+		I18N.addListener(localeRefresh);
 	}
 
 	protected abstract String getTitle();
@@ -104,10 +99,19 @@ public abstract class GUI extends JPanel {
 		
 	}
 
-		private void refreshI18n() {
+	protected void bind(Runnable refresher) {
+		i18nRefreshers.add(refresher);
+		refresher.run();
+	}
+
+	private void refreshI18n() {
 		for (Runnable refresher : i18nRefreshers) {
 			refresher.run();
 		}
+	}
+
+	private void applyTitleFont() {
+		menuTitle.setFont(menuTitle.getFont().deriveFont(Font.BOLD, titleSize));
 	}
 	
 }
