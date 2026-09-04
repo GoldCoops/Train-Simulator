@@ -9,14 +9,16 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class I18N {
-	private static final ObjectProperty<Locale> locale;
+
+	private static Locale locale;
+	private static final List<Runnable> listeners = new CopyOnWriteArrayList<>():
 	public static final Set<Locale> availableLocales = Set.of(
 			Locale.of("en", "AU")
 	);
 	private static final Locale defaultLocale = Locale.of("en", "AU");
 
 	static {
-		locale = new SimpleObjectProperty<>(getDefaultLocale());
+		locale = getDefaultLocale();
 	}
 
 	private I18N() {
@@ -32,7 +34,7 @@ public final class I18N {
 	}
 
 	public static Locale getLocale() {
-		return locale.get();
+		return locale;
 	}
 
 	public static void setLocale(Locale newLocale) {
@@ -49,7 +51,4 @@ public final class I18N {
 		}
 	}
 
-	public static StringBinding createStringBinding(String key, Object... params) {
-		return Bindings.createStringBinding(() -> getString(key, params), locale);
-	}
 }
