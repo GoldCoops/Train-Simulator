@@ -361,6 +361,7 @@ public final class SimulationView extends JPanel {
 		return pickObject(hoverPoint.x, hoverPoint.y);
 	}
 
+	/** Do not call this method directly */
 	private Object pickObject(double screenX, double screenY) {
 		for (Vehicle vehicle : simulation.getVehicles()) {
 			Point2D pos = vehicle.getPos();
@@ -442,7 +443,8 @@ public final class SimulationView extends JPanel {
 			@Override
 			public void mouseMoved(MouseEvent event) {
 				hoverPoint = event.getPoint();
-				setCursor(Cursor.getPredefinedCursor(pickObject(event.getX(), event.getY()) == null
+				// through getHoveredObject rather than pickObject directly
+				setCursor(Cursor.getPredefinedCursor(getHoveredObject() == null
 						? Cursor.DEFAULT_CURSOR
 						: Cursor.HAND_CURSOR));
 			}
