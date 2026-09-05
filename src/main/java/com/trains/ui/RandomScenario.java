@@ -16,16 +16,12 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Builds a random network in place of {@link DemoScenario}'s fixed one.
+ * Builds a random network in place of DemoScenario's fixed one.
  * <p>
  *     Connectivity is guaranteed by wiring the stations into a random spanning tree first, then
  *     adding a few extra tracks on top for loops. Without the extra tracks the network would be a
  *     tree, and a tree gives {@code Router.findRoute} exactly one path between any two stations,
  *     which makes redispatch's route-length tiebreak meaningless.
- * </p>
- * <p>
- *     Follows the same shape as {@link DemoScenario#build()} so either can be dropped into
- *     {@code new SimulationController(...)} interchangeably.
  * </p>
  */
 public final class RandomScenario {
@@ -162,7 +158,7 @@ public final class RandomScenario {
      *     connected directly usually come out as a diagonal, and a handful of those crossing each
      *     other is what makes a random layout look tangled. If the pair doesn't already share a row
      *     or column, this bends the track through an elbow junction instead - the same shape
-     *     {@link DemoScenario} uses by hand (station - junction - station).
+     *     DemoScenario uses by hand (station - junction - station).
      * </p>
      */
     private static void connectManhattan(Network network, Random random, Node a, Node b) {
@@ -248,8 +244,7 @@ public final class RandomScenario {
     /**
      * Adds one train per three stations, each between a random routable pair.
      * <p>
-     *     Goes through {@code Router.findRoute} first rather than trusting the spanning tree blindly,
-     *     the same defensive check {@link DemoScenario#addVehicle} makes.
+     *     Goes through {@code Router.findRoute} first rather than trusting the spanning tree blindly.
      * </p>
      */
     private static void addVehicles(Simulation sim, Router router, Random random, List<Station> stations) {
