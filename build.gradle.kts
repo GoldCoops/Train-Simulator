@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.trains"
-version = "1.0"
+version = providers.gradleProperty("releaseVersion").getOrElse("1.1")
 
 repositories {
     mavenCentral()
@@ -29,21 +29,10 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.javadoc {
-    (options as StandardJavadocDocletOptions).apply {
-        encoding = "UTF-8"
-        charSet = "UTF-8"
-        windowTitle = "${rootProject.name} API"
-        docTitle = "${rootProject.name} API"
-        addStringOption("Xdoclint:none", "-quiet")
-
-        // module-info only exports com.trains, and javadoc's module-mode default is
-        // --show-packages exported — without these the other packages are omitted.
-        addStringOption("-show-packages", "all")
-        addStringOption("-show-module-contents", "all")
-
-        links(
-            "https://docs.oracle.com/en/java/javase/21/docs/api/",
-        )
+// The application plugin doesn't touch the jar manifest, so without this the jar
+// builds fine but `java -jar` fails with "no main manifest attribute".
+tasks.jar {
+    manifest {
+        attributes("Main-Class" to application.mainClass.get())
     }
 }
