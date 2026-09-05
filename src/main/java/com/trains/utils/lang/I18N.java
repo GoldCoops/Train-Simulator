@@ -1,25 +1,24 @@
 package com.trains.utils.lang;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class I18N {
-	private static final ObjectProperty<Locale> locale;
+
+	private static Locale locale;
+	private static final List<Runnable> listeners = new CopyOnWriteArrayList<>();
 	public static final Set<Locale> availableLocales = Set.of(
 			Locale.of("en", "AU")
 	);
 	private static final Locale defaultLocale = Locale.of("en", "AU");
 
 	static {
-		locale = new SimpleObjectProperty<>(getDefaultLocale());
+		locale = getDefaultLocale();
 	}
 
 	private I18N() {
@@ -35,12 +34,23 @@ public final class I18N {
 	}
 
 	public static Locale getLocale() {
-		return locale.get();
+		return locale;
 	}
 
 	public static void setLocale(Locale newLocale) {
-		locale.set(newLocale);
+		locale = newLocale;
+		for (Runnable listener : listeners) {
+			listener.run();
+		}
 
+	}
+
+	public static void addListener(Runnable listener) {
+		listeners.add(listener);
+	}
+
+	public static void removeListener(Runnable listener) {
+		listeners.remove(listener);
 	}
 
 	public static String getString(String key, Object... params) {
@@ -52,7 +62,4 @@ public final class I18N {
 		}
 	}
 
-	public static StringBinding createStringBinding(String key, Object... params) {
-		return Bindings.createStringBinding(() -> getString(key, params), locale);
-	}
 }

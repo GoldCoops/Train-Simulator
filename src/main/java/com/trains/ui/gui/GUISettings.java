@@ -1,21 +1,21 @@
 package com.trains.ui.gui;
 
-import javafx.stage.Stage;
+import javax.swing.JFrame;
 
 public class GUISettings extends GUI {
-	public GUISettings(Stage stage, GUI previous) {
-		super(stage, previous);
+	public GUISettings(JFrame frame, GUI previous) {
+		super(frame, previous);
 	}
 
 	@Override
 	protected String getTitle() {
-		return "menu.title.settings";
+		return "Settings";
 	}
 
 	@Override
 	protected void drawMenuItems() {
-		buttonContainer.getChildren().addAll(
-				createMenuButton("menu.settings.button.language", () -> openMenu(new GUILanguage(stage, this)))
+		addMenuItems(
+				createMenuButton("Settings", () -> openMenu(new GUILanguage(frame, this)))
 		);
 	}
 }

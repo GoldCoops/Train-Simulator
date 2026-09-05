@@ -93,13 +93,15 @@ public final class CargoSpawner {
         Random random = new Random(); //Creating a new Random on every call on spawnPassenger() could be quite inefficient
                                       // Might be good to reuse a single Random instance instead 
 
+        //Randomly select the station where the passengers will start
         Station origin = stations.get(random.nextInt(stations.size()));
 
         Station destination;
+        //keep selecting until the destination is different from origin
         do{
             destination = stations.get(random.nextInt(stations.size()));
         } while (destination == origin);
-
+        //create and insert passenger
         return spawnPassenger(origin, destination);
     }
 

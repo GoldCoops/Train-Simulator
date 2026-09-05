@@ -46,8 +46,6 @@ public class Vehicle {
         return itinerary.getEntryNode();
     }
 
-
-
     public float getMaxSpeed() {
         return maxSpeed;
     }
@@ -74,12 +72,9 @@ public class Vehicle {
         this.isStopped = true;
     }
 
-
     public CargoHold getCargoHold() {
         return cargoHold;
     }
-
-
 
     public void stop() {
         this.isStopped = true;
@@ -125,9 +120,6 @@ public class Vehicle {
         return lerp(itinerary.getEntryNode().getPos(),itinerary.getTargetNode().getPos(), t);
     }
 
-
-
-
     public void update(double dt) { // this is just an example of what we should be doing, it needs to be edited.
         if(dt < 0) {
             throw new IllegalArgumentException("Function argument cannot be negative!");
@@ -144,7 +136,6 @@ public class Vehicle {
         double distanceTravelled = ((initialSpeed + speed) / 2.0) * dt;
         moveAlongRoute(distanceTravelled);
     }
-
 
     /**
      * Accelerates the train until it reaches its max speed value
@@ -185,15 +176,22 @@ public class Vehicle {
             Node arrivedAt = itinerary.getTargetNode(); // gets the node the train arrived to
             itinerary.advance();
 
-            // Reached the destination
-            if(itinerary.isComplete()) {
+            // Arrived at the station
+            if(arrivedAt instanceof Station station) { // stops the vehicle permanently at the station
                 speed = 0;
                 isStopped = true;
+
+                unloadPassengers(station); //let passengers off
+                
+                //only board passengers if vehicle still has somewhere to travel
+                if(!itinerary.isComplete()){
+                    boardPassengers(station);
+                }
                 return;
             }
 
-            // Arrived at the station
-            if(arrivedAt instanceof Station) { // stops the vehicle permanently at the station
+            //if route ends at a node that is not a station, stop vehicle
+            if (itinerary.isComplete()){
                 speed = 0;
                 isStopped = true;
                 return;
@@ -238,20 +236,32 @@ public class Vehicle {
         return "Vehicle { " + getPos() + ", " + speed + ", " + itinerary.getDestinationNode() + " }";
     }
 
+    /**
+     * Attempts to board passengers from a station onto this vehicle
+     * A passenger can board if:
+     * - the cargo is passenger
+     * -the passenger's destination is still ahead on this's vehicle's route
+     * -the vehicle has enough capacity
+     * @param station, the station passengers are boarding from
+     * @return the number of passengers successfully boarded
+     */
     public int boardPassengers(Station station){
         Objects.requireNonNull(station);
 
         int boarded = 0;
 
+        //check all the cargo currently waiting at the station
         for (Cargo cargo : station.getCargoHold().getContents()){
             if (cargo.getType() != CargoType.PASSENGER){
                 continue;
             }
 
+            //do not board the passengers whose destination is not ahead on the route
             if (!itinerary.willVisit(cargo.getDestination())){
             continue;
             }
 
+            //Transfer the passengers from station to vehicle if vehicle has enough capacity
             boolean transferred = CargoTransfer.transferCargo(station.getCargoHold(), cargoHold, cargo);
 
             if (transferred){
@@ -260,5 +270,26 @@ public class Vehicle {
         }
 
         return boarded;
+    }
+    /**
+     * Unloads passengers from the vehicle when they reach their destination station
+     * @param station, the station at which vehicle has arrived
+     * @return number of passengers successfully unloaded
+     */
+    public int unloadPassengers(Station station){
+        Objects.requireNonNull(station);
+
+        int unload = 0;
+        //Check each piece of the cargo currently on vehicle
+        for (Cargo cargo : cargoHold.getContents()){
+            if (cargo.getType() != CargoType.PASSENGER){
+                continue;
+            }
+            //deliverCargo only removes the passenger if this is their destination
+            if (CargoTransfer.deliverCargo(cargoHold, cargo, station.getPos())){
+                unload++;
+            }
+        }
+        return unload;
     }
 }

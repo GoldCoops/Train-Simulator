@@ -1,13 +1,12 @@
 package com.trains.ui.gui;
 
-import javafx.application.Platform;
-import javafx.stage.Stage;
+import javax.swing.JFrame;
 
 public class GUIMainMenu extends GUI {
 
-	public GUIMainMenu(Stage stage) {
-		super(stage, null);
-		titleSize.set(32.0);
+	public GUIMainMenu(JFrame frame) {
+		super(frame, null);
+		setTitleSize(32.0f);
 	}
 
 	@Override
@@ -17,13 +16,16 @@ public class GUIMainMenu extends GUI {
 
 	@Override
 	protected void drawMenuItems() {
-		buttonContainer.getChildren().addAll(
-				createMenuButton("menu.main.button.start", () -> openMenu(new GUISimulation(stage, this))),
+		addMenuItems(
+				createMenuButton("menu.main.button.start", () -> openMenu(new GUISimulation(frame, this))),
 				createButtonRow(
-						createMenuButton("menu.main.button.settings", () -> openMenu(new GUISettings(stage, this))),
-						createMenuButton("menu.main.button.about", () -> openMenu(new GUIAbout(stage, this)))
+						createMenuButton("Settings", () -> openMenu(new GUISettings(frame, this))),
+						createMenuButton("menu.main.button.about", () -> openMenu(new GUIAbout(frame, this)))
 				),
-				createMenuButton("menu.main.button.quit", Platform::exit)
+				createMenuButton("menu.main.button.quit", () -> {
+					frame.dispose();
+					System.exit(0);
+				})
 		);
 	}
 }

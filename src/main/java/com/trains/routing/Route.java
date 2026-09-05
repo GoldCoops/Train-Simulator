@@ -17,7 +17,7 @@ public final class Route {
 
     /**
      * The route constructor
-     * package private to avoid impossible routes that haven't come from Router or DijkstraRouter
+     * package private to avoid impossible routes that haven't come from Router
      * @param origin the origin node
      * @param destination the destination node
      * @param segments the segments in the path - must be pre-checked by the router to lead to the destination or something will get borked

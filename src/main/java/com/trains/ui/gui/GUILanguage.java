@@ -1,57 +1,57 @@
 package com.trains.ui.gui;
 
 import com.trains.utils.lang.I18N;
-import javafx.geometry.Pos;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
+import javax.swing.ScrollPaneConstants;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class GUILanguage extends GUI {
 
-	public GUILanguage(Stage stage, GUI previous) {
-		super(stage, previous);
+	public GUILanguage(JFrame frame, GUI previous) {
+		super(frame, previous);
 	}
 
 	@Override
 	protected String getTitle() {
-		return "menu.title.settings.language";
+		return "Language";
 	}
 
 	@Override
 	protected void drawMenuItems() {
-		ScrollPane scrollPane = new ScrollPane();
-		VBox toggleHolder = new VBox(15);
-		ToggleGroup toggleGroup = new ToggleGroup();
+		JPanel toggleHolder = new JPanel();
+		toggleHolder.setLayout(new BoxLayout(toggleHolder, BoxLayout.Y_AXIS));
+		toggleHolder.setOpaque(false);
+
+		ButtonGroup toggleGroup = new ButtonGroup();
 		List<Locale> locales = new ArrayList<>(I18N.availableLocales);
 
-		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		scrollPane.viewportBoundsProperty().addListener((ov, oldVb, newVb) -> {
-			toggleHolder.setPrefWidth(newVb.getWidth());
-		});
-		scrollPane.setFitToWidth(true);
-		scrollPane.setStyle("-fx-background-color: transparent; -fx-viewport-background: transparent; -fx-border-color: transparent;");
-
-		toggleHolder.setAlignment(Pos.CENTER);
-
 		for (Locale locale : locales) {
-			ToggleButton button = new ToggleButton(locale.getDisplayName());
-			button.setToggleGroup(toggleGroup);
+			JToggleButton button = new JToggleButton(locale.getDisplayName());
+			toggleGroup.add(button);
 			button.setSelected(locale.equals(I18N.getLocale()));
-			button.setMaxWidth(MAX_BUTTON_SIZE);
-			button.setOnAction(event -> {
-				I18N.setLocale(locale);
-			});
-
-			toggleHolder.getChildren().add(button);
+			button.setAlignmentX(Component.CENTER_ALIGNMENT);
+			button.setMaximumSize(new Dimension(MAX_BUTTON_SIZE, Integer.MAX_VALUE));
+			button.setPreferredSize(new Dimension(MAX_BUTTON_SIZE, button.getPreferredSize().height));
+			button.addActionListener(event -> I18N.setLocale(locale));
+			toggleHolder.add(button);
 		}
 
-		scrollPane.setContent(toggleHolder);
-		buttonContainer.getChildren().add(scrollPane);
+		JScrollPane scrollPane = new JScrollPane(toggleHolder);
+		scrollPane.setBorder(null);
+		scrollPane.setOpaque(false);
+		scrollPane.getViewport().setOpaque(false);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		addMenuItems(scrollPane);
 	}
 }

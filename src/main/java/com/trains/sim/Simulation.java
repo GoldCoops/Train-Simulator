@@ -16,6 +16,10 @@ public final class Simulation {
         this(new Network(), new ArrayList<>());
     }
 
+    public Simulation(Network network) {
+        this(network, new ArrayList<>());
+    }
+
     public Simulation(Network network, List<Vehicle> vehicles) {
         this.network = network;
         this.vehicles = vehicles;

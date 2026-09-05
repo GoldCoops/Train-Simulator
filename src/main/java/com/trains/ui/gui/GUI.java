@@ -1,95 +1,178 @@
 package com.trains.ui.gui;
 
 import com.trains.utils.lang.I18N;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
 
-public abstract class GUI extends BorderPane {
-	private static final double DEFAULT_TITLE_SIZE = 24.0;
-	protected static final double MAX_BUTTON_SIZE = 300.0;
-	protected final Stage stage;
-	protected final VBox buttonContainer;
-	protected DoubleProperty titleSize = new SimpleDoubleProperty(DEFAULT_TITLE_SIZE);
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class GUI extends JPanel {
+	private static final float DEFAULT_TITLE_SIZE = 24.0f;
+	protected static final int MAX_BUTTON_SIZE = 300;
+	protected final JFrame frame;
+	protected final JPanel buttonContainer;
+	protected float titleSize = DEFAULT_TITLE_SIZE;
 
 	protected GUI previous;
 
-	public GUI(Stage stage, GUI previous) {
-		this.stage = stage;
+	private final JLabel menuTitle;
+	private final List<Runnable> i18nRefreshers = new ArrayList<>();
+	private final Runnable localeRefresh = this::refreshI18n;
+
+	public GUI(JFrame frame, GUI previous) {
+		super(new BorderLayout());
+		this.frame = frame;
 		this.previous = previous;
-		this.buttonContainer = new VBox(15);
-		buttonContainer.setAlignment(Pos.CENTER);
+		this.buttonContainer = new JPanel();
+		buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.Y_AXIS));
+		buttonContainer.setOpaque(false);
+		buttonContainer.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 
-//		setPadding(new Insets(50));
+		menuTitle = new JLabel("", SwingConstants.CENTER);
+		applyTitleFont();
+		bind(menuTitle, getTitle());
 
-		Label menuTitle = new Label();
-		menuTitle.textProperty().bind(I18N.createStringBinding(getTitle()));
-		menuTitle.styleProperty().bind(Bindings.concat(
-				"-fx-font-size:",
-				titleSize.asString(),
-				"px"));
+		JPanel titleContainer = new JPanel(new BorderLayout());
+titleContainer.setOpaque(false);
+titleContainer.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 0));
+titleContainer.add(menuTitle, BorderLayout.CENTER);
 
-		HBox titleContainer = new HBox(menuTitle);
-		titleContainer.setAlignment(Pos.CENTER);
-		BorderPane.setMargin(titleContainer, new Insets(25,0, 0, 0));
+buttonContainer.add(Box.createVerticalGlue());
+drawMenuItems();
+buttonContainer.add(Box.createVerticalGlue());
 
-		drawMenuItems();
-
-		setTop(titleContainer);
-		setCenter(buttonContainer);
-
-		BorderPane.setMargin(buttonContainer, new Insets(50));
-
-		BorderPane.setAlignment(titleContainer, Pos.CENTER);
-		BorderPane.setAlignment(buttonContainer, Pos.TOP_CENTER);
+		add(titleContainer, BorderLayout.NORTH);
+		add(buttonContainer, BorderLayout.CENTER);
 
 		if (previous != null) {
-			HBox backButtonContainer = new HBox(createBackButton());
-			backButtonContainer.setAlignment(Pos.CENTER);
-			setBottom(backButtonContainer);
-
-			BorderPane.setAlignment(backButtonContainer, Pos.CENTER);
-			BorderPane.setMargin(backButtonContainer, new Insets(0,0, 50, 0));
+			JPanel backButtonContainer = new JPanel(new FlowLayout(FlowLayout.CENTER));
+			backButtonContainer.setOpaque(false);
+			backButtonContainer.setBorder(BorderFactory.createEmptyBorder(0, 0, 50, 0));
+			backButtonContainer.add(createBackButton());
+			add(backButtonContainer, BorderLayout.SOUTH);
 		}
+
+		I18N.addListener(localeRefresh);
 	}
 
 	protected abstract String getTitle();
 
 	protected abstract void drawMenuItems();
 
-	protected Button createMenuButton(String label, Runnable action) {
-		Button button = new Button();
-		button.textProperty().bind(I18N.createStringBinding(label));
-		button.setPrefWidth(MAX_BUTTON_SIZE);
-		button.setMaxWidth(MAX_BUTTON_SIZE);
-		button.setOnAction(event -> action.run());
+	protected void setTitleSize(float size) {
+		this.titleSize = size;
+		applyTitleFont();
+	}
+
+	protected JButton createMenuButton(String label, Runnable action) {
+		JButton button = new JButton();
+		bind(button, label);
+		button.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lockButtonSize(button, MAX_BUTTON_SIZE);
+		button.addActionListener(event -> action.run());
 		return button;
 	}
 
-	protected HBox createButtonRow(Button... buttons) {
-		double spacing = 15;
-		HBox buttonRow = new HBox(spacing, buttons);
-		buttonRow.setAlignment(Pos.CENTER);
+	protected JPanel createButtonRow(JButton... buttons) {
+		int spacing = 15;
+		JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.CENTER, spacing, 0));
+		buttonRow.setOpaque(false);
+		buttonRow.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		for (Button button : buttons) {
-			HBox.setHgrow(button, Priority.ALWAYS);
-			button.setMaxWidth((MAX_BUTTON_SIZE / 2) - (spacing / 2));
+		int gaps = buttons.length + 1;
+		int buttonWidth = (MAX_BUTTON_SIZE - spacing * gaps) / buttons.length;
+		for (JButton button : buttons) {
+			lockButtonSize(button, buttonWidth);
+			buttonRow.add(button);
 		}
 
+		buttonRow.setMaximumSize(new Dimension(MAX_BUTTON_SIZE, buttonRow.getPreferredSize().height));
 		return buttonRow;
 	}
 
-	protected Button createBackButton() {
+	protected static void lockButtonSize(AbstractButton button, int width) {
+		int height = button.getPreferredSize().height;
+		Dimension size = new Dimension(width, height);
+		button.setPreferredSize(size);
+		button.setMinimumSize(size);
+		button.setMaximumSize(size);
+	}
+
+	protected JButton createBackButton() {
 		return createMenuButton("menu.button.back", () -> openMenu(previous));
 	}
 
+	protected void addMenuItems(JComponent... items) {
+		for (JComponent item : items) {
+			if (buttonContainer.getComponentCount() > 0) {
+				buttonContainer.add(Box.createRigidArea(new Dimension(0, 15)));
+			}
+			item.setAlignmentX(Component.CENTER_ALIGNMENT);
+			buttonContainer.add(item);
+		}
+	}
+
+	protected void bind(JLabel label, String key) {
+		Runnable refresher = () -> label.setText(I18N.getString(key));
+		i18nRefreshers.add(refresher);
+		refresher.run();
+	}
+
+	protected void bind(AbstractButton button, String key) {
+		Runnable refresher = () -> button.setText(I18N.getString(key));
+		i18nRefreshers.add(refresher);
+		refresher.run();
+	}
+
+	protected void bind(Runnable refresher) {
+		i18nRefreshers.add(refresher);
+		refresher.run();
+	}
+
 	protected void openMenu(GUI menu) {
-		stage.getScene().setRoot(menu);
+		I18N.removeListener(localeRefresh);
+		menu.attachLocale();
+		frame.setContentPane(menu);
+		frame.revalidate();
+		frame.repaint();
+	}
+
+	private void attachLocale() {
+		I18N.removeListener(localeRefresh);
+		I18N.addListener(localeRefresh);
+		refreshI18n();
+	}
+
+	private void refreshI18n() {
+		for (Runnable refresher : i18nRefreshers) {
+			refresher.run();
+		}
+	}
+
+	private void applyTitleFont() {
+		menuTitle.setFont(menuTitle.getFont().deriveFont(Font.BOLD, titleSize));
+	}
+
+	protected static String stringToHTML(String text, String align) {
+		return "<html><div style='text-align:" + align + "'>"
+				+ text.replace("&", "&amp;")
+				.replace("<", "&lt;")
+				.replace(">", "&gt;")
+				.replace("\n", "<br/>")
+				+ "</div></html>";
 	}
 }
