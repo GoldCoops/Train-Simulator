@@ -5,22 +5,15 @@ import com.trains.ui.SimulationController;
 import com.trains.ui.SimulationView;
 import com.trains.utils.lang.I18N;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JSlider;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * The simulation screen.
  * <p>
- *     Reuses {@link GUI} for the title, the button helpers and the back button, then takes over the
- *     centre with the {@link SimulationView} canvas and moves the inherited button container to the
- *     right to act as a sidebar.
+ * Reuses {@link GUI} for the title, the button helpers and the back button, then takes over the
+ * centre with the {@link SimulationView} canvas and moves the inherited button container to the
+ * right to act as a sidebar.
  * </p>
  */
 public class GUISimulation extends GUI {
@@ -37,6 +30,7 @@ public class GUISimulation extends GUI {
 	private final JLabel waitingLabel;
 	private final JLabel onboardLabel;
 	private final JLabel deliveredLabel;
+	private final JLabel infoLabel;
 
 	public GUISimulation(JFrame frame, GUI previous) {
 		super(frame, previous);
@@ -57,6 +51,14 @@ public class GUISimulation extends GUI {
 		this.onboardLabel = createStatLabel();
 		this.deliveredLabel = createStatLabel();
 
+		this.infoLabel = createStatLabel();
+		this.infoLabel.setVerticalAlignment(SwingConstants.TOP);
+		this.infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		Dimension infoSize = new Dimension(SIDEBAR_WIDTH, 90);
+		this.infoLabel.setPreferredSize(infoSize);
+		this.infoLabel.setMinimumSize(infoSize);
+		this.infoLabel.setMaximumSize(infoSize);
+
 		buildSidebar();
 
 		// GUI put buttonContainer in the centre, so claim the centre first and then re-home it
@@ -73,14 +75,14 @@ public class GUISimulation extends GUI {
 
 	@Override
 	protected String getTitle() {
-		return "Simulation";
+		return "";
 	}
 
 	/**
 	 * Deliberately empty.
 	 * <p>
-	 *     GUI calls this from its constructor, before this class has assigned its fields, so the
-	 *     sidebar is built from the constructor body instead once the controller and view exist.
+	 * GUI calls this from its constructor, before this class has assigned its fields, so the
+	 * sidebar is built from the constructor body instead once the controller and view exist.
 	 * </p>
 	 */
 	@Override
@@ -90,8 +92,8 @@ public class GUISimulation extends GUI {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 *     Overridden to stop the frame timer, which would otherwise keep firing after the scene root
-	 *     has been swapped back to the previous menu.
+	 * Overridden to stop the frame timer, which would otherwise keep firing after the scene root
+	 * has been swapped back to the previous menu.
 	 * </p>
 	 */
 	@Override
@@ -104,6 +106,28 @@ public class GUISimulation extends GUI {
 	}
 
 	private void buildSidebar() {
+		JSlider speedSlider = getSpeedSlider();
+
+		addMenuItems(
+				createSectionLabel("sim.label.controls"),
+				createButtonRow(playPauseButton, createMenuButton("sim.button.reset", this::reset)),
+				speedLabel,
+				speedSlider,
+				createMenuButton("sim.button.spawn", controller::spawnPassenger),
+				createMenuButton("sim.button.spawnTrain", controller::spawnVehicle),
+				createMenuButton("sim.button.fit", view::requestFit),
+				createSectionLabel("sim.info.title"),
+				infoLabel,
+				createSectionLabel("sim.label.stats"),
+				timeLabel,
+				vehicleLabel,
+				waitingLabel,
+				onboardLabel,
+				deliveredLabel
+		);
+	}
+
+	private JSlider getSpeedSlider() {
 		int min = (int) Math.round(SimulationController.MIN_SPEED_MULTIPLIER * SPEED_SCALE);
 		int max = (int) Math.round(SimulationController.MAX_SPEED_MULTIPLIER * SPEED_SCALE);
 		int value = (int) Math.round(controller.getSpeedMultiplier() * SPEED_SCALE);
@@ -111,22 +135,7 @@ public class GUISimulation extends GUI {
 		speedSlider.setMaximumSize(new Dimension(SIDEBAR_WIDTH, speedSlider.getPreferredSize().height));
 		speedSlider.addChangeListener(event ->
 				controller.setSpeedMultiplier(speedSlider.getValue() / (double) SPEED_SCALE));
-
-		addMenuItems(
-			createSectionLabel("sim.label.controls"),
-			createButtonRow(playPauseButton, createMenuButton("sim.button.reset", this::reset)),
-			speedLabel,
-			speedSlider,
-			createMenuButton("sim.button.spawn", controller::spawnPassenger),
-			createMenuButton("sim.button.spawnTrain", controller::spawnVehicle),
-			createMenuButton("sim.button.fit", view::requestFit),
-			createSectionLabel("sim.label.stats"),
-			timeLabel,
-			vehicleLabel,
-			waitingLabel,
-			onboardLabel,
-			deliveredLabel
-		);
+		return speedSlider;
 	}
 
 	/**
@@ -146,6 +155,11 @@ public class GUISimulation extends GUI {
 		waitingLabel.setText(I18N.getString("sim.label.waiting", controller.getWaitingUnits()));
 		onboardLabel.setText(I18N.getString("sim.label.onboard", controller.getOnboardUnits()));
 		deliveredLabel.setText(I18N.getString("sim.label.delivered", controller.getDeliveredCount()));
+
+		Object hovered = view.getHoveredObject();
+		infoLabel.setText(stringToHTML(hovered == null
+				? I18N.getString("sim.info.none")
+				: view.describeSelectedObject(hovered), "center"));
 	}
 
 	private void togglePlayPause() {

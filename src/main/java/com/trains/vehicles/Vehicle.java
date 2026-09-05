@@ -46,8 +46,6 @@ public class Vehicle {
         return itinerary.getEntryNode();
     }
 
-
-
     public float getMaxSpeed() {
         return maxSpeed;
     }
@@ -74,12 +72,9 @@ public class Vehicle {
         this.isStopped = true;
     }
 
-
     public CargoHold getCargoHold() {
         return cargoHold;
     }
-
-
 
     public void stop() {
         this.isStopped = true;
@@ -125,9 +120,6 @@ public class Vehicle {
         return lerp(itinerary.getEntryNode().getPos(),itinerary.getTargetNode().getPos(), t);
     }
 
-
-
-
     public void update(double dt) { // this is just an example of what we should be doing, it needs to be edited.
         if(dt < 0) {
             throw new IllegalArgumentException("Function argument cannot be negative!");
@@ -144,7 +136,6 @@ public class Vehicle {
         double distanceTravelled = ((initialSpeed + speed) / 2.0) * dt;
         moveAlongRoute(distanceTravelled);
     }
-
 
     /**
      * Accelerates the train until it reaches its max speed value

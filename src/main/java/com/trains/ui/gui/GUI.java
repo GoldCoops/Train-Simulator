@@ -166,4 +166,13 @@ buttonContainer.add(Box.createVerticalGlue());
 	private void applyTitleFont() {
 		menuTitle.setFont(menuTitle.getFont().deriveFont(Font.BOLD, titleSize));
 	}
+
+	protected static String stringToHTML(String text, String align) {
+		return "<html><div style='text-align:" + align + "'>"
+				+ text.replace("&", "&amp;")
+				.replace("<", "&lt;")
+				.replace(">", "&gt;")
+				.replace("\n", "<br/>")
+				+ "</div></html>";
+	}
 }

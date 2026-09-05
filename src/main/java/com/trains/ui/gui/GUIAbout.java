@@ -21,16 +21,7 @@ public class GUIAbout extends GUI {
 	@Override
 	protected void drawMenuItems() {
 		JLabel textBlock = new JLabel("", SwingConstants.CENTER);
-		bind(() -> textBlock.setText(toHtml(I18N.getString("menu.about.description"))));
+		bind(() -> textBlock.setText(stringToHTML(I18N.getString("menu.about.description"), "center")));
 		addMenuItems(textBlock);
-	}
-
-	private static String toHtml(String text) {
-		return "<html><div style='text-align:center'>"
-				+ text.replace("&", "&amp;")
-						.replace("<", "&lt;")
-						.replace(">", "&gt;")
-						.replace("\n", "<br>")
-				+ "</div></html>";
 	}
 }

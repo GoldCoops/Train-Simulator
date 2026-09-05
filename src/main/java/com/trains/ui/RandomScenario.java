@@ -172,7 +172,10 @@ public final class RandomScenario {
         int by = (int) b.getY();
 
         if (ax == bx || ay == by) {
-            network.connectNodes(a, b); // already lined up, one straight segment is enough
+            // Check for no existing connection
+            if (!network.areConnected(a, b)) {
+                network.connectNodes(a, b); // already lined up, one straight segment is enough
+            }
             return;
         }
 
@@ -188,13 +191,22 @@ public final class RandomScenario {
         if (elbow == null) {
             elbow = junctionAt(network, second);
         }
+
         if (elbow == null) {
-            network.connectNodes(a, b); // both elbows blocked; rare, a diagonal beats no track at all
+            if (!network.areConnected(a, b)) {
+                network.connectNodes(a, b);
+            }
             return;
         }
 
-        network.connectNodes(a, elbow);
-        network.connectNodes(elbow, b);
+        // Checks for existing connections between a and elbow/b and elbow
+        if (!network.areConnected(a, elbow)) {
+            network.connectNodes(a, elbow);
+        }
+
+        if (!network.areConnected(elbow, b)) {
+            network.connectNodes(elbow, b);
+        }
     }
 
     /**
@@ -222,7 +234,11 @@ public final class RandomScenario {
         for (int i = 0; i < extraTracks; i++) {
             Station a = stations.get(random.nextInt(stations.size()));
             Station b = stations.get(random.nextInt(stations.size()));
-            if (a == b || a.getConnections().contains(b)) {
+            /*
+            * getConnections() does not hold Nodes. "'List<PathwaySegment>' may not contain objects of type 'Station'"
+            * Old code also caused crashes as the check would always return false and never trigger
+            */
+            if (a == b || network.areConnected(a, b)) {
                 continue; // no self loops, and no doubling up an existing track
             }
             connectManhattan(network, random, a, b);

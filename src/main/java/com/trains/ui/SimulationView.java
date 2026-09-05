@@ -8,16 +8,11 @@ import com.trains.network.Station;
 import com.trains.sim.Simulation;
 import com.trains.utils.GridPos;
 import com.trains.utils.Point2D;
+import com.trains.utils.lang.I18N;
 import com.trains.vehicles.Vehicle;
 
-import javax.swing.JPanel;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -85,6 +80,8 @@ public final class SimulationView extends JPanel {
 	private double dragAnchorX;
 	private double dragAnchorY;
 
+	private Point hoverPoint;
+
 	/**
 	 * Creates a view at the default world size
 	 */
@@ -105,8 +102,26 @@ public final class SimulationView extends JPanel {
 
 		this.worldSize = worldSize;
 		setBackground(BACKGROUND);
-        setOpaque(true);
+		setOpaque(true);
 		installPanAndZoom();
+	}
+
+	private static void fillOval(Graphics2D gc, double screenX, double screenY, double radius) {
+		int size = (int) Math.round(radius * 2);
+		gc.fillOval(
+				(int) Math.round(screenX - radius),
+				(int) Math.round(screenY - radius),
+				size,
+				size);
+	}
+
+	private static void fillTextCentered(Graphics2D gc, String text, double x, double y) {
+		FontMetrics metrics = gc.getFontMetrics();
+		gc.drawString(text, (float) (x - metrics.stringWidth(text) / 2.0), (float) y);
+	}
+
+	private static void fillTextLeft(Graphics2D gc, String text, double x, double y) {
+		gc.drawString(text, (float) x, (float) y);
 	}
 
 	/**
@@ -190,35 +205,35 @@ public final class SimulationView extends JPanel {
 		}
 
 		repaint();
-    }
+	}
 
-    @Override
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-        if (simulation == null) {
-            return;
-        }
+		if (simulation == null) {
+			return;
+		}
 
-        Graphics2D gc = (Graphics2D) g.create();
-        gc.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        gc.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		Graphics2D gc = (Graphics2D) g.create();
+		gc.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		gc.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        double width = getWidth();
-        double height = getHeight();
-        Network network = simulation.getNetwork();
+		double width = getWidth();
+		double height = getHeight();
+		Network network = simulation.getNetwork();
 
-        gc.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
-		
+		gc.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
+
 		drawGrid(gc, width, height);
 		drawPathways(gc, network);
 		drawNodes(gc, network);
 
 		for (Vehicle vehicle : simulation.getVehicles()) {
-            drawVehicle(gc, vehicle);
-        }
+			drawVehicle(gc, vehicle);
+		}
 
-        gc.dispose();
-    }
+		gc.dispose();
+	}
 
 	private void drawGrid(Graphics2D gc, double width, double height) {
 		double spacing = GRID_SPACING;
@@ -228,7 +243,7 @@ public final class SimulationView extends JPanel {
 		}
 
 		gc.setColor(GRID);
-        gc.setStroke(new BasicStroke(1f));
+		gc.setStroke(new BasicStroke(1f));
 
 		double firstX = Math.floor(offsetX / spacing) * spacing;
 		for (double x = firstX; toScreenX(x) <= width; x += spacing) {
@@ -245,16 +260,16 @@ public final class SimulationView extends JPanel {
 
 	private void drawPathways(Graphics2D gc, Network network) {
 		gc.setColor(PATHWAY);
-        gc.setStroke(new BasicStroke((float) Math.max(2.0, scale * 0.45),
-        BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		gc.setStroke(new BasicStroke((float) Math.max(2.0, scale * 0.45),
+				BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
 		for (PathwaySegment segment : network.getPathways()) {
 			GridPos start = segment.getStart().getPos();
 			GridPos end = segment.getEnd().getPos();
 			gc.drawLine(
-                    (int) Math.round(toScreenX(start.x())), (int) Math.round(toScreenY(start.y())),
-                    (int) Math.round(toScreenX(end.x())), (int) Math.round(toScreenY(end.y())));
-        }
+					(int) Math.round(toScreenX(start.x())), (int) Math.round(toScreenY(start.y())),
+					(int) Math.round(toScreenX(end.x())), (int) Math.round(toScreenY(end.y())));
+		}
 	}
 
 	private void drawNodes(Graphics2D gc, Network network) {
@@ -267,7 +282,7 @@ public final class SimulationView extends JPanel {
 			} else {
 				double radius = Math.max(3.0, scale * 0.5);
 				gc.setColor(NODE);
-                fillOval(gc, screenX, screenY, radius);
+				fillOval(gc, screenX, screenY, radius);
 			}
 		}
 	}
@@ -278,22 +293,22 @@ public final class SimulationView extends JPanel {
 		double corner = size / 3;
 
 		gc.setColor(hold.getRemainingCapacity() <= 0 ? STATION_FULL : STATION);
-        gc.fillRoundRect(
-                (int) Math.round(screenX - size / 2),
-                (int) Math.round(screenY - size / 2),
-                (int) Math.round(size),
-                (int) Math.round(size),
-                (int) Math.round(corner),
-                (int) Math.round(corner));
+		gc.fillRoundRect(
+				(int) Math.round(screenX - size / 2),
+				(int) Math.round(screenY - size / 2),
+				(int) Math.round(size),
+				(int) Math.round(size),
+				(int) Math.round(corner),
+				(int) Math.round(corner));
 
 		if (station.getName() != null) {
 			gc.setColor(TEXT);
-            fillTextCentered(gc, station.getName(), screenX, screenY - size / 2 - 6);
+			fillTextCentered(gc, station.getName(), screenX, screenY - size / 2 - 6);
 		}
 
 		gc.setColor(TEXT_DIM);
-        fillTextCentered(gc, hold.getUsedUnits() + "/" + hold.getCapacity(),
-                screenX, screenY + size / 2 + 14);
+		fillTextCentered(gc, hold.getUsedUnits() + "/" + hold.getCapacity(),
+				screenX, screenY + size / 2 + 14);
 	}
 
 	private void drawVehicle(Graphics2D gc, Vehicle vehicle) {
@@ -312,36 +327,102 @@ public final class SimulationView extends JPanel {
 		}
 
 		AffineTransform previous = gc.getTransform();
-        gc.translate(screenX, screenY);
-        gc.rotate(Math.toRadians(angle));
-        gc.setColor(vehicle.isStopped() ? VEHICLE_STOPPED : VEHICLE_MOVING);
-        gc.fillRoundRect(
-                (int) Math.round(-length / 2),
-                (int) Math.round(-width / 2),
-                (int) Math.round(length),
-                (int) Math.round(width),
-                (int) Math.round(width / 2),
-                (int) Math.round(width / 2));
-        gc.setTransform(previous);
+		gc.translate(screenX, screenY);
+		gc.rotate(Math.toRadians(angle));
+		gc.setColor(vehicle.isStopped() ? VEHICLE_STOPPED : VEHICLE_MOVING);
+		gc.fillRoundRect(
+				(int) Math.round(-length / 2),
+				(int) Math.round(-width / 2),
+				(int) Math.round(length),
+				(int) Math.round(width),
+				(int) Math.round(width / 2),
+				(int) Math.round(width / 2));
+		gc.setTransform(previous);
 
 		// only label a train that is actually carrying something, empty labels just collide
 		// with each other when trains bunch up at a junction
 		CargoHold hold = vehicle.getCargoHold();
-        if (hold.getUsedUnits() > 0) {
+		if (hold.getUsedUnits() > 0) {
 //			/*
 //			 * Beside the train rather than above it. A stopped train sits exactly on its station, so
 //			 * a label above would land on top of the station name.
 //			 */
 			gc.setColor(TEXT_DIM);
 			fillTextLeft(gc, hold.getUsedUnits() + "/" + hold.getCapacity(),
-            screenX + length / 2 + 6, screenY + 4);
+					screenX + length / 2 + 6, screenY + 4);
 		}
 	}
 
-	private void installPanAndZoom() {
-        addMouseWheelListener(this::onScroll);
+	public Object getHoveredObject() {
+		if (hoverPoint == null || simulation == null) {
+			return null;
+		}
 
-        MouseAdapter mouse = new MouseAdapter() {
+		return pickObject(hoverPoint.x, hoverPoint.y);
+	}
+
+	private Object pickObject(double screenX, double screenY) {
+		for (Vehicle vehicle : simulation.getVehicles()) {
+			Point2D pos = vehicle.getPos();
+			double half = Math.max(8.0, Math.max(14.0, scale * 2.5) / 2);
+			if (isWithinObjectHitbox(screenX, screenY, toScreenX(pos.x), toScreenY(pos.y), half)) {
+				return vehicle;
+			}
+		}
+
+		for (Node node : simulation.getNetwork().getNodes().values()) {
+			double half = node instanceof Station
+					? Math.max(8.0, Math.max(12.0, scale * 2.0) / 2)
+					: Math.max(8.0, Math.max(5.0, scale * 0.5));
+			if (isWithinObjectHitbox(screenX, screenY, toScreenX(node.getX()), toScreenY(node.getY()), half)) {
+				return node;
+			}
+		}
+		return null;
+	}
+
+	private boolean isWithinObjectHitbox(double screenX, double screenY, double x, double y, double half) {
+		return Math.abs(screenX - x) <= half && Math.abs(screenY - y) <= half;
+	}
+
+	public String describeSelectedObject(Object entity) {
+		switch (entity) {
+			case Vehicle vehicle -> {
+				CargoHold hold = vehicle.getCargoHold();
+				String routeStatus = vehicle.isRouteComplete()
+						? I18N.getString("sim.info.train.pendingDispatch")
+						: I18N.getString("sim.info.train.nextStop", label(vehicle.getTargetNode()));
+				return I18N.getString("sim.info.train")
+						+ "\n" + I18N.getString("sim.info.train.cargo", hold.getUsedUnits(), hold.getCapacity())
+						+ "\n" + I18N.getString("sim.info.train.speed", vehicle.getSpeed())
+						+ "\n" + routeStatus;
+			}
+			case Station station -> {
+				CargoHold hold = station.getCargoHold();
+				return label(station)
+						+ "\n" + I18N.getString("sim.info.station.passengers.waiting", hold.getUsedUnits(), hold.getCapacity())
+						+ "\n" + I18N.getString("sim.info.tracks.connections", station.getConnections().size());
+			}
+			case Node node -> {
+				return label(node)
+						+ "\n" + I18N.getString("sim.info.tracks.connections", node.getConnections().size());
+			}
+			default -> throw new IllegalStateException("Unexpected value: " + entity);
+		}
+	}
+
+	private String label(Node node) {
+		if (node instanceof Station station && station.getName() != null) {
+			return station.getName();
+		}
+
+		return I18N.getString("sim.info.junction", node.getX(), node.getY());
+	}
+
+	private void installPanAndZoom() {
+		addMouseWheelListener(this::onScroll);
+
+		MouseAdapter mouse = new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent event) {
 				dragAnchorX = event.getX();
@@ -354,51 +435,47 @@ public final class SimulationView extends JPanel {
 				offsetY -= (event.getY() - dragAnchorY) / scale;
 				dragAnchorX = event.getX();
 				dragAnchorY = event.getY();
+				hoverPoint = event.getPoint();
 				repaint();
 			}
-        };
 
-        addMouseListener(mouse);
-        addMouseMotionListener(mouse);
-    }
-	
+			@Override
+			public void mouseMoved(MouseEvent event) {
+				hoverPoint = event.getPoint();
+				setCursor(Cursor.getPredefinedCursor(pickObject(event.getX(), event.getY()) == null
+						? Cursor.DEFAULT_CURSOR
+						: Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent event) {
+				hoverPoint = null;
+			}
+		};
+
+		addMouseListener(mouse);
+		addMouseMotionListener(mouse);
+	}
+
 	private void onScroll(MouseWheelEvent event) {
-        double factor = event.getPreciseWheelRotation() < 0 ? ZOOM_STEP : 1 / ZOOM_STEP;
-        double newScale = Math.clamp(scale * factor, MIN_SCALE, MAX_SCALE);
-        if (newScale == scale) {
-            return;
-        }
-        // pin the world point under the cursor so zooming feels anchored to it
-        double worldX = toWorldX(event.getX());
-        double worldY = toWorldY(event.getY());
-        scale = newScale;
-        offsetX = worldX - event.getX() / scale;
-        offsetY = worldY - event.getY() / scale;
-        event.consume();
-        repaint();
-    }
+		double factor = event.getPreciseWheelRotation() < 0 ? ZOOM_STEP : 1 / ZOOM_STEP;
+		double newScale = Math.clamp(scale * factor, MIN_SCALE, MAX_SCALE);
+		if (newScale == scale) {
+			return;
+		}
+		// pin the world point under the cursor so zooming feels anchored to it
+		double worldX = toWorldX(event.getX());
+		double worldY = toWorldY(event.getY());
+		scale = newScale;
+		offsetX = worldX - event.getX() / scale;
+		offsetY = worldY - event.getY() / scale;
+		event.consume();
+		repaint();
+	}
 
-    private static void fillOval(Graphics2D gc, double screenX, double screenY, double radius) {
-        int size = (int) Math.round(radius * 2);
-        gc.fillOval(
-                (int) Math.round(screenX - radius),
-                (int) Math.round(screenY - radius),
-                size,
-                size);
-    }
-
-    private static void fillTextCentered(Graphics2D gc, String text, double x, double y) {
-		FontMetrics metrics = gc.getFontMetrics();
-        gc.drawString(text, (float) (x - metrics.stringWidth(text) / 2.0), (float) y);
-    }
-
-    private static void fillTextLeft(Graphics2D gc, String text, double x, double y) {
-        gc.drawString(text, (float) x, (float) y);
-    }
-
-    private double toScreenX(double worldX) {
-        return (worldX - offsetX) * scale;
-    }
+	private double toScreenX(double worldX) {
+		return (worldX - offsetX) * scale;
+	}
 
 	private double toScreenY(double worldY) {
 		return (worldY - offsetY) * scale;
