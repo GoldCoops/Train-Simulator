@@ -63,8 +63,8 @@ public final class CargoSpawner {
         List<Station> stations = new ArrayList<>();
 
         for(Node node: network.getNodes().values()){
-            if (node instanceof Station){
-                stations.add((Station) node);
+            if (node instanceof Station station){
+                stations.add(station);
             }
         }
 
