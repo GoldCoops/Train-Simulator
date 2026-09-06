@@ -363,6 +363,7 @@ public final class SimulationView extends JPanel {
 
 	/** Do not call this method directly */
 	private Object pickObject(double screenX, double screenY) {
+		if (simulation == null) { return null; }
 		for (Vehicle vehicle : simulation.getVehicles()) {
 			Point2D pos = vehicle.getPos();
 			double half = Math.max(8.0, Math.max(14.0, scale * 2.5) / 2);
