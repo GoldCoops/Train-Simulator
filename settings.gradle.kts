@@ -1,1 +1,1 @@
-rootProject.name = "COMP2000-Semester-1-Project"
+rootProject.name = "Train-Simulator"
