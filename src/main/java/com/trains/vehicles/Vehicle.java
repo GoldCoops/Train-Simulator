@@ -177,16 +177,10 @@ public class Vehicle {
             itinerary.advance();
 
             // Arrived at the station
-            if(arrivedAt instanceof Station station) { // stops the vehicle permanently at the station
+            if(arrivedAt instanceof Station) { // stops the vehicle permanently at the station
                 speed = 0;
                 isStopped = true;
-
-                unloadPassengers(station); //let passengers off
-                
-                //only board passengers if vehicle still has somewhere to travel
-                if(!itinerary.isComplete()){
-                    boardPassengers(station);
-                }
+                // unloading and boarding belong to the stop itself, which the controller runs
                 return;
             }
 
