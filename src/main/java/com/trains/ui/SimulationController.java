@@ -34,6 +34,8 @@ public class SimulationController {
      * run JUnit tests on Simulation.tick() and ensure the result is as expected.
      */
 
+    // While the comment above is the desired structure, this is not how it played out, we need to move much of this class into Simulation
+
     /**
      * Simulated seconds per tick. Vehicle.update integrates speed against dt, so holding the step
      * constant keeps movement identical no matter the frame rate or the speed multiplier.
