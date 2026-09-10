@@ -13,8 +13,8 @@ public final class I18N {
 	private static Locale locale;
 	private static final List<Runnable> listeners = new CopyOnWriteArrayList<>();
 	public static final Set<Locale> availableLocales = Set.of(
-			Locale.of("en", "AU")
-	);
+			Locale.of("en", "AU"),
+			Locale.of("el", "GR"));
 	private static final Locale defaultLocale = Locale.of("en", "AU");
 
 	static {
