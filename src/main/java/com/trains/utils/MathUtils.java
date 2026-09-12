@@ -39,9 +39,9 @@ public final class MathUtils {
      * @param t the fraction of the way between the two values
      * @return the interpolated value
      */
-    public static int lerp(int a, int b, double t) {
+    public static double lerp(int a, int b, double t) {
         t = Math.clamp(t, 0.0, 1.0);
-        return (int) (a + (b - a) * t);
+        return (a + (b - a) * t);
     }
 
     /**
