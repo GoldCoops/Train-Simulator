@@ -65,7 +65,7 @@ public final class Network {
         }
         return node;
     }
- 
+
 
 
     /**
@@ -90,7 +90,7 @@ public final class Network {
         return created;
     }
 
-
+    /** Haven't figured out how I wanna do this one yet; intention is to make a general purpose method which can add as many types of any Node as the caller wants */
     public <T extends Node> List<T> addNodes(Class<T> clazz, Map<GridPos, Integer> positions) throws IllegalArgumentException {
         if (positions.isEmpty()) {
             throw new IllegalArgumentException("No positions supplied");
