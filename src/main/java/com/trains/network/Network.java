@@ -3,6 +3,7 @@ package com.trains.network;
 
 import com.trains.utils.GridPos;
 
+import java.lang.reflect.Constructor;
 import java.util.*;
 
 
@@ -21,8 +22,8 @@ public final class Network {
     /**
      * Add a node to the network
      * usage: network.addNode(new GridPos(x,y))
-     * @param pos the position to add the node
-     * @return The created node object
+     * @param pos the position to add the {@link Node}
+     * @return The created {@link Node} object
      * @throws IllegalArgumentException If a node already exists at the supplied position
      */
     public Node addNode(GridPos pos) throws IllegalArgumentException{
@@ -32,13 +33,28 @@ public final class Network {
     /**
      * Add a station to the network
      * usage: network.addStation(new GridPos(x,y), capacity)
-     * @param pos the position to add the station
-     * @param capacity the capacity of the station - final, cannot be changed after creation
+     * @param pos the position to add the {@link Station}
+     * @param capacity the capacity of the {@link Station} - final, cannot be changed after creation
      * @return the created station object
      * @throws IllegalArgumentException If a node already exists at the supplied position
      */
     public Station addStation(GridPos pos, int capacity) throws IllegalArgumentException{
         return register(new Station(pos, capacity));
+    }
+
+
+
+    /**
+     * Add a station to the network
+     * usage: network.addStation(new GridPos(x,y), capacity)
+     * @param pos the position to add the {@link Station}
+     * @param capacity the capacity of the {@link Station} - final, cannot be changed after creation
+     * @param name the name of the {@link Station}
+     * @return the created station object
+     * @throws IllegalArgumentException If a node already exists at the supplied position
+     */
+    public Station addStation(GridPos pos, int capacity, String name) throws IllegalArgumentException{
+        return register(new Station(pos, capacity, name));
     }
 
     /** Registers a node in nodes if one does not already exist, if it does, it throws */
@@ -49,14 +65,14 @@ public final class Network {
         }
         return node;
     }
-
+ 
 
 
     /**
-     * Convenience method for adding multiple nodes at one time, returns a list of the nodes added
+     * Convenience method for adding multiple {@link Node}s at one time
      * If any of the positions supplied have nodes on them, this method will bail and throw before mutating the network
-     * @param positions The positions to add nodes at
-     * @return list of nodes added
+     * @param positions The positions to add {@link Node}s at
+     * @return a {@link List} of the {@link Node}s added
      * @throws IllegalArgumentException if any of the supplied positions already have nodes on them, or if duplicate positions are supplied
      */
     public List<Node> addNodes(GridPos... positions) throws IllegalArgumentException {
@@ -71,6 +87,36 @@ public final class Network {
         for(GridPos pos : positions) {
             created.add(addNode(pos));
         }
+        return created;
+    }
+
+
+    public <T extends Node> List<T> addNodes(Class<T> clazz, Map<GridPos, Integer> positions) throws IllegalArgumentException {
+        if (positions.isEmpty()) {
+            throw new IllegalArgumentException("No positions supplied");
+        }
+        List<T> created = new ArrayList<>(positions.size());
+        if (positions.keySet().stream().anyMatch(this::isNodeAt)) {
+            throw new IllegalArgumentException("Some positions supplied already have nodes on them");
+        }
+        Constructor<T> constructor;
+        try {
+            if (clazz == Node.class) {
+                List<GridPos> trimmed = new ArrayList<>(positions.keySet());
+                constructor = clazz.getDeclaredConstructor(trimmed.getClass());
+            } else {
+                Map<GridPos, Integer> casted = Map.copyOf(positions);
+                GridPos firstKey = casted.keySet().stream().findFirst().get();
+                int firstValue = casted.values().stream().findFirst().get();
+                constructor = clazz.getDeclaredConstructor();
+            }
+
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException("Could not find " + clazz.getSimpleName() + " constructor");
+        } catch (NoSuchElementException e) {
+            throw new IllegalArgumentException("Could not get the first key of " + positions);
+        }
+
         return created;
     }
 
