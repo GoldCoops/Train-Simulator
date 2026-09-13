@@ -19,13 +19,11 @@ public class GUIMainMenu extends GUI {
 		addMenuItems(
 				createMenuButton("menu.main.button.start", () -> openMenu(new GUISimulation(frame, this))),
 				createButtonRow(
-						createMenuButton("Settings", () -> openMenu(new GUISettings(frame, this))),
-						createMenuButton("menu.main.button.about", () -> openMenu(new GUIAbout(frame, this)))
-				),
+						createMenuButton("menu.main.button.language", () -> openMenu(new GUILanguage(frame, this))),
+						createMenuButton("menu.main.button.about", () -> openMenu(new GUIAbout(frame, this)))),
 				createMenuButton("menu.main.button.quit", () -> {
 					frame.dispose();
 					System.exit(0);
-				})
-		);
+				}));
 	}
 }

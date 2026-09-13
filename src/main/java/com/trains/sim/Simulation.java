@@ -10,7 +10,6 @@ public final class Simulation {
     // Should hold the network and a list of vehicles, with a tick method that advances time.
     private final Network network;
     private final List<Vehicle> vehicles;
-    private final CargoSpawner cargoSpawner;
 
     public Simulation() {
         this(new Network(), new ArrayList<>());
@@ -23,7 +22,6 @@ public final class Simulation {
     public Simulation(Network network, List<Vehicle> vehicles) {
         this.network = network;
         this.vehicles = vehicles;
-        this.cargoSpawner = new CargoSpawner(network);
     }
 
     public Network getNetwork() {

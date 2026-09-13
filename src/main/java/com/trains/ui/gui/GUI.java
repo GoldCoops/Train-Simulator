@@ -17,6 +17,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,13 +48,13 @@ public abstract class GUI extends JPanel {
 		bind(menuTitle, getTitle());
 
 		JPanel titleContainer = new JPanel(new BorderLayout());
-titleContainer.setOpaque(false);
-titleContainer.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 0));
-titleContainer.add(menuTitle, BorderLayout.CENTER);
+		titleContainer.setOpaque(false);
+		titleContainer.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 0));
+		titleContainer.add(menuTitle, BorderLayout.CENTER);
 
-buttonContainer.add(Box.createVerticalGlue());
-drawMenuItems();
-buttonContainer.add(Box.createVerticalGlue());
+		buttonContainer.add(Box.createVerticalGlue());
+		drawMenuItems();
+		buttonContainer.add(Box.createVerticalGlue());
 
 		add(titleContainer, BorderLayout.NORTH);
 		add(buttonContainer, BorderLayout.CENTER);
@@ -89,7 +90,7 @@ buttonContainer.add(Box.createVerticalGlue());
 
 	protected JPanel createButtonRow(JButton... buttons) {
 		int spacing = 15;
-		JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.CENTER, spacing, 0));
+		JPanel buttonRow = new JPanel(new GridLayout(1, buttons.length, spacing, 0));
 		buttonRow.setOpaque(false);
 		buttonRow.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -170,9 +171,9 @@ buttonContainer.add(Box.createVerticalGlue());
 	protected static String stringToHTML(String text, String align) {
 		return "<html><div style='text-align:" + align + "'>"
 				+ text.replace("&", "&amp;")
-				.replace("<", "&lt;")
-				.replace(">", "&gt;")
-				.replace("\n", "<br/>")
+						.replace("<", "&lt;")
+						.replace(">", "&gt;")
+						.replace("\n", "<br/>")
 				+ "</div></html>";
 	}
 }
