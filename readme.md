@@ -21,7 +21,7 @@ On Windows use `gradlew.bat` in place of `./gradlew`.
 Compiled jar can be run with: 
 
 ```
-java -jar build/libs/COMP2000-Semester-1-Project-1.0.jar
+java -jar build/libs/COMP2000-Semester-1-Project-{version}.jar
 ```
 
 ## Using the simulator
