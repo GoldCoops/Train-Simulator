@@ -21,8 +21,8 @@ public final class Network {
     /**
      * Add a node to the network
      * usage: network.addNode(new GridPos(x,y))
-     * @param pos the position to add the node
-     * @return The created node object
+     * @param pos the position to add the {@link Node}
+     * @return The created {@link Node} object
      * @throws IllegalArgumentException If a node already exists at the supplied position
      */
     public Node addNode(GridPos pos) throws IllegalArgumentException{
@@ -32,13 +32,28 @@ public final class Network {
     /**
      * Add a station to the network
      * usage: network.addStation(new GridPos(x,y), capacity)
-     * @param pos the position to add the station
-     * @param capacity the capacity of the station - final, cannot be changed after creation
+     * @param pos the position to add the {@link Station}
+     * @param capacity the capacity of the {@link Station} - final, cannot be changed after creation
      * @return the created station object
      * @throws IllegalArgumentException If a node already exists at the supplied position
      */
     public Station addStation(GridPos pos, int capacity) throws IllegalArgumentException{
         return register(new Station(pos, capacity));
+    }
+
+
+
+    /**
+     * Add a station to the network
+     * usage: network.addStation(new GridPos(x,y), capacity)
+     * @param pos the position to add the {@link Station}
+     * @param capacity the capacity of the {@link Station} - final, cannot be changed after creation
+     * @param name the name of the {@link Station}
+     * @return the created station object
+     * @throws IllegalArgumentException If a node already exists at the supplied position
+     */
+    public Station addStation(GridPos pos, int capacity, String name) throws IllegalArgumentException{
+        return register(new Station(pos, capacity, name));
     }
 
     /** Registers a node in nodes if one does not already exist, if it does, it throws */
@@ -53,14 +68,28 @@ public final class Network {
 
 
     /**
-     * Convenience method for adding multiple nodes at one time, returns a list of the nodes added
+     * Convenience method for adding multiple {@link Node}s at one time
      * If any of the positions supplied have nodes on them, this method will bail and throw before mutating the network
-     * @param positions The positions to add nodes at
-     * @return list of nodes added
+     * @param positions The positions to add {@link Node}s at
+     * @return a {@link List} of the {@link Node}s added
      * @throws IllegalArgumentException if any of the supplied positions already have nodes on them, or if duplicate positions are supplied
      */
     public List<Node> addNodes(GridPos... positions) throws IllegalArgumentException {
-        List<Node> created = new ArrayList<>(positions.length);
+        return addNodes(NodeFactory.node(), positions);
+    }
+
+    /**
+     * Convenience method for adding multiple nodes of one type at a time
+     * If any position supplied is taken, or the factory throws, this bails before mutating the network
+     * @param factory how to build each node, from {@link NodeFactory}
+     * @param positions the positions to add nodes at
+     * @param <T> the type of node being added
+     * @return a {@link List} of the nodes added, in the order the positions were supplied
+     * @throws IllegalArgumentException if any position already has a node, or if duplicate positions are supplied
+     * @throws NullPointerException if factory is null
+     */
+    public <T extends Node> List<T> addNodes(NodeFactory<T> factory, GridPos... positions) throws IllegalArgumentException, NullPointerException {
+        Objects.requireNonNull(factory);
         Set<GridPos> distinct = new LinkedHashSet<>(Arrays.asList(positions)); //a set to auto-eliminate duplicates
         if (distinct.size() != positions.length) {
             throw new IllegalArgumentException("Duplicate positions supplied");
@@ -68,8 +97,12 @@ public final class Network {
         if (distinct.stream().anyMatch(this::isNodeAt)) {
             throw new IllegalArgumentException("Some positions supplied already have nodes on them");
         }
-        for(GridPos pos : positions) {
-            created.add(addNode(pos));
+        List<T> created = new ArrayList<>(positions.length);
+        for (GridPos pos : positions) {
+            created.add(factory.create(pos));
+        }
+        for (T node : created) {
+            register(node);
         }
         return created;
     }

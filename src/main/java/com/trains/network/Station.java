@@ -19,6 +19,11 @@ public class Station extends Node {
         this.cargoHold = CargoHold.mixed(capacity);
     }
 
+    Station(GridPos pos, int capacity, String name) {
+        this(pos, capacity);
+        this.name = name;
+    }
+
     /**
      * gets the total capacity of the station
      * @return the total capacity
