@@ -361,7 +361,6 @@ public final class SimulationView extends JPanel {
 		return pickObject(hoverPoint.x, hoverPoint.y);
 	}
 
-	/** Do not call this method directly */
 	private Object pickObject(double screenX, double screenY) {
 		if (simulation == null) { return null; }
 		for (Vehicle vehicle : simulation.getVehicles()) {

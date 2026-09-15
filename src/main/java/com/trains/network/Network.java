@@ -3,7 +3,6 @@ package com.trains.network;
 
 import com.trains.utils.GridPos;
 
-import java.lang.reflect.Constructor;
 import java.util.*;
 
 
@@ -76,7 +75,21 @@ public final class Network {
      * @throws IllegalArgumentException if any of the supplied positions already have nodes on them, or if duplicate positions are supplied
      */
     public List<Node> addNodes(GridPos... positions) throws IllegalArgumentException {
-        List<Node> created = new ArrayList<>(positions.length);
+        return addNodes(NodeFactory.node(), positions);
+    }
+
+    /**
+     * Convenience method for adding multiple nodes of one type at a time
+     * If any position supplied is taken, or the factory throws, this bails before mutating the network
+     * @param factory how to build each node, from {@link NodeFactory}
+     * @param positions the positions to add nodes at
+     * @param <T> the type of node being added
+     * @return a {@link List} of the nodes added, in the order the positions were supplied
+     * @throws IllegalArgumentException if any position already has a node, or if duplicate positions are supplied
+     * @throws NullPointerException if factory is null
+     */
+    public <T extends Node> List<T> addNodes(NodeFactory<T> factory, GridPos... positions) throws IllegalArgumentException, NullPointerException {
+        Objects.requireNonNull(factory);
         Set<GridPos> distinct = new LinkedHashSet<>(Arrays.asList(positions)); //a set to auto-eliminate duplicates
         if (distinct.size() != positions.length) {
             throw new IllegalArgumentException("Duplicate positions supplied");
@@ -84,39 +97,13 @@ public final class Network {
         if (distinct.stream().anyMatch(this::isNodeAt)) {
             throw new IllegalArgumentException("Some positions supplied already have nodes on them");
         }
-        for(GridPos pos : positions) {
-            created.add(addNode(pos));
+        List<T> created = new ArrayList<>(positions.length);
+        for (GridPos pos : positions) {
+            created.add(factory.create(pos));
         }
-        return created;
-    }
-
-    /** Haven't figured out how I wanna do this one yet; intention is to make a general purpose method which can add as many types of any Node as the caller wants */
-    public <T extends Node> List<T> addNodes(Class<T> clazz, Map<GridPos, Integer> positions) throws IllegalArgumentException {
-        if (positions.isEmpty()) {
-            throw new IllegalArgumentException("No positions supplied");
+        for (T node : created) {
+            register(node);
         }
-        List<T> created = new ArrayList<>(positions.size());
-        if (positions.keySet().stream().anyMatch(this::isNodeAt)) {
-            throw new IllegalArgumentException("Some positions supplied already have nodes on them");
-        }
-        Constructor<T> constructor;
-        try {
-            if (clazz == Node.class) {
-                List<GridPos> trimmed = new ArrayList<>(positions.keySet());
-                constructor = clazz.getDeclaredConstructor(trimmed.getClass());
-            } else {
-                Map<GridPos, Integer> casted = Map.copyOf(positions);
-                GridPos firstKey = casted.keySet().stream().findFirst().get();
-                int firstValue = casted.values().stream().findFirst().get();
-                constructor = clazz.getDeclaredConstructor();
-            }
-
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("Could not find " + clazz.getSimpleName() + " constructor");
-        } catch (NoSuchElementException e) {
-            throw new IllegalArgumentException("Could not get the first key of " + positions);
-        }
-
         return created;
     }
 
