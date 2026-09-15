@@ -86,18 +86,50 @@ public final class Network {
      * @param <T> the type of node being added
      * @return a {@link List} of the nodes added, in the order the positions were supplied
      * @throws IllegalArgumentException if any position already has a node, or if duplicate positions are supplied
-     * @throws NullPointerException if factory is null
+     * @throws NullPointerException if factory or positions are null
      */
-    public <T extends Node> List<T> addNodes(NodeFactory<T> factory, GridPos... positions) throws IllegalArgumentException, NullPointerException {
+    public <T extends Node> List<T> addNodes(NodeFactory<T> factory, Collection<GridPos> positions) throws IllegalArgumentException {
+        return addNodes(factory, new ArrayList<>(positions));
+    }
+
+    /**
+     * Convenience method for adding multiple nodes of one type at a time
+     * If any position supplied is taken, or the factory throws, this bails before mutating the network
+     * @param factory how to build each node, from {@link NodeFactory}
+     * @param positions the positions to add nodes at
+     * @param <T> the type of node being added
+     * @return a {@link List} of the nodes added, in the order the positions were supplied
+     * @throws IllegalArgumentException if any position already has a node, or if duplicate positions are supplied
+     * @throws NullPointerException if factory or positions are null
+     */
+    public <T extends Node> List<T> addNodes(NodeFactory<T> factory, GridPos... positions) throws IllegalArgumentException {
+        return addNodes(factory, Arrays.asList(positions));
+    }
+
+    /**
+     * Convenience method for adding multiple nodes of one type at a time
+     * If any position supplied is taken, or the factory throws, this bails before mutating the network
+     * @param factory how to build each node, from {@link NodeFactory}
+     * @param positions the positions to add nodes at
+     * @param <T> the type of node being added
+     * @return a {@link List} of the nodes added, in the order the positions were supplied
+     * @throws IllegalArgumentException if any position already has a node, or if duplicate positions are supplied
+     * @throws NullPointerException if factory or positions are null
+     */
+    public <T extends Node> List<T> addNodes(NodeFactory<T> factory, List<GridPos> positions) throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(factory);
-        Set<GridPos> distinct = new LinkedHashSet<>(Arrays.asList(positions)); //a set to auto-eliminate duplicates
-        if (distinct.size() != positions.length) {
+        Objects.requireNonNull(positions);
+        if (positions.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Set<GridPos> distinct = new LinkedHashSet<>(positions); //a set to auto-eliminate duplicates
+        if (distinct.size() != positions.size()) {
             throw new IllegalArgumentException("Duplicate positions supplied");
         }
         if (distinct.stream().anyMatch(this::isNodeAt)) {
             throw new IllegalArgumentException("Some positions supplied already have nodes on them");
         }
-        List<T> created = new ArrayList<>(positions.length);
+        List<T> created = new ArrayList<>(positions.size());
         for (GridPos pos : positions) {
             created.add(factory.create(pos));
         }
