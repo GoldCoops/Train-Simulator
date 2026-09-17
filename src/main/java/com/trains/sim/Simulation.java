@@ -11,30 +11,62 @@ public final class Simulation {
     private final Network network;
     private final List<Vehicle> vehicles;
 
+    /**
+     * Simulation constructor with empty network and vehicle list
+     */
     public Simulation() {
         this(new Network(), new ArrayList<>());
     }
 
+    /**
+     * Simulation constructor with empty vehicle list
+     * <p>
+     *     Instantiates a blank vehicle list, uses the network provided
+     * </p>
+     * @param network
+     */
     public Simulation(Network network) {
         this(network, new ArrayList<>());
     }
 
+    /**
+     * Simulation constructor
+     * @param network the network of the simulation
+     * @param vehicles the list of vehicles in the simulation
+     */
     public Simulation(Network network, List<Vehicle> vehicles) {
         this.network = network;
         this.vehicles = vehicles;
     }
 
+    /**
+     * Gets the {@link Network} of the simulation
+     * @return the network
+     */
     public Network getNetwork() {
         return network;
     }
+
+    /**
+     * Gets the list of {@link Vehicle}s in the simulation
+     * @return an unmodifiable list of vehicles
+     */
     public List<Vehicle> getVehicles() {
         return Collections.unmodifiableList(vehicles);
     }
 
+    /**
+     * Adds a {@link Vehicle} to the simulation
+     * @param vehicle vehicle to be added
+     */
     public void addVehicle(Vehicle vehicle) {
         vehicles.add(vehicle);
     }
 
+    /**
+     * Removes a {@link Vehicle} from the simulation
+     * @param vehicle vehicle to be removed
+     */
     public void removeVehicle(Vehicle vehicle) {
         vehicles.remove(vehicle);
     }
