@@ -144,7 +144,14 @@ public final class CargoHold {
         return accepted.contains(cargo.getType()) && usedUnits + cargo.getUnits() <= capacity;
     }
 
-
+    /**
+     * Verifies that the used units and the sum of the cargo units in the contents are equal
+     * <p>
+     *     Uses a stream to sum the cargo units and ensure that it matches the usedUnits variable
+     *     If this method returns false, the cargo hold is in an inconsistent state, and should be reset or discarded.
+     * </p>
+     * @return true if the used units and the sum of the cargo units in the contents are equal, false otherwise
+     */
     public boolean verifyIntegrity() {
         return usedUnits == contents.stream().mapToInt(Cargo::getUnits).sum();
     }
