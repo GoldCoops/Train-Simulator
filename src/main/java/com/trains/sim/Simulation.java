@@ -5,7 +5,12 @@ import com.trains.vehicles.Vehicle;
 
 import java.util.*;
 
-
+/**
+ * The Simulation class
+ * <p>
+ *     Holds the network and a list of vehicles, and provides a tick method to advance the simulation by one tick.
+ * </p>
+ */
 public final class Simulation {
     // Should hold the network and a list of vehicles, with a tick method that advances time.
     private final Network network;

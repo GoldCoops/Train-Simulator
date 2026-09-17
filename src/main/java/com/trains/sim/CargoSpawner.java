@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Handles spawning of cargo
+ */
 public final class CargoSpawner {
     private final Network network;
 

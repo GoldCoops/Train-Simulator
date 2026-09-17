@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * The controller for the simulation
+ */
 public class SimulationController {
     // Decides when the simulation runs
     /*
