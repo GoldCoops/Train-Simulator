@@ -21,24 +21,49 @@ public final class Cargo {
     }
 
 
-    public static Cargo passenger(GridPos destination) throws IllegalArgumentException {
+    /**
+     * Passenger Cargo factory method
+     * @param destination the destination of the cargo
+     * @return The created Cargo Object
+     * @throws NullPointerException if destination is null
+     */
+    public static Cargo passenger(GridPos destination) throws NullPointerException{
         return new Cargo(destination, CargoType.PASSENGER, 1);
     }
 
+    /**
+     * Freight Cargo factory method
+     * @param destination The destination of the cargo
+     * @param units The number of units of freight
+     * @return The created Cargo Object
+     * @throws IllegalArgumentException if units is less than 1
+     * @throws NullPointerException if destination is null
+     */
     public static Cargo freight(GridPos destination, int units) throws IllegalArgumentException{
         return new Cargo(destination, CargoType.FREIGHT, units);
     }
 
 
-
+    /**
+     * Returns the number of units this cargo takes up
+     * @return
+     */
     public int getUnits() {
         return units;
-    }  
+    }
 
+    /**
+     * Returns the type of cargo
+     * @return the type of cargo
+     */
     public CargoType getType() {
         return type;
     }
 
+    /**
+     * Returns the destination of the cargo as a {@link GridPos}
+     * @return the destination of the cargo
+     */
     public GridPos getDestination() {
         return destination;
     }
