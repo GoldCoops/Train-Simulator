@@ -5,6 +5,10 @@ import java.util.Objects;
 
 import com.trains.utils.GridPos;
 
+/**
+ * The Cargo Class
+ */
+
 public final class Cargo {
     private final GridPos destination;
     private final CargoType type;
@@ -46,7 +50,7 @@ public final class Cargo {
 
     /**
      * Returns the number of units this cargo takes up
-     * @return
+     * @return the number of units this cargo takes up
      */
     public int getUnits() {
         return units;

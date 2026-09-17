@@ -4,6 +4,10 @@ import com.trains.utils.GridPos;
 
 import java.util.Objects;
 
+/**
+ * Handles the transfer of cargo between CargoHolds
+ *
+ */
 public final class CargoTransfer {
 
     /**
