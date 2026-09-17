@@ -1,7 +1,11 @@
 package com.trains.utils;
 
-import java.math.BigDecimal;
-
+/**
+ * Math Utilities
+ * <p>
+ *     Contains only lerp at the moment
+ * </p>
+ */
 public final class MathUtils {
 
 

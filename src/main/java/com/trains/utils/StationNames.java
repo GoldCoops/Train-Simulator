@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Static utility class for providing station names.
+ */
 public final class StationNames {
 	private static final List<String> NSW_NAMES = List.of(
 			"Parramatta", "Newcastle", "Wollongong", "Bathurst", "Orange",
