@@ -11,6 +11,13 @@ import com.trains.network.PathwaySegment;
 
 import java.util.*;
 
+/**
+ * The Router class
+ * <p>
+ *     Handles finding the cheapest route between two nodes.
+ *     Uses A* to find the cheapest route.
+ * </p>
+ */
 public class Router {
     // Handles pathfinding logic, I'm probably going to try using A* here, but if
     // that fails I'll just use Dijkstra
