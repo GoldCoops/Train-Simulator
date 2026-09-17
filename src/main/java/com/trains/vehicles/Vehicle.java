@@ -14,6 +14,9 @@ import com.trains.cargo.CargoType;
 
 import static com.trains.utils.MathUtils.*;
 
+/**
+ * The Vehicle class
+ */
 public class Vehicle {
     private boolean isStopped;
     private final CargoHold cargoHold; // CargoHold now manages capacity per hold
@@ -24,7 +27,13 @@ public class Vehicle {
     private double distanceAlong; // We should switch from using x and y values for the coordinates to a position along a PathwaySegment, and then interpolate X and Y when we need them for rendering in getX and getY
 
 
-
+    /**
+     * Vehicle constructor
+     * @param itinerary the route the vehicle will follow
+     * @param maxSpeed the maximum speed the vehicle can travel at
+     * @param acceleration the acceleration the vehicle will have when traveling at maxSpeed
+     * @param cargoHold the cargo hold the vehicle will be using
+     */
     public Vehicle(Itinerary itinerary, float maxSpeed, float acceleration, CargoHold cargoHold) {
         this.itinerary = Objects.requireNonNull(itinerary);
         this.cargoHold = Objects.requireNonNull(cargoHold);
@@ -34,18 +43,34 @@ public class Vehicle {
     }
 
 
+    /**
+     * Returns the current {@link PathwaySegment} the vehicle is on
+     * @return the current {@link PathwaySegment}
+     */
     public PathwaySegment getCurrentSegment() {
         return itinerary.getCurrentSegment();
     }
 
+    /**
+     * Gets the target {@link Node} of the vehicle's route
+     * @return The target node
+     */
     public Node getTargetNode() {
         return itinerary.getTargetNode();
     }
 
+    /**
+     * Gets the last {@link Node} the vehicle was on
+     * @return The previous {@link Node} the vehicle was on, or the origin if the vehicle has not yet started its route.
+     */
     public Node getEntryNode() {
         return itinerary.getEntryNode();
     }
 
+    /**
+     * Gets the maximum speed the vehicle can travel at
+     * @return The maximum speed in units per second
+     */
     public float getMaxSpeed() {
         return maxSpeed;
     }
@@ -72,14 +97,24 @@ public class Vehicle {
         this.isStopped = true;
     }
 
+    /**
+     * Returns the {@link CargoHold} the vehicle is using
+     * @return the cargo hold
+     */
     public CargoHold getCargoHold() {
         return cargoHold;
     }
 
+    /**
+     * Stops the vehicle from moving.
+     */
     public void stop() {
         this.isStopped = true;
     }
-    
+
+    /**
+     * Starts the vehicle moving.
+     */
     public void go() {
         this.isStopped = false;
     }
@@ -217,18 +252,18 @@ public class Vehicle {
         return blockers;
     }
 
-    /* 
-      @return a boolean to check whether a vehicle should depart or not from a station
-    */
+
+    /**
+     * Returns true if vehicle is ready to depart from station
+     * @return true if vehicle is ready to depart from station
+     */
 
     public boolean canDepart() {
         return checkDepartureBlockers().isEmpty();
     }
 
 
-    public String toString() {
-        return "Vehicle { " + getPos() + ", " + speed + ", " + itinerary.getDestinationNode() + " }";
-    }
+
 
     /**
      * Attempts to board passengers from a station onto this vehicle
@@ -285,5 +320,10 @@ public class Vehicle {
             }
         }
         return unload;
+    }
+
+    @Override
+    public String toString() {
+        return "Vehicle { " + getPos() + ", " + speed + ", " + itinerary.getDestinationNode() + " }";
     }
 }
