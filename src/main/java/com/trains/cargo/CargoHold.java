@@ -2,6 +2,10 @@ package com.trains.cargo;
 
 import java.util.*;
 
+
+/**
+ * CargoHold class, the container for cargo
+ */
 public final class CargoHold {
     private final int capacity;
     private final Set<CargoType> accepted;
