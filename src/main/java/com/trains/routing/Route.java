@@ -41,20 +41,33 @@ public final class Route {
     }
 
 
+    /**
+     * Returns the origin {@link Node}
+     * @return the origin {@link Node}
+     */
     public Node getOrigin() {
         return origin;
     }
+
+    /**
+     * Returns the final destination {@link Node}
+     * @return the destination {@link Node}
+     */
     public Node getDestination() {
         return destination;
     }
 
+    /**
+     * Returns an unmodifiable list of the {@link PathwaySegment} in the route
+     * @return an unmodifiable list of the {@link PathwaySegment} in the route
+     */
     public List<PathwaySegment> getSegments() {
         return Collections.unmodifiableList(segments);
     }
 
     /**
-     * Total length of all of the segments combined
-     * @return The total length
+     * Total length of all of the {@link PathwaySegment} combined
+     * @return The total length of the route
      */
     public double getTotalLength() {
         return totalLength;
