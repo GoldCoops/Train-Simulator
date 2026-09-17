@@ -12,8 +12,8 @@ public final class CargoHold {
         if (accepted.isEmpty()) {
             throw new IllegalArgumentException("At least one cargo type must be accepted");
         }
-        if (capacity < 0) {
-            throw new IllegalArgumentException("Capacity must be greater than or equal to 0");
+        if (capacity < 1) {
+            throw new IllegalArgumentException("Capacity must be greater than or equal to 1");
         }
         this.accepted = EnumSet.copyOf(accepted);
         this.capacity = capacity;
@@ -32,8 +32,10 @@ public final class CargoHold {
      * @param capacity The capacity of the hold
      * @param accepted The accepted type of cargo
      * @return The CargoHold Object
+     * @throws IllegalArgumentException if capacity is less than 1
+     * @throws NullPointerException if accepted is null
      */
-    public static CargoHold forType(int capacity, CargoType accepted) {
+    public static CargoHold forType(int capacity, CargoType accepted) throws IllegalArgumentException, NullPointerException{
         Objects.requireNonNull(accepted);
         return new CargoHold(capacity, EnumSet.of(accepted));
     }
@@ -43,8 +45,10 @@ public final class CargoHold {
      * @param capacity The capacity of the hold
      * @param accepted The cargo types to accept
      * @return The CargoHold Object
+     * @throws IllegalArgumentException if accepted is supplied, or if capacity is less than 1
+     * @throws NullPointerException if accepted is null
      */
-    public static CargoHold mixed(int capacity, CargoType... accepted) {
+    public static CargoHold mixed(int capacity, CargoType... accepted) throws IllegalArgumentException, NullPointerException{
         Objects.requireNonNull(accepted);
         if (accepted.length == 0) {
             throw new IllegalArgumentException("At least one cargo type must be accepted");
@@ -56,8 +60,9 @@ public final class CargoHold {
      * Creates a mixed cargo hold that accepts any of the cargo types in the enum
      * @param capacity The capacity of the hold
      * @return The CargoHold Object
+     * @throws IllegalArgumentException if capacity is less than 1
      */
-    public static CargoHold mixed(int capacity) {
+    public static CargoHold mixed(int capacity) throws IllegalArgumentException{
         return new CargoHold(capacity, EnumSet.allOf(CargoType.class));
     }
 
@@ -90,8 +95,9 @@ public final class CargoHold {
     checks whether the cargo is held in the contents
     @param cargo the cargo being checked
     @return true if the cargo exists in the contents
+     @throws NullPointerException if cargo is null
     */
-    boolean hasCargo(Cargo cargo) {
+    boolean hasCargo(Cargo cargo) throws NullPointerException{
         Objects.requireNonNull(cargo);
         return contents.contains(cargo);
     }
@@ -115,8 +121,9 @@ public final class CargoHold {
      * removes the cargo from the hold if it is there
      * @param cargo being removed
      * @return true if cargo was found and removed
+     * @throws NullPointerException if cargo is null
     */
-    boolean removeCargo(Cargo cargo) {
+    boolean removeCargo(Cargo cargo) throws NullPointerException {
         Objects.requireNonNull(cargo);
         boolean removed = contents.remove(cargo);
         if (removed) {
@@ -130,8 +137,9 @@ public final class CargoHold {
      * If the calling cargoHold can accept a given piece of cargo
      * @param cargo the cargo to check
      * @return true if the cargo can be accepted, false otherwise
+     * @throws NullPointerException if cargo is null
      */
-    public boolean canAccept(Cargo cargo) { 
+    public boolean canAccept(Cargo cargo) throws NullPointerException{
         Objects.requireNonNull(cargo);
         return accepted.contains(cargo.getType()) && usedUnits + cargo.getUnits() <= capacity;
     }
