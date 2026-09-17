@@ -6,11 +6,24 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+/**
+ * The main class for the application
+ */
 public class App {
+	/**
+	 * The main method
+	 * <p>
+	 *     Invokes the {@link App#start()} method on the Swing thread
+	 * </p>
+	 * @param args command line arguments
+	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(App::start);
 	}
 
+	/**
+	 * Starts the application
+	 */
 	private static void start() {
 		/*
 		Australian English is the only supported language at the moment
