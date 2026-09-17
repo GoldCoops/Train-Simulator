@@ -31,8 +31,16 @@ public class Router {
     private record OpenEntry(Node node, double fScore) {}
 
 
-
-
+    /**
+     * Finds the cheapest route between two nodes
+     * <p>
+     *     Nodes must be connected in the network, otherwise this will fail.
+     *     Uses A* to find the cheapest route.
+     * </p>
+     * @param origin The origin {@link Node} of the route must be connected to the destination {@link Node}
+     * @param destination The destination {@link Node} of the route must be connected to the origin {@link Node}
+     * @return The {@link Route} between the origin and destination, or null if no route was found
+     */
     public Route findRoute(Node origin, Node destination) {
         if (origin == destination) {
             throw new IllegalArgumentException("Origin and destination cannot be the same");
