@@ -1,6 +1,7 @@
 package com.trains.network;
 
 import com.trains.utils.GridPos;
+import java.util.Random;
 
 /**
  * A recipe for building a {@link Node} at a given position.
@@ -8,6 +9,7 @@ import com.trains.utils.GridPos;
  */
 @FunctionalInterface
 public interface NodeFactory<T extends Node> {
+    static Random RANDOM = new Random();
 
     /**
      * Builds a node at the given position. Must honour the position it is
@@ -32,6 +34,16 @@ public interface NodeFactory<T extends Node> {
      */
     static NodeFactory<Station> station(int capacity) {
         return pos -> new Station(pos, capacity);
+    }
+
+    /**
+     * Returns a factory for a {@link Station} with the capacity supplied
+     * @param lower the lower bound of the random capacity (inclusive)
+     * @param upper the upper bound of the random capacity (exclusive)
+     * @return a factory for unnamed {@link Station}s
+     */
+    static NodeFactory<Station> randStation(int lower, int upper) {
+        return pos -> new Station(pos, RANDOM.nextInt(lower, upper));
     }
 
     /**
