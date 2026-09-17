@@ -16,7 +16,10 @@ public final class Itinerary {
     private int leg;
     private Node entryNode;
 
-
+    /**
+     * Itinerary constructor
+     * @param route the route we are following
+     */
     public Itinerary(Route route) {
         this.route = Objects.requireNonNull(route);
         this.leg = 0;
@@ -40,10 +43,21 @@ public final class Itinerary {
         return route.getSegments().get(leg);
     }
 
+    /**
+     * Gets the destination node of the route
+     * @return The destination node
+     */
     public Node getDestinationNode() {
         return route.getDestination();
     }
 
+    /**
+     * Gets the {@link Route} this Itinerary is following
+     * @return The {@link Route}
+     */
+    public Route getRoute() {
+        return route;
+    }
     /**
      * Gets the last node we were on
      * @return The last node
