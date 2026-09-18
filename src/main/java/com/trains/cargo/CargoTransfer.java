@@ -11,7 +11,7 @@ import java.util.Objects;
 public final class CargoTransfer {
 
     /**
-     * Tramsfers cargo from origin to destination CargoHold
+     * Transfers cargo from origin to destination CargoHold
      * @param source the CargoHold from which the cargo is being transferred
      * @param destination CargoHold destination to where the cargo is being transferred
      * @param cargo being transferred
