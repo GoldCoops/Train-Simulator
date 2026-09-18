@@ -104,10 +104,17 @@ public class SimulationController {
     private int deliveredCount;
     private long lastFrameNanos;
 
+    /**
+     * Creates a new simulation controller with a new simulation.
+     */
     public SimulationController() {
         this(new Simulation());
     }
 
+    /**
+     * Creates a new simulation controller with the given simulation.
+     * @param sim the simulation to run
+     */
     public SimulationController(Simulation sim) {
         this.sim = Objects.requireNonNull(sim);
         this.router = new Router(sim.getNetwork());
@@ -119,6 +126,10 @@ public class SimulationController {
         }
     }
 
+    /**
+     * Gets the simulation this controller is running.
+     * @return the simulation this controller is running
+     */
     public Simulation getSimulation() {
         return sim;
     }
@@ -175,6 +186,7 @@ public class SimulationController {
     }
 
     /**
+     * Toggles between paused and running.
      * @return true if simulated time is advancing
      */
     public boolean isRunning() {
@@ -189,11 +201,16 @@ public class SimulationController {
         this.speedMultiplier = Math.clamp(speedMultiplier, MIN_SPEED_MULTIPLIER, MAX_SPEED_MULTIPLIER);
     }
 
+    /**
+     * Gets the current speed multiplier.
+     * @return the current speed multiplier, clamped between {@value #MIN_SPEED_MULTIPLIER} and {@value #MAX_SPEED_MULTIPLIER}
+     */
     public double getSpeedMultiplier() {
         return speedMultiplier;
     }
 
     /**
+     * Gets the current elapsed time, in simulated seconds.
      * @return simulated seconds run so far, not counting paused time
      */
     public double getElapsedSeconds() {
@@ -201,6 +218,7 @@ public class SimulationController {
     }
 
     /**
+     * Gets the current delivered cargo unit count across the entire network.
      * @return how many cargo units have reached their destination
      */
     public int getDeliveredCount() {
@@ -242,6 +260,7 @@ public class SimulationController {
     }
 
     /**
+     * Gets the number of passengers currently waiting at a station
      * @return the total cargo units waiting across every station
      */
     public int getWaitingUnits() {
@@ -255,6 +274,7 @@ public class SimulationController {
     }
 
     /**
+     * Gets the number of passengers currently onboard vehicles
      * @return the total cargo units currently aboard vehicles
      */
     public int getOnboardUnits() {
@@ -511,6 +531,10 @@ public class SimulationController {
         return stations;
     }
 
+    /**
+     * Spawns a train between two random stations that a train can actually travel between.
+     * @return true if a train was spawned
+     */
     public boolean spawnVehicle() {
     List<Station> stations = connectedStations();
     if (stations.size() < 2) {
