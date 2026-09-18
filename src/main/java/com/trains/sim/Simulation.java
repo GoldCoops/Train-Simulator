@@ -28,7 +28,7 @@ public final class Simulation {
      * <p>
      *     Instantiates a blank vehicle list, uses the network provided
      * </p>
-     * @param network
+     * @param network the network of the simulation
      */
     public Simulation(Network network) {
         this(network, new ArrayList<>());

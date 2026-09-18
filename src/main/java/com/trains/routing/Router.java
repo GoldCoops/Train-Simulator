@@ -31,6 +31,10 @@ public class Router {
 
     private final Network network;
 
+    /**
+     * Router constructor
+     * @param network The network to use for pathfinding
+     */
     public Router(Network network) {
         this.network = network;
     }

@@ -5,7 +5,13 @@ package com.trains.utils;
  * A continuous interpolated position for rendering
  */
 public final class Point2D {
+    /**
+     * The x coordinate
+     */
     public double x;
+    /**
+     * The y coordinate
+     */
     public double y;
 
     /**

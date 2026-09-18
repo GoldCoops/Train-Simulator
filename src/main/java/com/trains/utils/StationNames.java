@@ -21,7 +21,8 @@ public final class StationNames {
 	/**
 	 * Returns a random selection of NSW place names, in random order.
 	 * @param count how many names to return
-	 * @throws IllegalArgumentException if count exceeds the available pool
+	 * @return a list of names of length {@code count}, in random order
+	 * @throws IllegalArgumentException if the count exceeds the available pool
 	 */
 	public static List<String> randomNames(int count) {
 		if (count > NSW_NAMES.size()) {

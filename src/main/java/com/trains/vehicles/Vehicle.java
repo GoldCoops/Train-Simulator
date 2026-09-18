@@ -164,6 +164,10 @@ public class Vehicle {
         return lerp(itinerary.getEntryNode().getPos(),itinerary.getTargetNode().getPos(), t);
     }
 
+    /**
+     * Updates the vehicle's position based on its speed and acceleration
+     * @param dt the time elapsed since the last update
+     */
     public void update(double dt) { // this is just an example of what we should be doing, it needs to be edited.
         if(dt < 0) {
             throw new IllegalArgumentException("Function argument cannot be negative!");

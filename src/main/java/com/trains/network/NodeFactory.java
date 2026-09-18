@@ -9,6 +9,9 @@ import java.util.Random;
  */
 @FunctionalInterface
 public interface NodeFactory<T extends Node> {
+    /**
+     * A random number generator for use in factories
+     */
     static Random RANDOM = new Random();
 
     /**
