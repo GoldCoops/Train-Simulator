@@ -37,10 +37,10 @@ public interface NodeFactory<T extends Node> {
     }
 
     /**
-     * Returns a factory for a {@link Station} with the capacity supplied
+     * Returns a factory for a {@link Station} with a random capacity between the bounds supplied
      * @param lower the lower bound of the random capacity (inclusive)
      * @param upper the upper bound of the random capacity (exclusive)
-     * @return a factory for unnamed {@link Station}s
+     * @return a factory for unnamed {@link Station}s of random capacity between the bounds
      */
     static NodeFactory<Station> randStation(int lower, int upper) {
         return pos -> new Station(pos, RANDOM.nextInt(lower, upper));
