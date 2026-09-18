@@ -75,13 +75,22 @@ public class Vehicle {
         return maxSpeed;
     }
 
-    /** @return the current speed in units per second */
+    /**
+     * Gets the current speed of the vehicle
+     * @return the current speed in units per second
+     */
     public float getSpeed() { return speed; }
 
-    /** @return true if the vehicle is stopped or braking to a stop */
+    /**
+     * Gets the acceleration of the vehicle
+     * @return true if the vehicle is stopped or braking to a stop
+     */
     public boolean isStopped() { return isStopped; }
 
-    /** @return true if the vehicle has finished its route */
+    /**
+     * Gets whether the vehicle has finished its route
+     * @return true if the vehicle has finished its route
+     */
     public boolean isRouteComplete() { return itinerary.isComplete(); }
 
     /**
